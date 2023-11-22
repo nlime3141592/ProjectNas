@@ -43,6 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NasConfigFile.cs" />
+    <Compile Include="NasConfigFileD.cs" />
+    <Compile Include="NasConfigFileF.cs" />
+    <Compile Include="NasFileSystem_FileDirectory.cs" />
+    <Compile Include="NasFileSystem_FileSystemBrowser.cs" />
+    <Compile Include="NasFile.cs" />
+    <Compile Include="NasFileClient.cs" />
     <Compile Include="TestConProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

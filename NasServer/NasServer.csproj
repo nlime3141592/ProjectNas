@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D87A3448-34B8-4D9C-84F8-B6C94BDF3DE8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>NasServer</RootNamespace>
+    <RootNamespace>NAS</RootNamespace>
     <AssemblyName>NasServer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Classes\Server.cs" />
     <EmbeddedResource Include="NasServerMonitorForm.resx">
       <DependentUpon>NasServerMonitorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -65,6 +66,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -85,5 +87,6 @@
       <Name>NasFileSystem</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
