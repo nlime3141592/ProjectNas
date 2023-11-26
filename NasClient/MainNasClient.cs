@@ -49,7 +49,8 @@ namespace NAS.Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(AuthForm.GetForm(AuthForm.FormMode.Waiting));
+            // Application.Run(AuthForm.GetForm(AuthForm.FormMode.Waiting));
+            Application.Run(FileBrowserForm.GetForm());
         }
     }
 }

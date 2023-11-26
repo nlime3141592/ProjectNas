@@ -131,5 +131,11 @@ namespace NAS.Client
                     break;
             }
         }
+
+        private void AuthForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (s_m_authForm == this)
+                s_m_authForm = null;
+        }
     }
 }
