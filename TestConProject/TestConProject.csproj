@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NasClient.cs" />
     <Compile Include="NasConfigFile.cs" />
     <Compile Include="NasConfigFileD.cs" />
     <Compile Include="NasConfigFileF.cs" />
