@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasServer", "NasServer\NasS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasClient", "NasClient\NasClient.csproj", "{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasLib", "NasLib\NasLib.csproj", "{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

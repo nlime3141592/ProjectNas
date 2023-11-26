@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{49A5CFF0-6B37-4D2D-ADAC-736310FFFF73}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NAS.Tests</RootNamespace>
-    <AssemblyName>TestConProject</AssemblyName>
+    <ProjectGuid>{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NAS</RootNamespace>
+    <AssemblyName>NasLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,36 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NasConfigFile.cs" />
-    <Compile Include="NasConfigFileD.cs" />
-    <Compile Include="NasConfigFileF.cs" />
-    <Compile Include="NasFileSystem_FileDirectory.cs" />
-    <Compile Include="NasFileSystem_FileSystemBrowser.cs" />
-    <Compile Include="NasFile.cs" />
-    <Compile Include="NasFileClient.cs" />
-    <Compile Include="TestConProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
-      <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
-      <Name>NasFileSystem</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NasLib\NasLib.csproj">
-      <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>
-      <Name>NasLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NasServer\NasServer.csproj">
-      <Project>{d87a3448-34b8-4d9c-84f8-b6c94bdf3de8}</Project>
-      <Name>NasServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TestLibProject\TestLibProject.csproj">
-      <Project>{746520d6-10b1-4bcf-987a-b58a864fa2fd}</Project>
-      <Name>TestLibProject</Name>
-    </ProjectReference>
+    <Compile Include="src\Classes\NasThread.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

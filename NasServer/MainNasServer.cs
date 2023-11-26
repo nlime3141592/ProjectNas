@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace NAS.Server
 {
-    internal static class Program
+    internal static class MainNasServer
     {
         /// <summary>
         /// 해당 애플리케이션의 주 진입점입니다.

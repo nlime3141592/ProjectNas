@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAS.Server;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,7 +14,20 @@ namespace NAS.Tests
     {
         private static void Main(string[] args)
         {
-            Main_ClientAccess();
+            
+        }
+
+        private static void Main_NasServerOpenTest()
+        {
+            /*
+            NasServer server = new NasServer();
+
+            if (server.TryOpen(25565))
+            {
+                Console.WriteLine("서버가 열렸습니다.");
+                server.Start();
+            }
+            */
         }
 
         private static void Main_ClientAccess()
@@ -24,7 +38,7 @@ namespace NAS.Tests
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.35.31"), 25565);
                 socket.Connect(endPoint);
 
-                NasClient client = new NasClient(socket);
+                // NasClient client = new NasClient(socket);
             }
             catch(Exception ex)
             {
