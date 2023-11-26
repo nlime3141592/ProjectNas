@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{49A5CFF0-6B37-4D2D-ADAC-736310FFFF73}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NAS.Tests</RootNamespace>
-    <AssemblyName>TestConProject</AssemblyName>
+    <ProjectGuid>{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>NAS.Client</RootNamespace>
+    <AssemblyName>NasClient</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -39,29 +39,47 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NasClient.cs" />
-    <Compile Include="NasConfigFile.cs" />
-    <Compile Include="NasConfigFileD.cs" />
-    <Compile Include="NasConfigFileF.cs" />
-    <Compile Include="NasFileSystem_FileDirectory.cs" />
-    <Compile Include="NasFileSystem_FileSystemBrowser.cs" />
-    <Compile Include="NasFile.cs" />
-    <Compile Include="NasFileClient.cs" />
-    <Compile Include="TestConProgram.cs" />
+    <Compile Include="src\Classes\Tasks\ConnectionTask.cs" />
+    <Compile Include="src\Forms\AuthForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\AuthForm.Designer.cs">
+      <DependentUpon>AuthForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainNasClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="src\Forms\AuthForm.resx">
+      <DependentUpon>AuthForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
-      <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
-      <Name>NasFileSystem</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
