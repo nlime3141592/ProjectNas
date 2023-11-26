@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +13,25 @@ namespace NAS.Tests
     {
         private static void Main(string[] args)
         {
-            Main_FileDirectoryTest();
+            Main_ClientAccess();
+        }
+
+        private static void Main_ClientAccess()
+        {
+            try
+            {
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse("192.168.35.31"), 25565);
+                socket.Connect(endPoint);
+
+                NasClient client = new NasClient(socket);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("E c p i n  E L");
+                Console.WriteLine(" x e t o  H L O");
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private static void Main_FileDirectoryTest()
