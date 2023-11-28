@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,8 +55,12 @@
     </Compile>
     <Compile Include="MainNasServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Classes\NasClientThread.cs" />
-    <Compile Include="src\Classes\NasServer.cs" />
+    <Compile Include="src\Classes\Server\NasServer_AcceptThread.cs" />
+    <Compile Include="src\Classes\Server\NasClientThread.cs" />
+    <Compile Include="src\Classes\Server\NasServer.cs" />
+    <Compile Include="src\Classes\Server\NasStandardClientThread.cs" />
+    <Compile Include="src\Classes\Services\SvDisconnect.cs" />
+    <Compile Include="src\Classes\Services\SvTest01.cs" />
     <EmbeddedResource Include="NasServerMonitorForm.resx">
       <DependentUpon>NasServerMonitorForm.cs</DependentUpon>
     </EmbeddedResource>

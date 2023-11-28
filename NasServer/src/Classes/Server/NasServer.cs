@@ -7,12 +7,12 @@ using System.Threading;
 
 namespace NAS.Server
 {
-    public class NasServer : NasThread
+    public partial class NasServer : NasThread
     {
         public int maxClient = 10;
 
         private Socket m_serverSocket;
-        private Thread m_acceptThread;
+        private m_NasAcceptThread m_acceptThread;
         private List<NasThread> m_clientThreads;
         private byte[] m_buffer;
         private Encoding m_encoding;
@@ -21,7 +21,7 @@ namespace NAS.Server
         {
             m_clientThreads = new List<NasThread>(Math.Max(1, maxClient));
             m_buffer = new byte[4096];
-            m_encoding = Encoding.UTF8;
+            m_encoding = Encoding.ASCII;
         }
 
         public bool TryOpen(int _port)
@@ -36,7 +36,7 @@ namespace NAS.Server
                 m_serverSocket.Bind(endPoint);
                 m_serverSocket.Listen(10);
 
-                m_acceptThread = new Thread(m_OnAcceptThread);
+                m_acceptThread = new m_NasAcceptThread(this);
                 m_acceptThread.Start();
 
                 return true;
@@ -98,51 +98,5 @@ namespace NAS.Server
 
             this.TryClose();
         }
-
-        #region Codes on AcceptThread
-        private void m_OnAcceptThread()
-        {
-            try
-            {
-                while (true)
-                {
-                    if (m_clientThreads.Count >= maxClient)
-                        continue;
-
-                    Socket clientSocket = m_serverSocket.Accept();
-
-                    int length = clientSocket.Receive(m_buffer);
-
-                    if (length != 1)
-                        clientSocket.Send(m_encoding.GetBytes("<DENIED>"));
-                    else
-                        m_CreateClient(clientSocket);
-                }
-            }
-            catch (ThreadAbortException _threadAbortException)
-            {
-
-            }
-        }
-
-        private void m_CreateClient(Socket _clientSocket)
-        {
-            byte clientType = m_buffer[0];
-
-            switch (clientType)
-            {
-                case 1:
-                    NasClientThread thread = new NasClientThread(_clientSocket);
-                    thread.Start();
-                    m_clientThreads.Add(thread);
-                    _clientSocket.Send(m_encoding.GetBytes("<ACCEPTED>"));
-                    break;
-                default:
-                    _clientSocket.Send(m_encoding.GetBytes("<DENIED>"));
-                    _clientSocket.Close();
-                    break;
-            }
-        }
-        #endregion
     }
 }

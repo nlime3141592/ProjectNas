@@ -11,7 +11,8 @@ namespace NAS.Client
 {
     internal static class NetworkManager
     {
-        private const string c_HOST_IP = "192.168.35.31";
+        private const string c_HOST_IP = "127.0.0.1";
+        // private const string c_HOST_IP = "192.168.35.31";
         private const int c_HOST_PORT = 25565;
 
         private static Socket s_m_socket;
@@ -70,8 +71,8 @@ namespace NAS.Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(AuthForm.GetForm(AuthForm.FormMode.Waiting));
-            // Application.Run(FileBrowserForm.GetForm());
+            // Application.Run(AuthForm.GetForm(AuthForm.FormMode.Waiting));
+            Application.Run(FileBrowserForm.GetForm());
         }
     }
 }

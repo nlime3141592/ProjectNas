@@ -14,12 +14,13 @@ namespace NAS.Tests
     {
         private static void Main(string[] args)
         {
-            
+            // 함수 주석을 처리하고, 솔루션 빌드하고, 실행합니다.
+            Main_NasServerOpenTest(); // 서버 열기 테스트, 배치 파일에서 실행
+            // Main_FileDirectoryTest(); // 파일 연결 스레드 테스트, VS에서 실행
         }
 
         private static void Main_NasServerOpenTest()
         {
-            /*
             NasServer server = new NasServer();
 
             if (server.TryOpen(25565))
@@ -27,7 +28,6 @@ namespace NAS.Tests
                 Console.WriteLine("서버가 열렸습니다.");
                 server.Start();
             }
-            */
         }
 
         private static void Main_ClientAccess()
