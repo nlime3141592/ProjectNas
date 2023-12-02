@@ -6,32 +6,40 @@ namespace NAS.Server
 {
     public abstract class NasClientThread : NasThread
     {
-        protected Socket socket { get; private set; }
-        protected Encoding encoding { get; private set; }
-        protected byte[] buffer { get; private set; }
+        protected SocketModule m_socModule { get; private set; }
 
-        public NasClientThread(Socket _socket, Encoding _encoding)
+        public NasClientThread(SocketModule _module)
         {
-            socket = _socket;
-            encoding = _encoding;
-            buffer = new byte[4096];
+            m_socModule = _module;
         }
 
-        protected override void ThreadMain()
+        protected sealed override void ThreadMain()
         {
+            NasService service = null;
+            ServiceResult result = null;
+
             Console.WriteLine("새로운 클라이언트를 시작합니다.");
 
             while (!base.p_isStopped)
             {
-                int length = socket.Receive(buffer, 0, 32, SocketFlags.None);
-                string clientType = encoding.GetString(buffer, 0, length);
+                string serviceType = m_socModule.ReceiveString(-1);
 
-                if(length > 0)
-                    m_HandleServiceResult(HandleService(clientType)?.Execute() ?? ServiceResult.InvalidService);
-                else // NOTE: 통신 오류로 클라이언트 종료.
-                    base.Stop();
+                if (serviceType == null)
+                    base.Stop(); // NOTE: 통신 오류로 클라이언트 종료.
+                else if ((service = HandleService(serviceType)) == null)
+                    base.Stop(); // NOTE: 서비스 핸들링 오류로 클라이언트 종료.
+                else
+                {
+                    (service as ISocketModuleService)?.Bind(m_socModule);
+                    result = service.Execute();
+                    m_HandleServiceResult(result);
+                }
             }
+        }
 
+        protected override void OnThreadEnding()
+        {
+            base.OnThreadEnding();
             Console.WriteLine("클라이언트가 종료되었습니다.");
         }
 

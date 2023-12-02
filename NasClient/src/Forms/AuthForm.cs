@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAS.Client.Service;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -136,6 +137,24 @@ namespace NAS.Client
         {
             if (s_m_authForm == this)
                 s_m_authForm = null;
+        }
+
+        private void btLogin_Click(object sender, EventArgs e)
+        {
+            string id = txtLoginId.Text;
+            string pw = txtLoginPw.Text;
+
+            SvLogin service = new SvLogin(id, pw);
+            service.onSuccess = () =>
+            {
+                // NOTE: 이거 Hack code인 것 같은데...
+                // base.Invoke((MethodInvoker)delegate () { });
+
+                // FileBrowserForm.GetForm().Show();
+                new TestForm().Show(); // fail
+            };
+            ClientManager.GetInstance().RequestService(service);
+            // new TestForm().Show(); // ok
         }
     }
 }

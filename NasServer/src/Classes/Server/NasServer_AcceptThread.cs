@@ -1,10 +1,5 @@
-﻿using NAS;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net.Sockets;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NAS.Server
 {
@@ -13,12 +8,10 @@ namespace NAS.Server
         private class m_NasAcceptThread : NasThread
         {
             private NasServer m_server;
-            private byte[] m_buffer;
 
             public m_NasAcceptThread(NasServer _server)
             {
                 m_server = _server;
-                m_buffer = new byte[32];
             }
 
             protected override void ThreadMain()
@@ -29,33 +22,30 @@ namespace NAS.Server
                         continue;
 
                     Socket clientSocket = m_server.m_serverSocket.Accept();
-                    string clientType = m_ReceiveAndParseClientType(clientSocket);
-                    NasClientThread clientThread = m_ParseClientType(clientSocket, clientType);
+                    SocketModule socModule = new SocketModule(clientSocket, m_server.m_encoding);
+                    string clientType = socModule.ReceiveString();
+                    NasClientThread clientThread = m_ParseClientType(socModule, clientType);
 
                     if(clientThread == null)
                     {
-                        clientSocket.SendString("<DENIED>", m_server.m_encoding);
-                        clientSocket.Close();
+                        socModule.SendString("<DENIED>");
+                        socModule.Close();
                     }
                     else
                     {
-                        clientSocket.SendString("<ACCEPTED>", m_server.m_encoding);
+                        socModule.SendString("<ACCEPTED>");
                         clientThread.Start();
+                        m_server.m_clientThreads.Add(clientThread);
                     }
                 }
             }
 
-            private string m_ReceiveAndParseClientType(Socket _clientSocket)
-            {
-                return _clientSocket.ReceiveString(m_buffer, m_server.m_encoding);
-            }
-
-            private NasClientThread m_ParseClientType(Socket _clientSocket, string _clientType)
+            private NasClientThread m_ParseClientType(SocketModule _socModule, string _clientType)
             {
                 switch(_clientType)
                 {
                     case "stdCLNT":
-                        return new NasStandardClientThread(_clientSocket, m_server.m_encoding);
+                        return new NasStandardClientThread(_socModule);
                     default:
                         return null;
                 }

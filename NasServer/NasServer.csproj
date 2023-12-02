@@ -60,6 +60,7 @@
     <Compile Include="src\Classes\Server\NasServer.cs" />
     <Compile Include="src\Classes\Server\NasStandardClientThread.cs" />
     <Compile Include="src\Classes\Services\SvDisconnect.cs" />
+    <Compile Include="src\Classes\Services\SvLogin.cs" />
     <Compile Include="src\Classes\Services\SvTest01.cs" />
     <EmbeddedResource Include="NasServerMonitorForm.resx">
       <DependentUpon>NasServerMonitorForm.cs</DependentUpon>

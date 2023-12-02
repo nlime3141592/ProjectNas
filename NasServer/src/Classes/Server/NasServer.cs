@@ -14,13 +14,11 @@ namespace NAS.Server
         private Socket m_serverSocket;
         private m_NasAcceptThread m_acceptThread;
         private List<NasThread> m_clientThreads;
-        private byte[] m_buffer;
         private Encoding m_encoding;
 
         public NasServer()
         {
             m_clientThreads = new List<NasThread>(Math.Max(1, maxClient));
-            m_buffer = new byte[4096];
             m_encoding = Encoding.ASCII;
         }
 

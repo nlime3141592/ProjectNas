@@ -19,7 +19,10 @@ namespace NAS
         }
 
         protected abstract void ThreadMain();
-        protected virtual void OnThreadEnding() { }
+        protected virtual void OnThreadEnding()
+        {
+            m_thread = null;
+        }
 
         public void Start()
         {
@@ -44,8 +47,7 @@ namespace NAS
             }
             catch (SocketException _socketException)
             {
-                // NOTE: 서버와의 연결이 끊겼습니다.
-                Console.WriteLine("클라이언트의 접속 종료 발생");
+                // NOTE: 네트워크 문제가 발생했습니다.
             }
             catch (ThreadAbortException _threadAbortException)
             {

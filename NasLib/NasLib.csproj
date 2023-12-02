@@ -43,8 +43,9 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Classes\NasThread.cs" />
-    <Compile Include="src\Classes\Networks\SocketExtensions.cs" />
     <Compile Include="src\Classes\NasService.cs" />
+    <Compile Include="src\Classes\Networks\ISocketModuleService.cs" />
+    <Compile Include="src\Classes\Networks\SocketModule.cs" />
     <Compile Include="src\Classes\ServiceResult.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

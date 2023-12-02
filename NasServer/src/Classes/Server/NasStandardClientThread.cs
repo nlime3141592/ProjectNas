@@ -10,8 +10,8 @@ namespace NAS.Server
 {
     public class NasStandardClientThread : NasClientThread
     {
-        public NasStandardClientThread(Socket _socket, Encoding _encoding)
-        : base(_socket, _encoding)
+        public NasStandardClientThread(SocketModule _module)
+        : base(_module)
         {
 
         }
@@ -23,9 +23,11 @@ namespace NAS.Server
             switch(_serviceType)
             {
                 case "sv_test01":
-                    return new SvTest01(base.socket, base.buffer, base.encoding);
+                    return new SvTest01();
                 case "sv_discon":
                     return new SvDisconnect(this);
+                case "sv_login":
+                    return new SvLogin();
                 default:
                     return null;
             }

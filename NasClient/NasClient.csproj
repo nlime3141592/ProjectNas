@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientManager.cs" />
+    <Compile Include="src\Classes\Networks\NetworkManager.cs" />
+    <Compile Include="src\Classes\Services\SvLogin.cs" />
     <Compile Include="src\Classes\Tasks\ConnectionTask.cs" />
     <Compile Include="src\Forms\AuthForm.cs">
       <SubType>Form</SubType>
@@ -60,6 +63,12 @@
     </Compile>
     <Compile Include="src\Forms\FileBrowserForm.Designer.cs">
       <DependentUpon>FileBrowserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\TestForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\TestForm.Designer.cs">
+      <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -76,6 +85,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\FileBrowserForm.resx">
       <DependentUpon>FileBrowserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\TestForm.resx">
+      <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
