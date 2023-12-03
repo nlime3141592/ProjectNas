@@ -1,12 +1,9 @@
 ﻿using NAS.Server;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
+
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NAS.Tests
 {
@@ -30,15 +27,14 @@ namespace NAS.Tests
 
                 while(true)
                 {
-                    Console.Write("Q입력하면 종료");
+                    Console.WriteLine("Q를 입력하면 서버를 종료합니다.");
                     ConsoleKey key = Console.ReadKey(true).Key;
-                    Console.Write("\n");
 
                     if (key == ConsoleKey.Q)
                         break;
                 }
 
-                server.Stop();
+                server.Halt();
             }
             Console.WriteLine("서버 종료");
         }

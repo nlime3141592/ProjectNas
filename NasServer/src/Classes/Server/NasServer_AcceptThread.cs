@@ -30,20 +30,21 @@ namespace NAS.Server
 
                     // NOTE: Thread가 정상 종료되었습니다.
                 }
+                catch(ThreadInterruptedException)
+                {
+                    // NOTE: Thread가 강제로 종료되었습니다.
+                    base.Stop();
+                }
                 catch(ThreadAbortException)
                 {
                     // NOTE: Thread가 강제로 종료되었습니다.
-                    Console.WriteLine("[Accept] 1");
                     base.Stop();
-                    Console.WriteLine("[Accept] 2");
                 }
                 catch(Exception)
                 {
                     // NOTE: 알 수 없는 오류로 Thread가 종료되었습니다.
                     base.Stop();
                 }
-
-                Console.WriteLine("[Accept] 3");
             }
 
             private void m_ReceiveClient()
@@ -66,7 +67,10 @@ namespace NAS.Server
                     {
                         socModule.SendString("<ACCEPTED>");
                         clientThread.Start();
-                        m_server.m_clientThreads.Add(clientThread);
+
+                        Monitor.Enter(m_server.m_clientThreads);
+                        m_server.m_clientThreads.Enqueue(clientThread);
+                        Monitor.Exit(m_server.m_clientThreads);
                     }
                 }
                 catch (SocketException)

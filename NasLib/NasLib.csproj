@@ -47,6 +47,7 @@
     <Compile Include="src\Classes\Networks\ISocketModuleService.cs" />
     <Compile Include="src\Classes\Networks\SocketModule.cs" />
     <Compile Include="src\Classes\ServiceResult.cs" />
+    <Compile Include="src\Extensions\LogExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Sockets;
-using System.Threading;
+﻿using System.Threading;
 
 namespace NAS
 {
@@ -11,41 +9,28 @@ namespace NAS
 
         protected bool isInterruptedStop { get; private set; } = false;
 
-        private Thread m_thread;
+        protected Thread m_thread;
 
         protected NasThread()
         {
 
         }
 
-        public void Start()
+        public virtual void Start()
         {
             m_thread.Start();
         }
 
-        public void Stop()
+        public virtual void Stop()
         {
             isInterruptedStop = true;
-            m_thread = null;
         }
 
-        public void Abort()
+        public virtual void Halt()
         {
-            try
-            {
-                Console.WriteLine("[NasThread] Abort0");
-                // m_thread.Abort();
-                m_thread.Interrupt();
-                Console.WriteLine("[NasThread] Abort1");
-            }
-            catch(Exception _ex)
-            {
-                Console.WriteLine(_ex.Message);
-            }
-            Console.WriteLine("[NasThread] Abort2");
+            m_thread.Interrupt();
+
             isInterruptedStop = true;
-            Console.WriteLine("[NasThread] Abort3");
-            m_thread = null;
         }
 
         protected void SetThread(Thread _thread)
@@ -53,7 +38,7 @@ namespace NAS
             m_thread = _thread;
         }
 
-        protected Thread GetThread(Thread _thread)
+        protected Thread GetThread()
         {
             return m_thread;
         }
