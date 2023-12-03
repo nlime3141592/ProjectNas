@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace NAS.Client
 {
@@ -23,6 +23,7 @@ namespace NAS.Client
         private ClientManager()
         {
             m_serviceQueue = new Queue<NasService>(8);
+            base.SetThread(new Thread(new ThreadStart(ThreadMain)));
             base.Start();
         }
 
@@ -31,9 +32,9 @@ namespace NAS.Client
             m_serviceQueue.Enqueue(_service);
         }
 
-        protected override void ThreadMain()
+        private void ThreadMain()
         {
-            while(!base.p_isStopped)
+            while(!base.isInterruptedStop)
             {
                 while(m_serviceQueue.Count > 0)
                 {

@@ -18,6 +18,8 @@ namespace NAS.Server
 
         public NasServer()
         {
+            base.SetThread(new Thread(new ThreadStart(ThreadMain)));
+
             m_clientThreads = new List<NasThread>(Math.Max(1, maxClient));
             m_encoding = Encoding.ASCII;
         }
@@ -67,34 +69,68 @@ namespace NAS.Server
         {
             if (m_serverSocket == null)
                 return false;
-
-            m_acceptThread.Abort();
+            Console.WriteLine("[NasServer] TryClose 1");
+            m_acceptThread.Abort(); // TODO: 이 곳에 오류가 발생하여 해결해야 합니다.
+            Console.WriteLine("[NasServer] TryClose 2");
             m_acceptThread = null;
-
+            Console.WriteLine("[NasServer] TryClose 3");
             m_serverSocket.Close();
+            Console.WriteLine("[NasServer] TryClose 4");
             m_serverSocket = null;
+            Console.WriteLine("[NasServer] TryClose 5");
             return true;
         }
 
-        protected override void ThreadMain()
+        private void ThreadMain()
         {
-            while (true)
+            try
             {
-                for (int i = m_clientThreads.Count - 1; i >= 0; --i)
+                while (!base.isInterruptedStop)
                 {
-                    if (m_clientThreads[i] == null || m_clientThreads[i].isStopped)
-                        m_clientThreads.RemoveAt(i);
+                    // NOTE: 서버에서 Thread의 상태를 인식합니다.
+                    for (int i = m_clientThreads.Count - 1; i >= 0; --i)
+                    {
+                        if (m_clientThreads[i] == null || m_clientThreads[i].isEnded)
+                            m_clientThreads.RemoveAt(i);
+                    }
+
+                    // Thread.Sleep(1000); Console.WriteLine("동시 접속자 수: {0}", m_clientThreads.Count);
+                    Console.WriteLine("[NasServer] 서버 동작 중");
                 }
 
-                // Thread.Sleep(1000); Console.WriteLine("동시 접속자 수: {0}", m_clientThreads.Count);
+                // NOTE: 서버가 정상 종료되었습니다.
+                Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.41");
+                this.TryClose();
+                Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.42");
             }
+            catch (ThreadAbortException)
+            {
+                // NOTE: 서버가 강제로 종료되었습니다.
+                Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.31");
+                this.TryClose();
+                Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.32");
+            }
+            catch(Exception _ex)
+            {
+                // NOTE: 알 수 없는 예외 발생으로 서버가 종료되었습니다.
+                Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.21");
+                this.TryClose();
+                Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.22");
+            }
+            Console.WriteLine("[NasServer] 서버가 정상 종료되었습니다.1");
+            OnThreadEnding();
+            isEnded = true;
         }
 
-        protected override void OnThreadEnding()
+        private void OnThreadEnding()
         {
-            base.OnThreadEnding();
-
-            this.TryClose();
+            while(m_clientThreads.Count > 0)
+            {
+                Console.WriteLine("[NasServer] 남은 클라이언트 : {0}", m_clientThreads.Count);
+                m_clientThreads[0].Stop();
+                while (!m_clientThreads[0].isEnded);
+                m_clientThreads.RemoveAt(0);
+            }
         }
     }
 }

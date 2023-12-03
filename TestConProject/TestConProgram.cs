@@ -27,7 +27,20 @@ namespace NAS.Tests
             {
                 Console.WriteLine("서버가 열렸습니다.");
                 server.Start();
+
+                while(true)
+                {
+                    Console.Write("Q입력하면 종료");
+                    ConsoleKey key = Console.ReadKey(true).Key;
+                    Console.Write("\n");
+
+                    if (key == ConsoleKey.Q)
+                        break;
+                }
+
+                server.Stop();
             }
+            Console.WriteLine("서버 종료");
         }
 
         private static void Main_ClientAccess()

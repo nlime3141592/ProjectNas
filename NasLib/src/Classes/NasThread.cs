@@ -7,21 +7,15 @@ namespace NAS
     public abstract class NasThread
     {
         public bool isRunning { get; private set; } = false;
-        public bool isStopped { get; private set; } = false;
+        public bool isEnded { get; protected set; } = false;
 
-        protected bool p_isStopped { get; private set; } = false;
+        protected bool isInterruptedStop { get; private set; } = false;
 
         private Thread m_thread;
 
         protected NasThread()
         {
-            m_thread = new Thread(m_ThreadMain);
-        }
 
-        protected abstract void ThreadMain();
-        protected virtual void OnThreadEnding()
-        {
-            m_thread = null;
         }
 
         public void Start()
@@ -31,31 +25,37 @@ namespace NAS
 
         public void Stop()
         {
-            p_isStopped = true;
+            isInterruptedStop = true;
+            m_thread = null;
         }
 
         public void Abort()
         {
-            m_thread.Abort();
-        }
-
-        private void m_ThreadMain()
-        {
             try
             {
-                ThreadMain();
+                Console.WriteLine("[NasThread] Abort0");
+                // m_thread.Abort();
+                m_thread.Interrupt();
+                Console.WriteLine("[NasThread] Abort1");
             }
-            catch (SocketException _socketException)
+            catch(Exception _ex)
             {
-                // NOTE: 네트워크 문제가 발생했습니다.
+                Console.WriteLine(_ex.Message);
             }
-            catch (ThreadAbortException _threadAbortException)
-            {
-                // NOTE: Thread가 강제 종료되었습니다.
-            }
+            Console.WriteLine("[NasThread] Abort2");
+            isInterruptedStop = true;
+            Console.WriteLine("[NasThread] Abort3");
+            m_thread = null;
+        }
 
-            OnThreadEnding();
-            isStopped = true;
+        protected void SetThread(Thread _thread)
+        {
+            m_thread = _thread;
+        }
+
+        protected Thread GetThread(Thread _thread)
+        {
+            return m_thread;
         }
     }
 }
