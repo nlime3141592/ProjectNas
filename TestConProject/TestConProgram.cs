@@ -1,4 +1,5 @@
-﻿using NAS.Server;
+﻿using NAS.FileSystem;
+using NAS.Server;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -71,7 +72,7 @@ namespace NAS.Tests
         {
             string root = @"C:\NAS";
 
-            FileSystem fs = new FileSystem(root);
+            FileSys fs = new FileSys(root);
 
             Console.WriteLine("---------------- 파일 시스템 출력 ----------------");
             foreach (string dir in fs.NextDirectories)

@@ -5,20 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NAS
+namespace NAS.FileSystem
 {
     internal static class FileSystemMain
     {
-        private static FileSystem s_m_fileSystem;
+        private static FileSys s_m_fileSystem;
 
-        public static FileSystem GetFileSystem()
+        public static FileSys GetFileSystem()
         {
             return s_m_fileSystem;
         }
 
         static FileSystemMain()
         {
-            s_m_fileSystem = new FileSystem(@"C:\NAS");
+            s_m_fileSystem = new FileSys(@"C:\NAS");
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace NAS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(FileBrowserForm.GetInstance());
+            // Application.Run(FileBrowserForm.GetInstance());
             return 0;
         }
     }

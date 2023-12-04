@@ -6,9 +6,9 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NAS
+namespace NAS.FileSystem
 {
-    public class FileSystem
+    public class FileSys
     {
         private const string c_PERMISSION_FILE = @"\.permission";
 
@@ -21,7 +21,7 @@ namespace NAS
         private string[] m_dirNextDirectories;
         private string[] m_dirNextFiles;
 
-        public FileSystem(string _dirRoot)
+        public FileSys(string _dirRoot)
         {
             m_pathBuilder = new StringBuilder(256);
             m_dirStack = new List<string>(32);
