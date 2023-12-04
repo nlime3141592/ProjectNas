@@ -23,6 +23,9 @@ namespace NAS.Server.Service
                 string id = m_socModule.ReceiveString();
                 string pw = m_socModule.ReceiveString();
 
+                this.WriteLog("ID: {0}", id);
+                this.WriteLog("PW: {0}", pw);
+
                 Console.WriteLine("ID : {0}", id);
                 Console.WriteLine("PW : {0}", pw);
 

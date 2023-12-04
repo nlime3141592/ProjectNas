@@ -46,8 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientManager.cs" />
-    <Compile Include="src\Classes\Networks\NetworkManager.cs" />
     <Compile Include="src\Classes\Services\SvLogin.cs" />
     <Compile Include="src\Classes\Tasks\ConnectionTask.cs" />
     <Compile Include="src\Forms\AuthForm.cs">
@@ -103,6 +101,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NasLibClient\NasLibClient.csproj">
+      <Project>{6f3001b7-5f3c-4214-91d0-d22bbd7e3d2a}</Project>
+      <Name>NasLibClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>
       <Name>NasLib</Name>

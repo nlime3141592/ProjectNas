@@ -52,11 +52,15 @@
   <ItemGroup>
     <Compile Include="MainNasServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Classes\Server\NasServer_AcceptThread.cs" />
-    <Compile Include="src\Classes\Server\NasClientThread.cs" />
-    <Compile Include="src\Classes\Server\NasServer.cs" />
-    <Compile Include="src\Classes\Server\NasStandardClientThread.cs" />
+    <Compile Include="src\Classes\Handlers\NasStorageHandler.cs" />
+    <Compile Include="src\Classes\Handlers\NasUserHandler.cs" />
+    <Compile Include="src\Classes\Servers\IMessenger.cs" />
+    <Compile Include="src\Classes\Servers\NasServer_AcceptThread.cs" />
+    <Compile Include="src\Classes\Handlers\NasHandler.cs" />
+    <Compile Include="src\Classes\Servers\NasServer.cs" />
+    <Compile Include="src\Classes\Handlers\NasTestHandler.cs" />
     <Compile Include="src\Classes\Services\SvDisconnect.cs" />
+    <Compile Include="src\Classes\Services\SvInitialize.cs" />
     <Compile Include="src\Classes\Services\SvLogin.cs" />
     <Compile Include="src\Classes\Services\SvTest01.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

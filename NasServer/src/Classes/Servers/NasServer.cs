@@ -5,40 +5,53 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Collections.Concurrent;
+using NAS.Server.Handler;
 
 namespace NAS.Server
 {
-    public partial class NasServer : NasThread
+    public partial class NasServer : NasThread, IMessenger
     {
         public int currentClientCount { get; private set; } = 0;
 
         public int maxClient = 10;
 
-        private Socket m_serverSocket;
-        private m_NasAcceptThread m_acceptThread;
-        private ConcurrentQueue<NasThread> m_clientThreads;
+        private ConcurrentQueue<NasHandler> m_users;
         private Encoding m_encoding;
+
+        private Socket m_socServer;
+        private m_NasAcceptThread m_acceptThread;
 
         public NasServer()
         {
             base.SetThread(new Thread(new ThreadStart(ThreadMain)));
 
-            // m_clientThreads = new List<NasThread>(Math.Max(1, maxClient));
-            m_clientThreads = new ConcurrentQueue<NasThread>();
+            m_users = new ConcurrentQueue<NasHandler>();
             m_encoding = Encoding.ASCII;
+        }
+
+        void IMessenger.RequestService(string _userName, NasService _service)
+        {
+            foreach(NasHandler handler in m_users)
+            { 
+                if(handler.handlerName.Equals(_userName))
+                {
+                    handler.RequestService(_service);
+                    return;
+                }
+            }
         }
 
         public bool TryOpen(int _port)
         {
-            if (m_serverSocket != null || m_acceptThread != null)
+            if (m_socServer != null || m_acceptThread != null)
                 return false;
 
             try
             {
-                m_serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                m_socServer = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, _port);
-                m_serverSocket.Bind(endPoint);
-                m_serverSocket.Listen(10);
+                m_socServer.Bind(endPoint);
+                m_socServer.Listen(10);
 
                 m_acceptThread = new m_NasAcceptThread(this);
                 m_acceptThread.Start();
@@ -60,9 +73,9 @@ namespace NAS.Server
                 }
                 finally
                 {
-                    m_serverSocket?.Close();
+                    m_socServer?.Close();
                     m_acceptThread = null;
-                    m_serverSocket = null;
+                    m_socServer = null;
                 }
 
                 return false;
@@ -71,14 +84,14 @@ namespace NAS.Server
 
         public bool TryClose()
         {
-            if (m_serverSocket == null)
+            if (m_socServer == null)
                 return false;
 
             m_acceptThread.Halt();
             m_acceptThread = null;
 
-            m_serverSocket.Close();
-            m_serverSocket = null;
+            m_socServer.Close();
+            m_socServer = null;
             return true;
         }
 
@@ -89,15 +102,15 @@ namespace NAS.Server
                 while (!base.isInterruptedStop)
                 {
                     // NOTE: 서버에서 Thread의 상태를 인식합니다.
-                    int threadCount = m_clientThreads.Count;
+                    int threadCount = m_users.Count;
                     currentClientCount = threadCount;
 
                     while (threadCount-- > 0)
                     {
-                        NasThread clientThread;
+                        NasHandler clientThread;
 
-                        if (m_clientThreads.TryDequeue(out clientThread) && !clientThread.isEnded)
-                            m_clientThreads.Enqueue(clientThread);
+                        if (m_users.TryDequeue(out clientThread) && !clientThread.isEnded)
+                            m_users.Enqueue(clientThread);
                     }
                     // Thread.Sleep(1000); Console.WriteLine("동시 접속자 수: {0}", m_clientThreads.Count);
                 }
@@ -122,11 +135,11 @@ namespace NAS.Server
             }
 
             // NOTE: 클라이언트 강제 종료 처리
-            while (m_clientThreads.Count > 0)
+            while (m_users.Count > 0)
             {
-                NasThread clientThread;
+                NasHandler clientThread;
 
-                if (m_clientThreads.TryDequeue(out clientThread))
+                if (m_users.TryDequeue(out clientThread))
                     clientThread.Halt();
             }
 

@@ -1,17 +1,24 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 
-namespace NAS.Server
+namespace NAS.Server.Handler
 {
-    public abstract class NasClientThread : NasThread
+    public abstract class NasHandler : NasThread
     {
+        public string handlerName { get; set; }
+        protected IMessenger messenger { get; private set; }
+
         protected SocketModule m_socModule { get; private set; }
 
-        protected NasClientThread(SocketModule _module)
+        private ConcurrentQueue<NasService> m_serviceQueue;
+
+        protected NasHandler(IMessenger _messenger, SocketModule _module)
         {
+            messenger = _messenger;
             m_socModule = _module;
+            m_serviceQueue = new ConcurrentQueue<NasService>();
             base.SetThread(new Thread(new ThreadStart(ThreadMain)));
         }
 
@@ -22,6 +29,13 @@ namespace NAS.Server
             base.Halt();
 
             m_socModule.Close();
+        }
+
+        protected virtual void OnHandlerEnd() { }
+
+        public void RequestService(NasService _service)
+        {
+            m_serviceQueue.Enqueue(_service);
         }
 
         private void ThreadMain()
@@ -35,8 +49,12 @@ namespace NAS.Server
             {
                 while (!base.isInterruptedStop)
                 {
+                    NasService queuedService;
+
+                    while (m_serviceQueue.TryPeek(out queuedService))
+                        queuedService.Execute();
+
                     string serviceType = m_socModule.ReceiveString(-1);
-                    this.WriteLog("서비스 헤더 수신: {0}", serviceType);
 
                     if (serviceType == null)
                         base.Stop(); // NOTE: 통신 오류로 클라이언트 종료.
@@ -81,6 +99,7 @@ namespace NAS.Server
             }
 
             base.isEnded = true;
+            OnHandlerEnd();
             this.WriteLog("클라이언트가 종료되었습니다.");
         }
 

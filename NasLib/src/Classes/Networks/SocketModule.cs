@@ -21,16 +21,20 @@ namespace NAS
             m_socket.Close();
         }
 
-        public bool SendInt32(int _value)
+        public void SendInt32(int _value)
         {
             byte[] bytes = BitConverter.GetBytes(_value);
-            return TrySendFixedDate(bytes, 0, 4, 1000);
+
+            if (!TrySendFixedDate(bytes, 0, 4, 1000))
+                throw new SocketException();
         }
 
-        public bool SendString(string _string)
+        public void SendString(string _string)
         {
             byte[] sBytes = m_encoding.GetBytes(_string);
-            return TrySendVariableData(sBytes, 0, sBytes.Length, 1000);
+
+            if (!TrySendVariableData(sBytes, 0, sBytes.Length, 1000))
+                throw new SocketException();
         }
 
         public int ReceiveInt32()

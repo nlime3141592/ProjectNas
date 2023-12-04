@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{42004FB3-299D-4D8C-88F5-B0AD55AEAE9D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NAS.FileSystem</RootNamespace>
-    <AssemblyName>NasFileSystem</AssemblyName>
+    <RootNamespace>NAS.Client</RootNamespace>
+    <AssemblyName>NasLibClient</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -30,15 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,28 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="src\Classes\DirectoryManager.cs" />
-    <Compile Include="src\Classes\FileSys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Classes\Services\SvAddDirectory.cs" />
-    <Compile Include="src\MainFileSystem.cs" />
+    <Compile Include="src\Classes\ClientNetworkManager.cs" />
+    <Compile Include="src\Classes\NasClientThread.cs" />
+    <Compile Include="src\Classes\Services\SvInitialize.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NasLibClient\NasLibClient.csproj">
-      <Project>{6f3001b7-5f3c-4214-91d0-d22bbd7e3d2a}</Project>
-      <Name>NasLibClient</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>
       <Name>NasLib</Name>

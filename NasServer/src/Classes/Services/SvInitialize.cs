@@ -1,16 +1,18 @@
-﻿using NAS;
+﻿using NAS.Server.Handler;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Sockets;
 
 namespace NAS.Server.Service
 {
-    public sealed class SvTest01 : NasService, ISocketModuleService
+    public class SvInitialize : NasService, ISocketModuleService
     {
         private SocketModule m_socModule;
+        private NasHandler m_handler;
+
+        public SvInitialize(NasHandler _handler)
+        {
+            m_handler = _handler;
+        }
 
         void ISocketModuleService.Bind(SocketModule _module)
         {
@@ -21,15 +23,16 @@ namespace NAS.Server.Service
         {
             try
             {
-                this.WriteLog("서비스 시작");
-                string message = m_socModule.ReceiveString();
-                this.WriteLog("서비스가 메시지를 수신하였음. ({0})", message);
-                this.WriteLog("서비스 종료");
+                m_handler.handlerName = m_socModule.ReceiveString();
+                this.WriteLog("name of handler: {0}", m_handler.handlerName);
                 return ServiceResult.Success;
             }
             catch(SocketException)
             {
-                this.WriteLog("통신 오류 발생");
+                return ServiceResult.NetworkError;
+            }
+            catch(Exception)
+            {
                 return ServiceResult.NetworkError;
             }
         }

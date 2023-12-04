@@ -17,9 +17,15 @@ namespace NAS.Server.Service
 
         public override ServiceResult Execute()
         {
-            m_thread.Stop();
-            base.ShowServiceLog("클라이언트가 정상적으로 접속 종료했습니다.");
-            return ServiceResult.Success;
+            try
+            {
+                m_thread.Stop();
+                return ServiceResult.Success;
+            }
+            catch(Exception ex)
+            {
+                return ServiceResult.NetworkError;
+            }
         }
     }
 }

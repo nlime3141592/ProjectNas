@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasClient", "NasClient\NasC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasLib", "NasLib\NasLib.csproj", "{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasLibClient", "NasLibClient\NasLibClient.csproj", "{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

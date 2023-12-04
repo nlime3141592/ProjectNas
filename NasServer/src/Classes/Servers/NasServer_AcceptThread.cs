@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NAS.Server.Handler;
+using System;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -22,7 +23,7 @@ namespace NAS.Server
                 {
                     while (!base.isInterruptedStop)
                     {
-                        if (m_server.m_clientThreads.Count >= m_server.maxClient)
+                        if (m_server.m_users.Count >= m_server.maxClient)
                             continue;
 
                         m_ReceiveClient();
@@ -53,10 +54,10 @@ namespace NAS.Server
 
                 try
                 {
-                    socClient = m_server.m_serverSocket.Accept();
+                    socClient = m_server.m_socServer.Accept();
                     SocketModule socModule = new SocketModule(socClient, m_server.m_encoding);
                     string clientType = socModule.ReceiveString();
-                    NasClientThread clientThread = m_ParseClientType(socModule, clientType);
+                    NasHandler clientThread = m_ParseClientType(socModule, clientType);
 
                     if (clientThread == null)
                     {
@@ -68,9 +69,9 @@ namespace NAS.Server
                         socModule.SendString("<ACCEPTED>");
                         clientThread.Start();
 
-                        Monitor.Enter(m_server.m_clientThreads);
-                        m_server.m_clientThreads.Enqueue(clientThread);
-                        Monitor.Exit(m_server.m_clientThreads);
+                        Monitor.Enter(m_server.m_users);
+                        m_server.m_users.Enqueue(clientThread);
+                        Monitor.Exit(m_server.m_users);
                     }
                 }
                 catch (SocketException)
@@ -85,12 +86,16 @@ namespace NAS.Server
                 }
             }
 
-            private NasClientThread m_ParseClientType(SocketModule _socModule, string _clientType)
+            private NasHandler m_ParseClientType(SocketModule _socModule, string _clientType)
             {
                 switch(_clientType)
                 {
-                    case "stdCLNT":
-                        return new NasStandardClientThread(_socModule);
+                    case "tstCLNT":
+                        return new NasTestHandler(m_server, _socModule);
+                    case "strCLNT":
+                        return new NasStorageHandler(m_server, _socModule);
+                    case "usrCLNT":
+                        return new NasUserHandler(m_server, _socModule);
                     default:
                         return null;
                 }

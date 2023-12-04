@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
+using System.Net;
 using System.Text;
 
 namespace NAS.Client
 {
-    internal static class NetworkManager
+    public class ClientNetworkManager
     {
         private const string c_HOST_IP = "127.0.0.1";
         // private const string c_HOST_IP = "192.168.35.31";
@@ -15,13 +15,14 @@ namespace NAS.Client
 
         private static Encoding s_m_encoding;
 
-        static NetworkManager()
+        static ClientNetworkManager()
         {
             s_m_encoding = Encoding.UTF8;
         }
 
-        public static bool TryConnectToServer()
+        public static bool TryConnectToServer(string _clientType)
         {
+            ClientNetworkManager.socModule?.Close();
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try
@@ -34,14 +35,14 @@ namespace NAS.Client
 
                 // NOTE: 클라이언트 타입 전송
                 SocketModule socModule = new SocketModule(socket, s_m_encoding);
-                socModule.SendString("stdCLNT");
+                socModule.SendString(_clientType);
 
                 // NOTE: 올바른 클라이언트 유형 값을 보냈는지 결과를 반환함.
                 string response = socModule.ReceiveString();
 
                 if (response.Equals("<ACCEPTED>"))
                 {
-                    NetworkManager.socModule = socModule;
+                    ClientNetworkManager.socModule = socModule;
                     return true;
                 }
 
@@ -55,5 +56,4 @@ namespace NAS.Client
             }
         }
     }
-
 }

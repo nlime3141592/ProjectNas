@@ -32,7 +32,7 @@ namespace NAS.Client.Service
                 m_socModule.SendString(m_id);
                 m_socModule.SendString(m_pw);
                 string response = m_socModule.ReceiveString();
-                base.ShowServiceLogFormat("Response : {0}", response);
+                this.WriteLog("Response : {0}", response);
                 onSuccess?.Invoke();
                 return ServiceResult.Success;
             }

@@ -153,7 +153,7 @@ namespace NAS.Client
                 // FileBrowserForm.GetForm().Show();
                 new TestForm().Show(); // fail
             };
-            ClientManager.GetInstance().RequestService(service);
+            NasClientThread.GetInstance().RequestService(service);
             // new TestForm().Show(); // ok
         }
     }
