@@ -13,8 +13,12 @@ namespace NAS.Tests
         private static void Main(string[] args)
         {
             // 함수 주석을 처리하고, 솔루션 빌드하고, 실행합니다.
-            Main_NasServerOpenTest(); // 서버 열기 테스트, 배치 파일에서 실행
+            // Main_NasServerOpenTest(); // 서버 열기 테스트, 배치 파일에서 실행
             // Main_FileDirectoryTest(); // 파일 연결 스레드 테스트, VS에서 실행
+            NAS.DB.DBConnection con = new NAS.DB.DBConnection();
+
+            con.TryOpen();
+            con.TryClose();
         }
 
         private static void Main_NasServerOpenTest()

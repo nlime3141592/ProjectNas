@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.4.33205.214
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGuiProject", "TestGuiProject\TestGuiProject.csproj", "{213F9E59-1045-4366-84D6-586AFF24F09B}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasLib", "NasLib\NasLib.csproj", "{BD9E8A6B-75F6-4134-8637-42A1B5698EFE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasLibClient", "NasLibClient\NasLibClient.csproj", "{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasDB", "NasDB\NasDB.csproj", "{2EB17581-BA3F-46DC-85A8-629E012E70DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -49,10 +49,8 @@ namespace NAS.Server.Handler
             {
                 while (!base.isInterruptedStop)
                 {
-                    NasService queuedService;
-
-                    while (m_serviceQueue.TryPeek(out queuedService))
-                        queuedService.Execute();
+                    // NasService queuedService;
+                    // while (m_serviceQueue.TryPeek(out queuedService)) queuedService.Execute();
 
                     string serviceType = m_socModule.ReceiveString(-1);
 

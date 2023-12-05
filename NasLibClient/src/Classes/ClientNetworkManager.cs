@@ -7,9 +7,9 @@ namespace NAS.Client
 {
     public class ClientNetworkManager
     {
-        private const string c_HOST_IP = "127.0.0.1";
+        // private const string c_HOST_IP = "127.0.0.1";
         // private const string c_HOST_IP = "192.168.35.31";
-        private const int c_HOST_PORT = 25565;
+        // private const int c_HOST_PORT = 25565;
 
         public static SocketModule socModule { get; private set; }
 
@@ -20,14 +20,14 @@ namespace NAS.Client
             s_m_encoding = Encoding.UTF8;
         }
 
-        public static bool TryConnectToServer(string _clientType)
+        public static bool TryConnectToServer(string _ip, int _port, string _clientType)
         {
             ClientNetworkManager.socModule?.Close();
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
             try
             {
-                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(c_HOST_IP), c_HOST_PORT);
+                IPEndPoint endPoint = new IPEndPoint(IPAddress.Parse(_ip), _port);
                 socket.Connect(endPoint);
 
                 if (!socket.Connected)

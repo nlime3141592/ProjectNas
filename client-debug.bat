@@ -1,4 +1,4 @@
 @echo off
-start .\NasClient\bin\Debug\NasClient.exe
+.\NasClient\bin\Debug\NasClient.exe
 
 pause

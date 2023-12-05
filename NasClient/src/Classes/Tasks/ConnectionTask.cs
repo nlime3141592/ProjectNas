@@ -18,7 +18,7 @@ namespace NAS.Client
 
         private void onTask()
         {
-            bool isSuccess = ClientNetworkManager.TryConnectToServer("stdCLNT");
+            bool isSuccess = ClientNetworkManager.TryConnectToServer("127.0.0.1", 25565, "usrCLNT");
 
             if(!isSuccess)
                 Thread.Sleep(1000);

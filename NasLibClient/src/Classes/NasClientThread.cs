@@ -36,6 +36,7 @@ namespace NAS.Client
 
         private void ThreadMain()
         {
+            this.WriteLog("t시작");
             try
             {
                 while (!base.isInterruptedStop)

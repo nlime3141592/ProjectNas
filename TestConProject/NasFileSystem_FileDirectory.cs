@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +12,12 @@ namespace NAS.Tests
         // STORAGE_ROOT => SYSTEM_ROOT로 이름을 치환할 수 있다?
         // STORAGE_ROOT:25565/FirstRootDir/ ... 과 같은 형식으로 파일 경로를 만들까?
 
-        public static readonly Dictionary<string, NasFile> nasFiles; // NOTE: Enabled file directories.
+        public static readonly ConcurrentDictionary<string, NasFile> nasFiles; // NOTE: Enabled file directories.
         public static readonly List<string> absRootDirectories; // NOTE: Root absolute directories, should query from database.
 
         static NasFileSystem()
         {
-            nasFiles = new Dictionary<string, NasFile>(10);
+            nasFiles = new ConcurrentDictionary<string, NasFile>();
             absRootDirectories = new List<string>(10);
         }
 

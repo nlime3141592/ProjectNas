@@ -8,10 +8,11 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>NAS.Tests</RootNamespace>
     <AssemblyName>TestConProject</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -57,6 +58,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NasDB\NasDB.csproj">
+      <Project>{2eb17581-ba3f-46dc-85a8-629e012e70de}</Project>
+      <Name>NasDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
       <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
       <Name>NasFileSystem</Name>

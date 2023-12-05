@@ -21,27 +21,27 @@ namespace NAS
             m_socket.Close();
         }
 
-        public void SendInt32(int _value)
+        public void SendInt32(int _value, int _msTimeout = 1000)
         {
             byte[] bytes = BitConverter.GetBytes(_value);
 
-            if (!TrySendFixedDate(bytes, 0, 4, 1000))
+            if (!TrySendFixedDate(bytes, 0, 4, _msTimeout))
                 throw new SocketException();
         }
 
-        public void SendString(string _string)
+        public void SendString(string _string, int _msTimeout = 1000)
         {
             byte[] sBytes = m_encoding.GetBytes(_string);
 
-            if (!TrySendVariableData(sBytes, 0, sBytes.Length, 1000))
+            if (!TrySendVariableData(sBytes, 0, sBytes.Length, _msTimeout))
                 throw new SocketException();
         }
 
-        public int ReceiveInt32()
+        public int ReceiveInt32(int _msTimeout = 1000)
         {
             byte[] buffer;
 
-            if (!TryReceiveFixedData(out buffer, 4, 1000))
+            if (!TryReceiveFixedData(out buffer, 4, _msTimeout))
                 throw new SocketException();
 
             return BitConverter.ToInt32(buffer, 0);

@@ -4,13 +4,13 @@ using System.Text;
 
 namespace NAS.FileSystem.Service
 {
-    public class SvAddDirectory : NasService
+    class SvDeleteDirectory : NasService
     {
         private string m_currentDirectory;
         private string m_folderName;
         private Encoding m_encoding;
 
-        public SvAddDirectory(string _currentDirectory, string _folderName, Encoding _encoding)
+        public SvDeleteDirectory(string _currentDirectory, string _folderName, Encoding _encoding)
         {
             m_currentDirectory = _currentDirectory;
             m_folderName = _folderName;
@@ -23,16 +23,16 @@ namespace NAS.FileSystem.Service
             {
                 DirectoryManager manager = DirectoryManager.Get(m_currentDirectory, m_encoding);
 
-                if(manager.TryAddFolder(m_folderName))
+                if (manager.TryDeleteFolder(m_folderName))
                     return ServiceResult.Success;
                 else
                     return ServiceResult.Failure;
             }
-            catch(SocketException)
+            catch (SocketException)
             {
                 return ServiceResult.NetworkError;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return ServiceResult.NetworkError;
             }

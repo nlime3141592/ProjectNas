@@ -4,18 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D87A3448-34B8-4D9C-84F8-B6C94BDF3DE8}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NAS.Server</RootNamespace>
-    <AssemblyName>NasServer</AssemblyName>
+    <ProjectGuid>{2EB17581-BA3F-46DC-85A8-629E012E70DE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NAS.DB</RootNamespace>
+    <AssemblyName>NasDB</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -33,12 +31,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=7.0.0.1, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
       <HintPath>..\..\..\ExternalProjects\MySqlConnector\artifacts\bin\MySqlConnector.Tests\debug_net481\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.TestPlatform.CoreUtilities">
@@ -53,8 +47,7 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
       <HintPath>..\..\..\ExternalProjects\MySqlConnector\artifacts\bin\MySqlConnector.Tests\debug_net481\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
     </Reference>
-    <Reference Include="MySqlConnector, Version=2.0.0.0, Culture=neutral, PublicKeyToken=d33d3e53aa5f8c92, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="MySqlConnector">
       <HintPath>..\..\..\ExternalProjects\MySqlConnector\artifacts\bin\MySqlConnector.Tests\debug_net481\MySqlConnector.dll</HintPath>
     </Reference>
     <Reference Include="MySqlConnector.Tests">
@@ -81,7 +74,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\ExternalProjects\MySqlConnector\artifacts\bin\MySqlConnector.Tests\debug_net481\System.Memory.dll</HintPath>
     </Reference>
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\ExternalProjects\MySqlConnector\artifacts\bin\MySqlConnector.Tests\debug_net481\System.Numerics.Vectors.dll</HintPath>
@@ -101,10 +93,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="xunit.abstractions">
       <HintPath>..\..\..\ExternalProjects\MySqlConnector\artifacts\bin\MySqlConnector.Tests\debug_net481\xunit.abstractions.dll</HintPath>
@@ -129,56 +118,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainNasServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Classes\Handlers\NasStorageHandler.cs" />
-    <Compile Include="src\Classes\Handlers\NasUserHandler.cs" />
-    <Compile Include="src\Classes\Servers\IMessenger.cs" />
-    <Compile Include="src\Classes\Servers\NasServer_AcceptThread.cs" />
-    <Compile Include="src\Classes\Handlers\NasHandler.cs" />
-    <Compile Include="src\Classes\Servers\NasServer.cs" />
-    <Compile Include="src\Classes\Handlers\NasTestHandler.cs" />
-    <Compile Include="src\Classes\Services\SvDisconnect.cs" />
-    <Compile Include="src\Classes\Services\SvInitialize.cs" />
-    <Compile Include="src\Classes\Services\SvLogin.cs" />
-    <Compile Include="src\Classes\Services\SvTest01.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <Compile Include="src\Classes\DBConnection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NasDB\NasDB.csproj">
-      <Project>{2eb17581-ba3f-46dc-85a8-629e012e70de}</Project>
-      <Name>NasDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
-      <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
-      <Name>NasFileSystem</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>
       <Name>NasLib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

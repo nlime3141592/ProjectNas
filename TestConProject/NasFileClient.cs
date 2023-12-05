@@ -9,9 +9,9 @@ namespace NAS.Tests
 {
     public class NasFileClient
     {
-        public Socket clientSocket => m_clientSocket;
+        public SocketModule clientSocket => m_clientSocket;
 
-        private Socket m_clientSocket;
+        private SocketModule m_clientSocket;
         private NasFile m_fileDirectory;
 
         public NasFileClient(NasFile _fileDirectory)
@@ -19,7 +19,7 @@ namespace NAS.Tests
             m_fileDirectory = _fileDirectory;
         }
 
-        public void SetClientSocket(Socket _clientSocket)
+        public void SetClientSocket(SocketModule _clientSocket)
         {
             m_clientSocket = _clientSocket;
         }

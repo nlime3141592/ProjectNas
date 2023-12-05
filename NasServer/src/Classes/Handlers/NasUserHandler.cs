@@ -20,6 +20,10 @@ namespace NAS.Server.Handler
                     return new SvDisconnect(this);
                 case "sv_init":
                     return new SvInitialize(this);
+                case "sv_login":
+                    return new SvLogin();
+                case "sv_test01":
+                    return new SvTest01();
                 default:
                     return null;
             }

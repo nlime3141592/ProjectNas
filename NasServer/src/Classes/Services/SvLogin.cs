@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using NAS.DB;
+using MySqlConnector;
+using System;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NAS.Server.Service
 {
@@ -23,28 +21,33 @@ namespace NAS.Server.Service
                 string id = m_socModule.ReceiveString();
                 string pw = m_socModule.ReceiveString();
 
-                this.WriteLog("ID: {0}", id);
-                this.WriteLog("PW: {0}", pw);
+                MySqlCommand sqlcmd;
+                MainNasServer.GetDB().TryGetSqlCommand(out sqlcmd, "SELECT uuid FROM account WHERE id = @id AND pw = @pw");
+                sqlcmd.Parameters.AddWithValue("@id", id);
+                sqlcmd.Parameters.AddWithValue("@pw", pw);
+                MySqlDataReader reader = sqlcmd.ExecuteReader();
 
-                Console.WriteLine("ID : {0}", id);
-                Console.WriteLine("PW : {0}", pw);
-
-                if(id.Equals("testid") && pw.Equals("testpw"))
+                if(!reader.Read())
                 {
-                    m_socModule.SendString("<LOGIN_SUCCESS>");
-                    return ServiceResult.Success;
+                    // NOTE: 존재하지 않는 계정입니다.
+                    m_socModule.SendInt32(-1);
+                    m_socModule.SendString("<LOGIN_FAILURE>");
+                    reader.Close();
+                    return new ServiceResult(20001, "INVALID_ACCOUNT");
                 }
                 else
                 {
-                    m_socModule.SendString("<LOGIN_FAILURE>");
-                    return ServiceResult.Failure;
+                    m_socModule.SendInt32(reader.GetInt32(0));
+                    m_socModule.SendString("<LOGIN_SUCCESS>");
+                    reader.Close();
+                    return ServiceResult.Success;
                 }
             }
-            catch(SocketException)
+            catch(SocketException _socEx)
             {
                 return ServiceResult.NetworkError;
             }
-            catch(Exception)
+            catch(Exception _ex)
             {
                 return ServiceResult.Error;
             }

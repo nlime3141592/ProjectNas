@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -145,15 +146,16 @@ namespace NAS.Client
             string pw = txtLoginPw.Text;
 
             SvLogin service = new SvLogin(id, pw);
-            service.onSuccess = () =>
-            {
-                // NOTE: 이거 Hack code인 것 같은데...
-                // base.Invoke((MethodInvoker)delegate () { });
-
-                // FileBrowserForm.GetForm().Show();
-                new TestForm().Show(); // fail
-            };
-            NasClientThread.GetInstance().RequestService(service);
+            FileStream fs = new FileStream(@"C:\NAS\tttt.txt", FileMode.OpenOrCreate, FileAccess.Write);
+            StreamWriter wr = new StreamWriter(fs);
+            wr.WriteLine(service.Execute());
+            wr.WriteLine(service.response);
+            wr.WriteLine(service.uuid);
+            wr.Close();
+            fs.Close();
+            // string message = string.Format("수신 결과: {0} ({1})", service.response, service.uuid);
+            // MessageBox.Show(message);
+            // NasClientThread.GetInstance().RequestService(service);
             // new TestForm().Show(); // ok
         }
     }

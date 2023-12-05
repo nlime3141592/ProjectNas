@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Net.Sockets;
-
+using System.IO;
 namespace NAS.Client.Service
 {
-    public class SvLogin : NasService, ISocketModuleService
+    public class SvLogin : NasService
     {
         private SocketModule m_socModule;
 
-        public Action onSuccess { get; set; } = null;
-        public Action onFailure { get; set; } = null;
+        public int uuid { get; private set; }
+        public string response { get; private set; }
 
         private string m_id;
         private string m_pw;
@@ -19,21 +19,15 @@ namespace NAS.Client.Service
             m_pw = _pw;
         }
 
-        void ISocketModuleService.Bind(SocketModule _module)
-        {
-            m_socModule = _module;
-        }
-
         public override ServiceResult Execute()
         {
             try
             {
-                m_socModule.SendString("sv_login");
-                m_socModule.SendString(m_id);
-                m_socModule.SendString(m_pw);
-                string response = m_socModule.ReceiveString();
-                this.WriteLog("Response : {0}", response);
-                onSuccess?.Invoke();
+                ClientNetworkManager.socModule.SendString("sv_login");
+                ClientNetworkManager.socModule.SendString(m_id);
+                ClientNetworkManager.socModule.SendString(m_pw);
+                this.uuid = ClientNetworkManager.socModule.ReceiveInt32();
+                this.response = ClientNetworkManager.socModule.ReceiveString();
                 return ServiceResult.Success;
             }
             catch(SocketException)

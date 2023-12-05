@@ -11,10 +11,15 @@ namespace NAS.Client
         [STAThread]
         private static void Main()
         {
+            Console.WriteLine("Sfsfsd");
+            NasClientThread.GetInstance().Start();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(AuthForm.GetForm(AuthForm.FormMode.Waiting));
-            // Application.Run(FileBrowserForm.GetForm());
+
+            while (Console.ReadKey(true).Key != ConsoleKey.Q);
+            NasClientThread.GetInstance().Halt();
         }
     }
 }
