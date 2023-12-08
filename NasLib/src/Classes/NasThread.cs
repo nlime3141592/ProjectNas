@@ -1,46 +1,74 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace NAS
 {
     public abstract class NasThread
     {
-        public bool isRunning { get; private set; } = false;
-        public bool isEnded { get; protected set; } = false;
+        public bool isStarted => m_isStarted;
+        public bool isStopped => m_isStopped;
 
-        protected bool isInterruptedStop { get; private set; } = false;
-
-        protected Thread m_thread;
+        private Thread m_thread;
+        private volatile bool m_isStarted = false;
+        private volatile bool m_isStopped = true;
 
         protected NasThread()
         {
-
+            m_thread = new Thread(new ThreadStart(ThreadMain));
         }
 
-        public virtual void Start()
+        protected abstract void ThreadMain();
+
+        public bool TryStart()
         {
-            m_thread.Start();
+            try
+            {
+                if (m_isStarted)
+                    return false; // NOTE: 이미 한 번 실행된 적이 있는 Thread입니다.
+
+                m_isStarted = true;
+                m_isStopped = false;
+                m_thread.Start();
+                return true;
+            }
+            catch (Exception)
+            {
+                m_isStopped = true;
+                return false;
+            }
         }
 
-        public virtual void Stop()
+        public bool TryStop()
         {
-            isInterruptedStop = true;
+            try
+            {
+                if (m_isStopped)
+                    return false;
+
+                m_isStopped = true;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        public virtual void Halt()
+        public bool TryHalt()
         {
-            m_thread.Interrupt();
+            try
+            {
+                if (m_isStopped)
+                    return false;
 
-            isInterruptedStop = true;
-        }
-
-        protected void SetThread(Thread _thread)
-        {
-            m_thread = _thread;
-        }
-
-        protected Thread GetThread()
-        {
-            return m_thread;
+                m_isStopped = true;
+                m_thread.Interrupt();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

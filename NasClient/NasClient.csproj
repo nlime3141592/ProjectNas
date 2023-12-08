@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>NAS.Client</RootNamespace>
+    <RootNamespace>NAS</RootNamespace>
     <AssemblyName>NasClient</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -47,8 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Classes\Services\SvLogin.cs" />
-    <Compile Include="src\Classes\Tasks\ConnectionTask.cs" />
     <Compile Include="src\Forms\AuthForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +108,9 @@
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>
       <Name>NasLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

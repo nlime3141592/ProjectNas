@@ -1,9 +1,10 @@
-﻿using NAS.DB;
+﻿/*
+using NAS.DB;
 using MySqlConnector;
 using System;
 using System.Net.Sockets;
 
-namespace NAS.Server.Service
+namespace NAS
 {
     public class SvLogin : NasService, ISocketModuleService
     {
@@ -14,7 +15,7 @@ namespace NAS.Server.Service
             m_socModule = _module;
         }
 
-        public override ServiceResult Execute()
+        public override NasServiceResult Execute()
         {
             try
             {
@@ -33,24 +34,25 @@ namespace NAS.Server.Service
                     m_socModule.SendInt32(-1);
                     m_socModule.SendString("<LOGIN_FAILURE>");
                     reader.Close();
-                    return new ServiceResult(20001, "INVALID_ACCOUNT");
+                    return new NasServiceResult(20001, "INVALID_ACCOUNT");
                 }
                 else
                 {
                     m_socModule.SendInt32(reader.GetInt32(0));
                     m_socModule.SendString("<LOGIN_SUCCESS>");
                     reader.Close();
-                    return ServiceResult.Success;
+                    return NasServiceResult.Success;
                 }
             }
             catch(SocketException _socEx)
             {
-                return ServiceResult.NetworkError;
+                return NasServiceResult.NetworkError;
             }
             catch(Exception _ex)
             {
-                return ServiceResult.Error;
+                return NasServiceResult.Error;
             }
         }
     }
 }
+*/

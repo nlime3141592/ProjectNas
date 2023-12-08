@@ -1,4 +1,4 @@
-﻿namespace NAS.Client
+﻿namespace NAS
 {
     partial class AuthForm
     {

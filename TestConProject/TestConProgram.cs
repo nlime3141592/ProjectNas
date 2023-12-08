@@ -1,5 +1,4 @@
 ﻿using NAS.FileSystem;
-using NAS.Server;
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -23,6 +22,7 @@ namespace NAS.Tests
 
         private static void Main_NasServerOpenTest()
         {
+            /*
             NasServer server = new NasServer();
 
             if (server.TryOpen(25565))
@@ -42,6 +42,7 @@ namespace NAS.Tests
                 server.Halt();
             }
             Console.WriteLine("서버 종료");
+            */
         }
 
         private static void Main_ClientAccess()

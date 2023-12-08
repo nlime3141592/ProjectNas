@@ -131,17 +131,6 @@
   <ItemGroup>
     <Compile Include="MainNasServer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Classes\Handlers\NasStorageHandler.cs" />
-    <Compile Include="src\Classes\Handlers\NasUserHandler.cs" />
-    <Compile Include="src\Classes\Servers\IMessenger.cs" />
-    <Compile Include="src\Classes\Servers\NasServer_AcceptThread.cs" />
-    <Compile Include="src\Classes\Handlers\NasHandler.cs" />
-    <Compile Include="src\Classes\Servers\NasServer.cs" />
-    <Compile Include="src\Classes\Handlers\NasTestHandler.cs" />
-    <Compile Include="src\Classes\Services\SvDisconnect.cs" />
-    <Compile Include="src\Classes\Services\SvInitialize.cs" />
-    <Compile Include="src\Classes\Services\SvLogin.cs" />
-    <Compile Include="src\Classes\Services\SvTest01.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -166,19 +155,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NasDB\NasDB.csproj">
-      <Project>{2eb17581-ba3f-46dc-85a8-629e012e70de}</Project>
-      <Name>NasDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
-      <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
-      <Name>NasFileSystem</Name>
+    <Folder Include="src\Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NasLibServer\NasLibServer.csproj">
+      <Project>{5fe58928-cfca-45bb-91ed-7c2771e8e3ac}</Project>
+      <Name>NasLibServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>
       <Name>NasLib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

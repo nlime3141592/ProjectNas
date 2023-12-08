@@ -1,32 +1,34 @@
 ﻿using System;
 using System.Net.Sockets;
 
-namespace NAS.Client.Service
+namespace NAS
 {
     public class SvInitialize : NasService
     {
+        private NasClient m_client;
         private string m_clientName;
 
-        public SvInitialize(string _clientName)
+        public SvInitialize(NasClient _client, string _clientName)
         {
+            m_client = _client;
             m_clientName = _clientName;
         }
 
-        public override ServiceResult Execute()
+        public override NasServiceResult Execute()
         {
             try
             {
-                ClientNetworkManager.socModule.SendString("sv_init");
-                ClientNetworkManager.socModule.SendString(m_clientName);
-                return ServiceResult.Success;
+                m_client.socModule.SendString("sv_init");
+                m_client.socModule.SendString(m_clientName);
+                return NasServiceResult.Success;
             }
             catch(SocketException)
             {
-                return ServiceResult.NetworkError;
+                return NasServiceResult.NetworkError;
             }
             catch(Exception)
             {
-                return ServiceResult.NetworkError;
+                return NasServiceResult.NetworkError;
             }
         }
     }

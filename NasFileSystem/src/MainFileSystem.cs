@@ -1,6 +1,4 @@
-﻿using NAS.Client;
-using NAS.Client.Service;
-using NAS.FileSystem.Service;
+﻿using NAS.FileSystem.Service;
 using System.Text;
 using System;
 
@@ -13,6 +11,7 @@ namespace NAS.FileSystem
         /// </summary>
         private static int Main(string[] _args)
         {
+            /*
             // NOTE: 서버와 통신할 수 있는 객체를 생성합니다.
             if (!ClientNetworkManager.TryConnectToServer("127.0.0.1", 25565, "strCLNT"))
             {
@@ -34,6 +33,7 @@ namespace NAS.FileSystem
 
             while (Console.ReadKey().Key != ConsoleKey.Q) ;
             NasClientThread.GetInstance().Halt();
+            */
             return 0;
         }
     }

@@ -1,5 +1,4 @@
-﻿
-namespace NAS.Client
+﻿namespace NAS
 {
     partial class TestForm
     {

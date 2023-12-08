@@ -4,15 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6F3001B7-5F3C-4214-91D0-D22BBD7E3D2A}</ProjectGuid>
+    <ProjectGuid>{5FE58928-CFCA-45BB-91ED-7C2771E8E3AC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NAS.Client</RootNamespace>
-    <AssemblyName>NasLibClient</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <RootNamespace>NAS</RootNamespace>
+    <AssemblyName>NasLibServer</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,10 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Classes\NasClient.cs" />
+    <Compile Include="src\Classes\AcceptedClient.cs" />
+    <Compile Include="src\Classes\NasServer.cs" />
     <Compile Include="src\Classes\Services\SvConnectionCheck.cs" />
-    <Compile Include="src\Classes\Services\SvInitialize.cs" />
+    <Compile Include="src\Classes\Services\SvDisconnect.cs" />
     <Compile Include="src\Classes\Services\SvLogin.cs" />
+    <Compile Include="src\Classes\Services\SvTest.cs" />
+    <Compile Include="src\Classes\StandardClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NasLib\NasLib.csproj">

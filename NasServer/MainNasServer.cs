@@ -1,16 +1,16 @@
-﻿using NAS.DB;
-using System;
+﻿using System;
+using System.IO;
 
-namespace NAS.Server
+namespace NAS
 {
     internal static class MainNasServer
     {
         private const int c_PORT = 25565;
-
-        private static DBConnection s_m_db;
+        
+        // private static DBConnection s_m_db;
         private static NasServer s_m_server;
 
-        public static DBConnection GetDB() => s_m_db;
+        // public static DBConnection GetDB() => s_m_db;
         public static NasServer GetServer() => s_m_server;
 
         /// <summary>
@@ -18,6 +18,7 @@ namespace NAS.Server
         /// </summary>
         private static void Main(string[] args)
         {
+            /*
             s_m_db = new DBConnection();
 
             if (!s_m_db.TryOpen())
@@ -26,38 +27,82 @@ namespace NAS.Server
             }
             else
             {
-                s_m_server = new NasServer();
-
-                if (s_m_server.TryOpen(MainNasServer.c_PORT))
+                
+            }
+            */
+            try
+            {
+                if (args == null || args.Length != 2)
                 {
-                    s_m_server.WriteLog("서버 대기 중...");
-                    s_m_server.Start();
-                    s_m_server.WriteLog("서버가 열렸습니다.");
+                    s_m_server.WriteLog("Command argument error.");
+                    return;
+                }
 
-                    while (true)
-                    {
-                        string command = Console.ReadLine().ToLower();
+                string rootStorageDirectory = s_m_GetAbsoluteDirectory(args[0]);
+                int port = s_m_GetPortNumber(args[1]);
 
-                        if (command.Equals("stop") || command.Equals("exit") || command.Equals("quit"))
-                            break;
+                NasServer server = new NasServer(port);
 
-                        switch (command)
-                        {
-                            case "count":
-                                s_m_server.WriteLog("현재 접속한 클라이언트 수: {0}", s_m_server.currentClientCount);
-                                break;
-                            default:
-                                s_m_server.WriteLog("잘못된 명령어입니다.");
-                                break;
-                        }
-                    }
+                if (!server.TryOpen(rootStorageDirectory))
+                {
+                    s_m_server.WriteLog("Server open failed.");
+                    return;
+                }
 
-                    s_m_server.WriteLog("서버 종료 중...");
-                    s_m_server.Halt();
+                s_m_server.WriteLog("Opened server.");
+                s_m_ExecuteServerCommand(s_m_server);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private static string s_m_GetAbsoluteDirectory(string _directory)
+        {
+            string directory = _directory;
+
+            if (!Path.IsPathRooted(directory))
+                directory = Path.GetFullPath(directory);
+
+            if (directory.LastIndexOf('\\') < directory.Length - 1)
+                directory += '\\';
+
+            return directory;
+        }
+
+        private static int s_m_GetPortNumber(string _stringPort)
+        {
+            int port;
+
+            if (!int.TryParse(_stringPort, out port) || port <= 0 || port >= 65535)
+                throw new ArgumentException("_stringPort parameter error.");
+            else
+                return port;
+        }
+
+        private static void s_m_ExecuteServerCommand(NasServer _server)
+        {
+            bool isStopped = false;
+
+            do
+            {
+                string line = Console.ReadLine();
+
+                switch (line)
+                {
+                    case "stop":
+                    case "quit":
+                        isStopped = _server.TryClose();
+                        break;
+                    case "ccnt":
+                        _server.WriteLog("Client Count: {0}", _server.clientCount);
+                        break;
+                    default:
+                        break;
                 }
             }
-
-            s_m_server.WriteLog("서버가 종료되었습니다.");
+            while (!isStopped);
         }
     }
 }

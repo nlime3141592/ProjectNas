@@ -17,24 +17,24 @@ namespace NAS.FileSystem.Service
             m_encoding = _encoding;
         }
 
-        public override ServiceResult Execute()
+        public override NasServiceResult Execute()
         {
             try
             {
                 DirectoryManager manager = DirectoryManager.Get(m_currentDirectory, m_encoding);
 
                 if (manager.TryAddFile(m_fileName))
-                    return ServiceResult.Success;
+                    return NasServiceResult.Success;
                 else
-                    return ServiceResult.Failure;
+                    return NasServiceResult.Failure;
             }
             catch (SocketException)
             {
-                return ServiceResult.NetworkError;
+                return NasServiceResult.NetworkError;
             }
             catch (Exception)
             {
-                return ServiceResult.NetworkError;
+                return NasServiceResult.NetworkError;
             }
         }
     }

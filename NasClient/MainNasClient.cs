@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace NAS.Client
+namespace NAS
 {
     internal static class MainNasClient
     {
@@ -11,15 +11,15 @@ namespace NAS.Client
         [STAThread]
         private static void Main()
         {
-            Console.WriteLine("Sfsfsd");
-            NasClientThread.GetInstance().Start();
+            NasClient client = new NasClient();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(AuthForm.GetForm(AuthForm.FormMode.Waiting));
 
-            while (Console.ReadKey(true).Key != ConsoleKey.Q);
-            NasClientThread.GetInstance().Halt();
+            if (client.TryConnect("127.0.0.1", 25565))
+                Application.Run(AuthForm.GetForm(AuthForm.FormMode.Login));
+            else
+                Application.Run(AuthForm.GetForm(AuthForm.FormMode.Start));
         }
     }
 }

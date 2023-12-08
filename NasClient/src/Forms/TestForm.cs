@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NAS.Client
+namespace NAS
 {
     public partial class TestForm : Form
     {

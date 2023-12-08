@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NAS.Server.Service
+namespace NAS
 {
     public class SvDisconnect : NasService
     {
@@ -15,16 +11,16 @@ namespace NAS.Server.Service
             m_thread = _thread;
         }
 
-        public override ServiceResult Execute()
+        public override NasServiceResult Execute()
         {
             try
             {
-                m_thread.Stop();
-                return ServiceResult.Success;
+                m_thread.TryHalt();
+                return NasServiceResult.Success;
             }
             catch(Exception ex)
             {
-                return ServiceResult.NetworkError;
+                return NasServiceResult.NetworkError;
             }
         }
     }

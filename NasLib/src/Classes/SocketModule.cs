@@ -7,18 +7,20 @@ namespace NAS
 {
     public class SocketModule
     {
-        private Socket m_socket;
+        private TcpClient tcpClient;
         private Encoding m_encoding;
 
-        public SocketModule(Socket _socket, Encoding _encoding)
+        public SocketModule(TcpClient _tcpClient, Encoding _encoding)
         {
-            m_socket = _socket;
+            tcpClient = _tcpClient;
             m_encoding = _encoding;
         }
 
         public void Close()
         {
-            m_socket.Close();
+            Monitor.Enter(tcpClient);
+            tcpClient.Close();
+            Monitor.Exit(tcpClient);
         }
 
         public void SendInt32(int _value, int _msTimeout = 1000)
@@ -64,9 +66,9 @@ namespace NAS
                 if (_buffer == null || _buffer.Length <= 0)
                     return false;
 
-                Monitor.Enter(m_socket);
-                m_socket.SendTimeout = _msTimeout;
-                m_socket.Send(_buffer, _offset, _length, SocketFlags.None);
+                Monitor.Enter(tcpClient);
+                tcpClient.SendTimeout = _msTimeout;
+                tcpClient.GetStream().Write(_buffer, _offset, _length);
                 return true;
             }
             catch (Exception)
@@ -75,8 +77,8 @@ namespace NAS
             }
             finally
             {
-                m_socket.SendTimeout = -1;
-                Monitor.Exit(m_socket);
+                tcpClient.SendTimeout = -1;
+                Monitor.Exit(tcpClient);
             }
         }
 
@@ -87,11 +89,11 @@ namespace NAS
                 byte[] buffer = new byte[_length];
                 int ptrFront = 0;
 
-                Monitor.Enter(m_socket);
-                m_socket.ReceiveTimeout = _msTimeout;
+                Monitor.Enter(tcpClient);
+                tcpClient.ReceiveTimeout = _msTimeout;
 
                 while (ptrFront < buffer.Length)
-                    ptrFront += m_socket.Receive(buffer, ptrFront, buffer.Length - ptrFront, SocketFlags.None);
+                    ptrFront += tcpClient.GetStream().Read(buffer, ptrFront, buffer.Length - ptrFront);
 
                 _newByteArray = buffer;
                 return true;
@@ -103,8 +105,8 @@ namespace NAS
             }
             finally
             {
-                m_socket.ReceiveTimeout = -1;
-                Monitor.Exit(m_socket);
+                tcpClient.ReceiveTimeout = -1;
+                Monitor.Exit(tcpClient);
             }
         }
 
@@ -117,9 +119,9 @@ namespace NAS
                 Buffer.BlockCopy(lBytes, 0, bytes, 0, lBytes.Length);
                 Buffer.BlockCopy(_buffer, _offset, bytes, lBytes.Length, _length);
 
-                Monitor.Enter(m_socket);
-                m_socket.SendTimeout = _msTimeout;
-                m_socket.Send(bytes, 0, bytes.Length, SocketFlags.None);
+                Monitor.Enter(tcpClient);
+                tcpClient.SendTimeout = _msTimeout;
+                tcpClient.GetStream().Write(bytes, 0, bytes.Length);
                 return true;
             }
             catch (Exception)
@@ -128,8 +130,8 @@ namespace NAS
             }
             finally
             {
-                m_socket.SendTimeout = -1;
-                Monitor.Exit(m_socket);
+                tcpClient.SendTimeout = -1;
+                Monitor.Exit(tcpClient);
             }
         }
 
@@ -140,18 +142,18 @@ namespace NAS
                 byte[] fixedBuffer = new byte[4];
                 int ptrFront = 0;
 
-                Monitor.Enter(m_socket);
-                m_socket.ReceiveTimeout = _msTimeout;
+                Monitor.Enter(tcpClient);
+                tcpClient.ReceiveTimeout = _msTimeout;
 
                 while (ptrFront < fixedBuffer.Length)
-                    ptrFront += m_socket.Receive(fixedBuffer, ptrFront, fixedBuffer.Length - ptrFront, SocketFlags.None);
+                    ptrFront += tcpClient.GetStream().Read(fixedBuffer, ptrFront, fixedBuffer.Length - ptrFront);
 
                 int length = BitConverter.ToInt32(fixedBuffer, 0);
                 byte[] variableBuffer = new byte[length];
                 ptrFront = 0;
 
                 while (ptrFront < variableBuffer.Length)
-                    ptrFront += m_socket.Receive(variableBuffer, ptrFront, variableBuffer.Length - ptrFront, SocketFlags.None);
+                    ptrFront += tcpClient.GetStream().Read(variableBuffer, ptrFront, variableBuffer.Length - ptrFront);
 
                 _newByteArray = variableBuffer;
                 return true;
@@ -163,8 +165,8 @@ namespace NAS
             }
             finally
             {
-                m_socket.ReceiveTimeout = -1;
-                Monitor.Exit(m_socket);
+                tcpClient.ReceiveTimeout = -1;
+                Monitor.Exit(tcpClient);
             }
         }
     }

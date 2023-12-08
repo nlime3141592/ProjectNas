@@ -1,16 +1,9 @@
-﻿using NAS.Client.Service;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 
-namespace NAS.Client
+namespace NAS
 {
     public sealed partial class AuthForm : Form
     {
@@ -83,8 +76,8 @@ namespace NAS.Client
             btStart.Hide();
             lbWaiting.Show();
 
-            ConnectionTask conTask = new ConnectionTask(m_OnTriedConnectionToServer);
-            conTask.thread.Start();
+            // ConnectionTask conTask = new ConnectionTask(m_OnTriedConnectionToServer);
+            // conTask.thread.Start();
         }
 
         private void m_OnTriedConnectionToServer(bool _isSuccess)
@@ -145,7 +138,7 @@ namespace NAS.Client
             string id = txtLoginId.Text;
             string pw = txtLoginPw.Text;
 
-            SvLogin service = new SvLogin(id, pw);
+            SvLogin service = new SvLogin(null, id, pw); // TODO: 클라이언트를 집어넣어야 함.
             FileStream fs = new FileStream(@"C:\NAS\tttt.txt", FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter wr = new StreamWriter(fs);
             wr.WriteLine(service.Execute());
