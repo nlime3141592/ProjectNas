@@ -1,16 +1,17 @@
 ﻿namespace NAS
 {
-    public class SvConnectionCheck : NasService
+    public class SSvConnectionCheck : NasService
     {
         private AcceptedClient m_client;
 
-        public SvConnectionCheck(AcceptedClient _client)
+        public SSvConnectionCheck(AcceptedClient _client)
         {
             m_client = _client;
         }
 
         public override NasServiceResult Execute()
         {
+            this.WriteLog("Checked.");
             return NasServiceResult.Success;
         }
     }

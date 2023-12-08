@@ -129,8 +129,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainNasServer.cs" />
+    <Compile Include="NasServerProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Classes\AcceptedClient.cs" />
+    <Compile Include="src\Classes\NasServer.cs" />
+    <Compile Include="src\Classes\Services\SSvConnectionCheck.cs" />
+    <Compile Include="src\Classes\Services\SSvDisconnect.cs" />
+    <Compile Include="src\Classes\Services\SSvJoin.cs" />
+    <Compile Include="src\Classes\Services\SSvLogin.cs" />
+    <Compile Include="src\Classes\Services\SSvTest.cs" />
+    <Compile Include="src\Classes\StandardClient.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -154,13 +162,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="src\Classes\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\NasLibServer\NasLibServer.csproj">
-      <Project>{5fe58928-cfca-45bb-91ed-7c2771e8e3ac}</Project>
-      <Name>NasLibServer</Name>
+    <ProjectReference Include="..\NasDB\NasDB.csproj">
+      <Project>{2eb17581-ba3f-46dc-85a8-629e012e70de}</Project>
+      <Name>NasDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>

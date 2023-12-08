@@ -1,16 +1,30 @@
-﻿using System;
+﻿using MySqlConnector;
+using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace NAS
 {
-    internal static class MainNasServer
+    internal sealed class NasServerProgram
     {
-        private const int c_PORT = 25565;
-        
-        // private static DBConnection s_m_db;
-        private static NasServer s_m_server;
+        private static NasServerProgram instance
+        {
+            get
+            {
+                if (s_m_program == null)
+                    s_m_program = new NasServerProgram();
 
-        // public static DBConnection GetDB() => s_m_db;
+                return s_m_program;
+            }
+        }
+
+        private static DBConnection s_m_db;
+        private static NasServer s_m_server;
+        private static NasServerProgram s_m_program;
+
+        private NasServerProgram() { }
+
+        public static DBConnection GetDB() => s_m_db;
         public static NasServer GetServer() => s_m_server;
 
         /// <summary>
@@ -18,38 +32,36 @@ namespace NAS
         /// </summary>
         private static void Main(string[] args)
         {
-            /*
-            s_m_db = new DBConnection();
-
-            if (!s_m_db.TryOpen())
-            {
-                s_m_db = null;
-            }
-            else
-            {
-                
-            }
-            */
             try
             {
                 if (args == null || args.Length != 2)
                 {
-                    s_m_server.WriteLog("Command argument error.");
+                    NasServerProgram.instance.WriteLog("Command argument error.");
                     return;
                 }
 
                 string rootStorageDirectory = s_m_GetAbsoluteDirectory(args[0]);
                 int port = s_m_GetPortNumber(args[1]);
 
+                s_m_db = new DBConnection();
+
+                if (!s_m_db.TryOpen())
+                {
+                    s_m_db = null;
+                    NasServerProgram.instance.WriteLog("DB를 열 수 없습니다.");
+                    return;
+                }
+
                 NasServer server = new NasServer(port);
 
                 if (!server.TryOpen(rootStorageDirectory))
                 {
-                    s_m_server.WriteLog("Server open failed.");
+                    NasServerProgram.instance.WriteLog("Server open failed.");
                     return;
                 }
 
-                s_m_server.WriteLog("Opened server.");
+                s_m_server = server;
+                NasServerProgram.instance.WriteLog("Opened server.");
                 s_m_ExecuteServerCommand(s_m_server);
             }
             catch (Exception)

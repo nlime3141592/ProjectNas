@@ -2,11 +2,11 @@
 
 namespace NAS
 {
-    public class SvDisconnect : NasService
+    public class SSvDisconnect : NasService
     {
         private NasThread m_thread;
 
-        public SvDisconnect(NasThread _thread)
+        public SSvDisconnect(NasThread _thread)
         {
             m_thread = _thread;
         }

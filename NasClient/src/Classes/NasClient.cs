@@ -35,7 +35,7 @@ namespace NAS
                     // NOTE: 10초마다 서버와의 연결 체크를 위한 서비스를 전송한다.
                     if (m_watch.ElapsedMilliseconds > 1000 * c_CONNECTION_CHECK_INTERVAL)
                     {
-                        this.Request(new SvConnectionCheck(this));
+                        this.Request(new CSvConnectionCheck(this));
                         m_watch.Restart();
                     }
 
@@ -88,7 +88,8 @@ namespace NAS
                     return false;
 
                 socModule = module;
-                Console.WriteLine("연결 성공");
+                // this.WriteLog("Connected to server.");
+                Debug.WriteLine("Connected to server.");
                 return true;
             }
             catch (Exception)
@@ -101,7 +102,19 @@ namespace NAS
 
         public void Request(NasService _service)
         {
-            m_services.Enqueue(_service);
+            if(isStarted && !isStopped)
+                m_services.Enqueue(_service);
+            else
+            {
+                try
+                {
+                    _service.Execute();
+                }
+                catch(Exception)
+                {
+                    
+                }
+            }
         }
     }
 }

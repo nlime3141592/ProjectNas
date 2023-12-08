@@ -7,7 +7,7 @@
     <ProjectGuid>{2EB17581-BA3F-46DC-85A8-629E012E70DE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NAS.DB</RootNamespace>
+    <RootNamespace>NAS</RootNamespace>
     <AssemblyName>NasDB</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

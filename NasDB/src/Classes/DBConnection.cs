@@ -1,7 +1,7 @@
 ﻿using System;
 using MySqlConnector;
 
-namespace NAS.DB
+namespace NAS
 {
     public class DBConnection
     {

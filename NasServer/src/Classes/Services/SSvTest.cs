@@ -2,11 +2,11 @@
 
 namespace NAS
 {
-    internal class SvConnectionCheck : NasService
+    public sealed class SSvTest : NasService
     {
-        private NasClient m_client;
+        private AcceptedClient m_client;
 
-        public SvConnectionCheck(NasClient _client)
+        public SSvTest(AcceptedClient _client)
         {
             m_client = _client;
         }
@@ -15,11 +15,13 @@ namespace NAS
         {
             try
             {
-                m_client.socModule.SendString("CONNECTION_CHECK");
+                string message = m_client.socModule.ReceiveString();
+                this.WriteLog("Receive: {0}", message);
                 return NasServiceResult.Success;
             }
-            catch (Exception)
+            catch(Exception)
             {
+                this.WriteLog("Error service.");
                 return NasServiceResult.NetworkError;
             }
         }

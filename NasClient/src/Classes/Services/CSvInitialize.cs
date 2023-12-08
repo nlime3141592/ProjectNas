@@ -3,12 +3,12 @@ using System.Net.Sockets;
 
 namespace NAS
 {
-    public class SvInitialize : NasService
+    public class CSvInitialize : NasService
     {
         private NasClient m_client;
         private string m_clientName;
 
-        public SvInitialize(NasClient _client, string _clientName)
+        public CSvInitialize(NasClient _client, string _clientName)
         {
             m_client = _client;
             m_clientName = _clientName;
