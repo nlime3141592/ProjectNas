@@ -11,7 +11,10 @@ namespace NAS
     {
         public const int c_CONNECTION_CHECK_INTERVAL = 8;
 
+        public LoginData datLogin { get; private set; }
+        public FileBrowseData datFileBrowse { get; private set; }
         public SocketModule socModule { get; private set; }
+
         public Action onHaltedByException;
 
         private Stopwatch m_watch;
@@ -19,6 +22,9 @@ namespace NAS
 
         public NasClient()
         {
+            datLogin = new LoginData();
+            datFileBrowse = new FileBrowseData();
+
             m_watch = new Stopwatch();
             m_services = new ConcurrentQueue<NasService>();
         }

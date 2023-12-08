@@ -30,6 +30,7 @@ namespace NAS
                 {
                     // NOTE: 존재하지 않는 계정입니다.
                     m_client.socModule.SendInt32(-1);
+                    m_client.socModule.SendString("");
                     m_client.socModule.SendString("<LOGIN_FAILURE>");
                     reader.Close();
                     return new NasServiceResult(20001, "INVALID_ACCOUNT");
@@ -37,6 +38,7 @@ namespace NAS
                 else
                 {
                     m_client.socModule.SendInt32(reader.GetInt32(0));
+                    m_client.socModule.SendString(m_client.fileSystem.rootFakeDirectory);
                     m_client.socModule.SendString("<LOGIN_SUCCESS>");
                     reader.Close();
                     return NasServiceResult.Success;

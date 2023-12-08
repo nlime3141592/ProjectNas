@@ -96,6 +96,7 @@
             this.lklbFoundPw.TabIndex = 5;
             this.lklbFoundPw.TabStop = true;
             this.lklbFoundPw.Text = "비밀번호를 잊어버렸나요?";
+            this.lklbFoundPw.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lklbFoundPw_LinkClicked);
             // 
             // lklbNewAccount
             // 

@@ -14,6 +14,8 @@ namespace NAS
                     return new SSvLogin(this);
                 case "SV_JOIN":
                     return new SSvJoin(this);
+                case "SV_DIRECTORY_MOVE":
+                    return new SSvDirectoryMove(this);
                 default:
                     return null;
             }

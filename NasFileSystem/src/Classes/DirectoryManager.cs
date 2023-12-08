@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace NAS.FileSystem
 {
     public class DirectoryManager
     {
-        public string dirRoot => m_dirRoot;
+        private const int c_DIRECTORY_MANAGER_TIMEOUT = 5;
+        private static ConcurrentDictionary<string, DirectoryManager> s_m_managers;
 
+        public string dirRoot => m_dirRoot;
+        public bool isTimeout => m_watch.ElapsedMilliseconds >= 1000 * c_DIRECTORY_MANAGER_TIMEOUT;
+        public int directoryCount => directories.Count;
+        public int fileCount => files.Count;
+
+        #region .dmeta file datas
         private int headerSize = 24;
         private int idxInc = 0;
         private int ptrData = 0;
@@ -20,9 +27,16 @@ namespace NAS.FileSystem
 
         private SortedList<int, string> directories;
         private SortedList<int, string> files;
+        #endregion
 
         private string m_dirRoot;
         private Encoding m_encoding;
+        private Stopwatch m_watch;
+
+        static DirectoryManager()
+        {
+            s_m_managers = new ConcurrentDictionary<string, DirectoryManager>();
+        }
 
         private DirectoryManager(string _dirRoot, Encoding _encoding)
         {
@@ -31,6 +45,8 @@ namespace NAS.FileSystem
 
             m_dirRoot = _dirRoot;
             m_encoding = _encoding;
+            m_watch = new Stopwatch();
+            m_watch.Start();
 
             if (!m_TryInitialize())
                 m_LoadMetaFile();
@@ -38,11 +54,37 @@ namespace NAS.FileSystem
 
         public static DirectoryManager Get(string _dirRoot, Encoding _encoding)
         {
-            return new DirectoryManager(_dirRoot, _encoding);
+            if (!s_m_managers.ContainsKey(_dirRoot))
+                s_m_managers.TryAdd(_dirRoot, new DirectoryManager(_dirRoot, _encoding));
+
+            return s_m_managers[_dirRoot];
+        }
+
+        public static void Update()
+        {
+            DirectoryManager manager;
+
+            foreach(string key in s_m_managers.Keys)
+                if (s_m_managers[key].isTimeout)
+                    s_m_managers.TryRemove(key, out manager);
+        }
+
+        public IEnumerator<KeyValuePair<int, string>> GetDirectories()
+        {
+            m_watch.Restart();
+            return directories.GetEnumerator();
+        }
+
+        public IEnumerator<KeyValuePair<int, string>> GetFiles()
+        {
+            m_watch.Restart();
+            return files.GetEnumerator();
         }
 
         public bool TryAddFolder(string _folderName)
         {
+            m_watch.Restart();
+
             string directory = string.Format(@"{0}{1}\", m_dirRoot, _folderName);
 
             if (Directory.Exists(directory)) // NOTE: 디렉토리가 이미 존재하는데 .dmeta에 추가되지 않은 경우에 대한 로직 처리
@@ -70,6 +112,8 @@ namespace NAS.FileSystem
 
         public bool TryAddFile(string _fileName)
         {
+            m_watch.Restart();
+
             string file = string.Format(@"{0}{1}\", m_dirRoot, _fileName);
 
             if (Directory.Exists(file)) // NOTE: 디렉토리가 이미 존재하는데 .dmeta에 추가되지 않은 경우에 대한 로직 처리
@@ -97,6 +141,8 @@ namespace NAS.FileSystem
 
         public bool TryDeleteFolder(string _folderName)
         {
+            m_watch.Restart();
+
             string directory = string.Format(@"{0}{1}\", m_dirRoot, _folderName);
 
             foreach (int key in directories.Keys)
@@ -120,6 +166,8 @@ namespace NAS.FileSystem
 
         public bool TryDeleteFile(string _fileName)
         {
+            m_watch.Restart();
+
             string file = string.Format(@"{0}{1}\", m_dirRoot, _fileName);
 
             foreach (int key in files.Keys)

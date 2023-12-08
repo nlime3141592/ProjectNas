@@ -134,6 +134,7 @@
     <Compile Include="src\Classes\AcceptedClient.cs" />
     <Compile Include="src\Classes\NasServer.cs" />
     <Compile Include="src\Classes\Services\SSvConnectionCheck.cs" />
+    <Compile Include="src\Classes\Services\SSvDirectoryMove.cs" />
     <Compile Include="src\Classes\Services\SSvDisconnect.cs" />
     <Compile Include="src\Classes\Services\SSvJoin.cs" />
     <Compile Include="src\Classes\Services\SSvLogin.cs" />
@@ -167,6 +168,10 @@
     <ProjectReference Include="..\NasDB\NasDB.csproj">
       <Project>{2eb17581-ba3f-46dc-85a8-629e012e70de}</Project>
       <Name>NasDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
+      <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
+      <Name>NasFileSystem</Name>
     </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">
       <Project>{bd9e8a6b-75f6-4134-8637-42a1b5698efe}</Project>

@@ -47,8 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Classes\FileBrowseData.cs" />
+    <Compile Include="src\Classes\LoginData.cs" />
     <Compile Include="src\Classes\NasClient.cs" />
     <Compile Include="src\Classes\Services\CSvConnectionCheck.cs" />
+    <Compile Include="src\Classes\Services\CSvDirectoryMove.cs" />
     <Compile Include="src\Classes\Services\CSvInitialize.cs" />
     <Compile Include="src\Classes\Services\CSvLogin.cs" />
     <Compile Include="src\Classes\Services\CSvJoin.cs" />

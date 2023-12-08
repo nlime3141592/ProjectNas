@@ -12,7 +12,6 @@ namespace NAS
     {
         public int maxClientCount { get; private set; } = 20;
         public int clientCount { get; private set; } = 0;
-        public string rootStorageDirectory { get; private set; } = null;
 
         private TcpListener m_server;
         private int m_port;
@@ -22,6 +21,7 @@ namespace NAS
         private volatile bool m_isOpened = false;
         private volatile bool m_isClosed = true;
 
+        private NasFileSystem m_fileSystem;
         private ConcurrentQueue<AcceptedClient> m_clients;
 
         public NasServer(int _port)
@@ -42,13 +42,7 @@ namespace NAS
                 if (m_isOpened) // NOTE: 이미 한 번 열린 적이 있는 서버입니다.
                     return false;
 
-                rootStorageDirectory = _rootStorageDirectory;
-
-                if (!Directory.Exists(rootStorageDirectory))
-                    Directory.CreateDirectory(rootStorageDirectory);
-
-                // DMeta를 찾을 수 없다면 이 곳에서 초기화합니다.
-
+                m_fileSystem = new NasFileSystem(_rootStorageDirectory);
                 m_isOpened = true;
                 m_isClosed = false;
                 m_server.Start();
@@ -128,7 +122,7 @@ namespace NAS
 
         private void m_AcThreadMain()
         {
-            Console.WriteLine("[Server] Wait client.");
+            this.WriteLog("Wait client.");
 
             try
             {
@@ -147,9 +141,10 @@ namespace NAS
                         continue;
                     }
 
-                    client.TryStart();
+                    client.fileSystem = m_fileSystem;
                     client.socModule = socModule;
                     client.socModule.SendString("<ACCEPTED>");
+                    client.TryStart(); // TODO: 호출 순서가 중요한가? 맨 위에 있긴 했는데 점검해 볼 필요 있음.
                     m_clients.Enqueue(client);
                 }
             }
@@ -158,7 +153,7 @@ namespace NAS
 
             }
 
-            Console.WriteLine("[Server] Deny client.");
+            this.WriteLog("Deny client.");
         }
 
         private bool m_TrySwitchClient(out AcceptedClient _acceptedClient, string _clientType)

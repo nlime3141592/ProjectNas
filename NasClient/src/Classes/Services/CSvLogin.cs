@@ -4,12 +4,9 @@ namespace NAS
 {
     public class CSvLogin : NasService
     {
-        public Action<int> onLoginSuccess;
+        public Action<int, string> onLoginSuccess;
         public Action onLoginFailure;
         public Action onError;
-
-        public int uuid { get; private set; }
-        public string response { get; private set; }
 
         private NasClient m_client;
         private string m_id;
@@ -29,13 +26,14 @@ namespace NAS
                 m_client.socModule.SendString("SV_LOGIN");
                 m_client.socModule.SendString(m_id);
                 m_client.socModule.SendString(m_pw);
-                this.uuid = m_client.socModule.ReceiveInt32();
-                this.response = m_client.socModule.ReceiveString();
+                int uuid = m_client.socModule.ReceiveInt32();
+                string fakedir = m_client.socModule.ReceiveString();
+                string response = m_client.socModule.ReceiveString();
 
-                switch(this.response)
+                switch(response)
                 {
                     case "<LOGIN_SUCCESS>":
-                        onLoginSuccess?.Invoke(this.uuid);
+                        onLoginSuccess?.Invoke(uuid, fakedir);
                         return NasServiceResult.Success;
                     case "<LOGIN_FAILURE>":
                         onLoginFailure?.Invoke();

@@ -7,6 +7,7 @@ namespace NAS
         public const int c_CLIENT_TIMEOUT = 10;
 
         public SocketModule socModule { get; internal set; }
+        public NasFileSystem fileSystem { get; internal set; }
 
         protected sealed override void ThreadMain()
         {

@@ -198,6 +198,11 @@ namespace NAS
             m_ShowRegistrationMode();
         }
 
+        private void lklbFoundPw_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show(this, "미구현 기능입니다.", "AuthForm");
+        }
+
         private void btStart_Click(object sender, EventArgs e)
         {
             m_ShowWaitingMode();
@@ -263,9 +268,25 @@ namespace NAS
                 _Execute();
         }
 
-        private void m_OnLoginSuccess(int _uuid)
+        private void m_OnLoginSuccess(int _uuid, string _fakedir)
         {
+            void _Show()
+            {
+                FileBrowserForm.GetForm().ctShow();
+            }
+
+            NasClient client = NasClientProgram.GetClient();
+
+            client.datLogin.uuid = _uuid;
+            client.datFileBrowse.fakeroot = _fakedir;
+            client.datFileBrowse.fakedir = _fakedir;
+
             this.ctHide();
+
+            if(this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
         }
 
         private void m_OnLoginFailure()
