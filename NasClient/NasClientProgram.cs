@@ -5,6 +5,9 @@ namespace NAS
 {
     internal class NasClientProgram
     {
+        public const string c_HOST = "127.0.0.1";
+        public const int c_PORT = 25565;
+
         private static NasClientProgram instance
         {
             get
@@ -43,7 +46,7 @@ namespace NAS
             s_m_client = new NasClient();
             s_m_client.onHaltedByException = s_m_OnHaltedByException;
 
-            if (s_m_client.TryConnect("127.0.0.1", 28160))
+            if (s_m_client.TryConnect(c_HOST, c_PORT))
             {
                 AuthForm.GetForm().ctChangeFormMode(AuthForm.FormMode.Login);
                 return true;

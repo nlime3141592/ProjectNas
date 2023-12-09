@@ -74,10 +74,6 @@
       <Project>{d87a3448-34b8-4d9c-84f8-b6c94bdf3de8}</Project>
       <Name>NasServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TestLibProject\TestLibProject.csproj">
-      <Project>{746520d6-10b1-4bcf-987a-b58a864fa2fd}</Project>
-      <Name>TestLibProject</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

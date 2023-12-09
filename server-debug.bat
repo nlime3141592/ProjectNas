@@ -1,3 +1,3 @@
 @echo off
-.\NasServer\bin\Debug\NasServer.exe C:\NAS\ 28160
+.\NasServer\bin\Debug\NasServer.exe C:\NAS\ 25565
 pause

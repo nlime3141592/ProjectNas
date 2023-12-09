@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NAS
@@ -123,7 +121,7 @@ namespace NAS
             }
         }
 
-        private void m_OnDirectoryMoveSuccess()
+        public void ctUpdateFileBrowser()
         {
             string name = "";
             string type = "";
@@ -171,6 +169,11 @@ namespace NAS
             }
         }
 
+        private void m_OnDirectoryMoveSuccess()
+        {
+            ctUpdateFileBrowser();
+        }
+
         private void m_OnNetworkError()
         {
             NasClientProgram.GetClient().TryHalt();
@@ -181,11 +184,21 @@ namespace NAS
 
         private void btRoot_Click(object sender, EventArgs e)
         {
+            NasClient client = NasClientProgram.GetClient();
+
+            if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
+                return;
+
             m_ToRootDir();
         }
 
         private void btBack_Click(object sender, EventArgs e)
         {
+            NasClient client = NasClientProgram.GetClient();
+
+            if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
+                return;
+
             m_ToBackDir();
         }
 
@@ -263,6 +276,25 @@ namespace NAS
                 _Set();
         }
 
+        private void m_ShowFileDialog()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "폴더 추가";
+            dialog.Multiselect = false;
+
+            DialogResult result = dialog.ShowDialog(this);
+
+            switch(result)
+            {
+                case DialogResult.Cancel:
+                    break;
+                case DialogResult.OK:
+                    this.WriteLog(dialog.SafeFileName); // 파일의 이름
+                    this.WriteLog(dialog.FileName); // 절대경로
+                    break;
+            }
+        }
+
         private void 이동ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string dirnext = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
@@ -277,6 +309,72 @@ namespace NAS
         private void 상위경로로이동ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             m_ToBackDir();
+        }
+
+        private void 새폴더ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            WriteFolderNameForm form = new WriteFolderNameForm();
+            form.ShowDialog(this);
+        }
+
+        private void 새폴더ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            WriteFolderNameForm form = new WriteFolderNameForm();
+            form.ShowDialog(this);
+        }
+
+        private void 파일업로드ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            m_ShowFileDialog();
+        }
+
+        private void 파일업로드ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_ShowFileDialog();
+        }
+
+        // NOTE: 폴더 삭제 이벤트
+        private void 삭제ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(this, "폴더를 삭제하시겠습니까?\n폴더 안에 포함된 모든 내용이 함께 삭제됩니다.", "폴더 삭제", MessageBoxButtons.OKCancel);
+
+            switch(result)
+            {
+                case DialogResult.OK:
+                    string folderName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
+                    CSvDirectoryDelete service = new CSvDirectoryDelete(NasClientProgram.GetClient(), folderName);
+                    service.onDeleteSuccess = m_OnDirectoryDeleteSuccess;
+                    service.onDeleteFailure = m_OnDirectoryDeleteFailure;
+                    NasClientProgram.GetClient().Request(service);
+                    break;
+                case DialogResult.Cancel:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void m_OnDirectoryDeleteSuccess(int _didx, string _folderName)
+        {
+            string folderName;
+
+            NasClient client = NasClientProgram.GetClient();
+            client.datFileBrowse.directories.TryRemove(_didx, out folderName);
+
+            ctUpdateFileBrowser();
+        }
+
+        private void m_OnDirectoryDeleteFailure()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "폴더를 삭제할 수 없습니다.", "폴더 삭제 실패");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
         }
     }
 }

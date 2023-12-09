@@ -71,11 +71,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TestFormContainer\TestFormContainer.csproj">
-      <Project>{3bea455c-aa5e-472c-b7e3-ba9b6494333d}</Project>
-      <Name>TestFormContainer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

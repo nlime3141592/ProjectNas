@@ -21,11 +21,6 @@ namespace NAS
                 Directory.CreateDirectory(rootStorageDirectory);
 
             DirectoryManager manager = DirectoryManager.Get(_rootAbsDirectory, Encoding.UTF8);
-
-            // TEST: 테스트 코드입니다.
-            manager.TryAddFolder("firstFolder");
-            manager.TryAddFolder("secondFolder");
-            manager.TryAddFolder("thirdFolder");
         }
 
         public string FakeToPath(string _fake)

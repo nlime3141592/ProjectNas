@@ -3,9 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
-namespace NAS.FileSystem
+namespace NAS
 {
     public class DirectoryManager
     {
@@ -52,6 +53,20 @@ namespace NAS.FileSystem
                 m_LoadMetaFile();
         }
 
+        public static bool IsValidName(string _fileOrFolderName)
+        {
+            if (_fileOrFolderName == null || _fileOrFolderName.Length < 1 || _fileOrFolderName.Length > 128)
+                return false;
+
+            string charset = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_ 0123456789";
+
+            for (int i = 0; i < _fileOrFolderName.Length; ++i)
+                if (!charset.Contains(_fileOrFolderName[i]))
+                    return false;
+
+            return true;
+        }
+
         public static DirectoryManager Get(string _dirRoot, Encoding _encoding)
         {
             if (!s_m_managers.ContainsKey(_dirRoot))
@@ -79,6 +94,16 @@ namespace NAS.FileSystem
         {
             m_watch.Restart();
             return files.GetEnumerator();
+        }
+
+        public int GetFolderIndex(string _folderName)
+        {
+            return directories.FirstOrDefault((_kvPair) => _kvPair.Value == _folderName).Key;
+        }
+
+        public int GetFileIndex(string _fileName)
+        {
+            return files.FirstOrDefault((_kvPair) => _kvPair.Value == _fileName).Key;
         }
 
         public bool TryAddFolder(string _folderName)
@@ -151,7 +176,10 @@ namespace NAS.FileSystem
                 {
                     // NOTE: 디렉토리가 존재하지 않는데 Directory.Delete()를 호출하는 문제를 회피
                     if (Directory.Exists(directory))
+                    {
+                        m_rec_Delete(directory);
                         Directory.Delete(directory);
+                    }
 
                     directories.Remove(key);
                     ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
@@ -295,6 +323,18 @@ namespace NAS.FileSystem
 
             wr.Close();
             stream.Close();
+        }
+
+        private void m_rec_Delete(string _directory)
+        {
+            foreach(string file in Directory.GetFiles(_directory))
+                File.Delete(file);
+
+            foreach (string directory in Directory.GetDirectories(_directory))
+            {
+                m_rec_Delete(directory);
+                Directory.Delete(directory);
+            }
         }
     }
 }

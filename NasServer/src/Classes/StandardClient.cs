@@ -16,6 +16,13 @@ namespace NAS
                     return new SSvJoin(this);
                 case "SV_DIRECTORY_MOVE":
                     return new SSvDirectoryMove(this);
+                case "SV_DIRECTORY_ADD":
+                    return new SSvDirectoryAdd(this);
+                case "SV_DIRECTORY_DELETE":
+                    return new SSvDirectoryDelete(this);
+                case "SV_FILE_ADD":
+                case "SV_FILE_DELETE":
+                    return null;
                 default:
                     return null;
             }

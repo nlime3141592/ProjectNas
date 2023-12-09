@@ -29,20 +29,24 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "1",
             "11",
             "22"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("2");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("3");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("2");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("3");
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.파일ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.새폴더ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.파일업로드ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lvFileBrowser = new System.Windows.Forms.ListView();
             this.hdName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hdGenDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.hdCapacity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ctxMenuNoSelected = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.새폴더ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.파일업로드ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.txtFakePath = new System.Windows.Forms.TextBox();
             this.cxtMenuDirectoryViewer = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.루트경로로이동ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,14 +61,11 @@
             this.이동ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.삭제ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.ctxMenuNoSelected = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.새폴더ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.파일업로드ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBar.SuspendLayout();
+            this.ctxMenuNoSelected.SuspendLayout();
             this.cxtMenuDirectoryViewer.SuspendLayout();
             this.ctxMenuFileSelected.SuspendLayout();
             this.ctxMenuFolderSelected.SuspendLayout();
-            this.ctxMenuNoSelected.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuBar
@@ -81,16 +82,25 @@
             // 파일ToolStripMenuItem
             // 
             this.파일ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.새폴더ToolStripMenuItem1,
             this.파일업로드ToolStripMenuItem});
             this.파일ToolStripMenuItem.Name = "파일ToolStripMenuItem";
             this.파일ToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.파일ToolStripMenuItem.Text = "파일";
+            // 
+            // 새폴더ToolStripMenuItem1
+            // 
+            this.새폴더ToolStripMenuItem1.Name = "새폴더ToolStripMenuItem1";
+            this.새폴더ToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            this.새폴더ToolStripMenuItem1.Text = "새 폴더";
+            this.새폴더ToolStripMenuItem1.Click += new System.EventHandler(this.새폴더ToolStripMenuItem1_Click);
             // 
             // 파일업로드ToolStripMenuItem
             // 
             this.파일업로드ToolStripMenuItem.Name = "파일업로드ToolStripMenuItem";
             this.파일업로드ToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
             this.파일업로드ToolStripMenuItem.Text = "파일 업로드";
+            this.파일업로드ToolStripMenuItem.Click += new System.EventHandler(this.파일업로드ToolStripMenuItem_Click);
             // 
             // 설정ToolStripMenuItem
             // 
@@ -109,9 +119,9 @@
             this.lvFileBrowser.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvFileBrowser.HideSelection = false;
             this.lvFileBrowser.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3});
             this.lvFileBrowser.Location = new System.Drawing.Point(12, 55);
             this.lvFileBrowser.MultiSelect = false;
             this.lvFileBrowser.Name = "lvFileBrowser";
@@ -137,6 +147,28 @@
             this.hdCapacity.Text = "파일 크기";
             this.hdCapacity.Width = 126;
             // 
+            // ctxMenuNoSelected
+            // 
+            this.ctxMenuNoSelected.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.새폴더ToolStripMenuItem,
+            this.파일업로드ToolStripMenuItem1});
+            this.ctxMenuNoSelected.Name = "ctxMenuNoSelected";
+            this.ctxMenuNoSelected.Size = new System.Drawing.Size(139, 48);
+            // 
+            // 새폴더ToolStripMenuItem
+            // 
+            this.새폴더ToolStripMenuItem.Name = "새폴더ToolStripMenuItem";
+            this.새폴더ToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.새폴더ToolStripMenuItem.Text = "새 폴더";
+            this.새폴더ToolStripMenuItem.Click += new System.EventHandler(this.새폴더ToolStripMenuItem_Click);
+            // 
+            // 파일업로드ToolStripMenuItem1
+            // 
+            this.파일업로드ToolStripMenuItem1.Name = "파일업로드ToolStripMenuItem1";
+            this.파일업로드ToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
+            this.파일업로드ToolStripMenuItem1.Text = "파일 업로드";
+            this.파일업로드ToolStripMenuItem1.Click += new System.EventHandler(this.파일업로드ToolStripMenuItem1_Click);
+            // 
             // txtFakePath
             // 
             this.txtFakePath.ContextMenuStrip = this.cxtMenuDirectoryViewer;
@@ -154,19 +186,19 @@
             this.루트경로로이동ToolStripMenuItem,
             this.상위경로로이동ToolStripMenuItem});
             this.cxtMenuDirectoryViewer.Name = "ctxMenuFileSelected";
-            this.cxtMenuDirectoryViewer.Size = new System.Drawing.Size(181, 70);
+            this.cxtMenuDirectoryViewer.Size = new System.Drawing.Size(167, 48);
             // 
             // 루트경로로이동ToolStripMenuItem
             // 
             this.루트경로로이동ToolStripMenuItem.Name = "루트경로로이동ToolStripMenuItem";
-            this.루트경로로이동ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.루트경로로이동ToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.루트경로로이동ToolStripMenuItem.Text = "루트 경로로 이동";
             this.루트경로로이동ToolStripMenuItem.Click += new System.EventHandler(this.루트경로로이동ToolStripMenuItem_Click);
             // 
             // 상위경로로이동ToolStripMenuItem
             // 
             this.상위경로로이동ToolStripMenuItem.Name = "상위경로로이동ToolStripMenuItem";
-            this.상위경로로이동ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.상위경로로이동ToolStripMenuItem.Size = new System.Drawing.Size(166, 22);
             this.상위경로로이동ToolStripMenuItem.Text = "상위 경로로 이동";
             this.상위경로로이동ToolStripMenuItem.Click += new System.EventHandler(this.상위경로로이동ToolStripMenuItem_Click);
             // 
@@ -223,7 +255,7 @@
             this.toolStripMenuItem2,
             this.삭제ToolStripMenuItem1});
             this.ctxMenuFolderSelected.Name = "ctxMenuFileSelected";
-            this.ctxMenuFolderSelected.Size = new System.Drawing.Size(99, 54);
+            this.ctxMenuFolderSelected.Size = new System.Drawing.Size(181, 76);
             // 
             // 이동ToolStripMenuItem
             // 
@@ -235,33 +267,14 @@
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(95, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // 삭제ToolStripMenuItem1
             // 
             this.삭제ToolStripMenuItem1.Name = "삭제ToolStripMenuItem1";
-            this.삭제ToolStripMenuItem1.Size = new System.Drawing.Size(98, 22);
+            this.삭제ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.삭제ToolStripMenuItem1.Text = "삭제";
-            // 
-            // ctxMenuNoSelected
-            // 
-            this.ctxMenuNoSelected.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.새폴더ToolStripMenuItem,
-            this.파일업로드ToolStripMenuItem1});
-            this.ctxMenuNoSelected.Name = "ctxMenuNoSelected";
-            this.ctxMenuNoSelected.Size = new System.Drawing.Size(139, 48);
-            // 
-            // 새폴더ToolStripMenuItem
-            // 
-            this.새폴더ToolStripMenuItem.Name = "새폴더ToolStripMenuItem";
-            this.새폴더ToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
-            this.새폴더ToolStripMenuItem.Text = "새 폴더";
-            // 
-            // 파일업로드ToolStripMenuItem1
-            // 
-            this.파일업로드ToolStripMenuItem1.Name = "파일업로드ToolStripMenuItem1";
-            this.파일업로드ToolStripMenuItem1.Size = new System.Drawing.Size(138, 22);
-            this.파일업로드ToolStripMenuItem1.Text = "파일 업로드";
+            this.삭제ToolStripMenuItem1.Click += new System.EventHandler(this.삭제ToolStripMenuItem1_Click);
             // 
             // FileBrowserForm
             // 
@@ -279,10 +292,10 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FileBrowserForm_FormClosed);
             this.menuBar.ResumeLayout(false);
             this.menuBar.PerformLayout();
+            this.ctxMenuNoSelected.ResumeLayout(false);
             this.cxtMenuDirectoryViewer.ResumeLayout(false);
             this.ctxMenuFileSelected.ResumeLayout(false);
             this.ctxMenuFolderSelected.ResumeLayout(false);
-            this.ctxMenuNoSelected.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -315,5 +328,6 @@
         private System.Windows.Forms.ContextMenuStrip ctxMenuNoSelected;
         private System.Windows.Forms.ToolStripMenuItem 새폴더ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 파일업로드ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 새폴더ToolStripMenuItem1;
     }
 }
