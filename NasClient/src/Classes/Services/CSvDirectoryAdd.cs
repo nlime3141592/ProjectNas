@@ -15,7 +15,7 @@ namespace NAS
         public CSvDirectoryAdd(NasClient _client, string _nextDir)
         {
             m_client = _client;
-            m_nextDir = _nextDir;
+            m_nextDir = _nextDir.Trim();
         }
 
         public override NasServiceResult Execute()

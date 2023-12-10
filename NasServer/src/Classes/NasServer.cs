@@ -26,8 +26,8 @@ namespace NAS
 
         public NasServer(int _port)
         {
-            m_server = new TcpListener(IPAddress.Parse("127.0.0.1"), _port);
-            // m_server = new TcpListener(IPAddress.Any, _port);
+            // m_server = new TcpListener(IPAddress.Parse("127.0.0.1"), _port);
+            m_server = new TcpListener(IPAddress.Any, _port);
             m_port = _port;
 
             m_thread = new Thread(new ThreadStart(m_ThreadMain));

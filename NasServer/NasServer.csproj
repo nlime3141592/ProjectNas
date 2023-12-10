@@ -140,6 +140,7 @@
     <Compile Include="src\Classes\Services\SSvDisconnect.cs" />
     <Compile Include="src\Classes\Services\SSvFileAdd.cs" />
     <Compile Include="src\Classes\Services\SSvFileDelete.cs" />
+    <Compile Include="src\Classes\Services\SSvFileDownload.cs" />
     <Compile Include="src\Classes\Services\SSvJoin.cs" />
     <Compile Include="src\Classes\Services\SSvLogin.cs" />
     <Compile Include="src\Classes\Services\SSvTest.cs" />

@@ -18,7 +18,7 @@ namespace NAS
         public CSvDirectoryDelete(NasClient _client, string _folderName)
         {
             m_client = _client;
-            m_folderName = _folderName;
+            m_folderName = _folderName.Trim();
         }
 
         public override NasServiceResult Execute()

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NAS
 {
@@ -58,13 +59,9 @@ namespace NAS
             if (_fileOrFolderName == null || _fileOrFolderName.Length < 1 || _fileOrFolderName.Length > 128)
                 return false;
 
-            string charset = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_ 0123456789";
-
-            for (int i = 0; i < _fileOrFolderName.Length; ++i)
-                if (!charset.Contains(_fileOrFolderName[i]))
-                    return false;
-
-            return true;
+            Regex unsupportedRegex = new Regex("(^(PRN|AUX|NUL|CON|COM[1-9]|LPT[1-9]|(\\.+)$)(\\..*)?$)|(([\\x00-\\x1f\\\\?*:\";|/<>])+)|(([\\.]+))", RegexOptions.IgnoreCase);
+            Match match = unsupportedRegex.Match(_fileOrFolderName);
+            return !match.Success;
         }
 
         public static DirectoryManager Get(string _dirRoot, Encoding _encoding)
@@ -204,7 +201,10 @@ namespace NAS
                 {
                     // NOTE: 디렉토리가 존재하지 않는데 Directory.Delete()를 호출하는 문제를 회피
                     if (Directory.Exists(file))
+                    {
+                        m_rec_Delete(file);
                         Directory.Delete(file);
+                    }
 
                     files.Remove(key);
                     ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);

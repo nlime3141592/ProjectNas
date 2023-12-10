@@ -79,6 +79,7 @@
             this.Controls.Add(this.lbInfo);
             this.Controls.Add(this.btOk);
             this.Controls.Add(this.btCancel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "WriteFolderNameForm";
             this.Text = "폴더 이름 입력";
             this.ResumeLayout(false);

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace NAS
 {
@@ -19,7 +16,31 @@ namespace NAS
         {
             try
             {
-                return NasServiceResult.Failure;
+                string fakedir = m_client.socModule.ReceiveString();
+                string fileNameWithoutExt = m_client.socModule.ReceiveString();
+                string fileExt = m_client.socModule.ReceiveString();
+
+                if (!DirectoryManager.IsValidName(fileNameWithoutExt))
+                {
+                    m_client.socModule.SendString("<FAILURE>");
+                    return NasServiceResult.Failure;
+                }
+
+                string absdir = m_client.fileSystem.FakeToPath(fakedir);
+                DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
+                int fidx = manager.GetFileIndex(fileNameWithoutExt + fileExt);
+
+                if (manager.TryDeleteFile(fileNameWithoutExt + fileExt))
+                {
+                    m_client.socModule.SendString("<SUCCESS>");
+                    m_client.socModule.SendInt32(fidx);
+                    return NasServiceResult.Success;
+                }
+                else
+                {
+                    m_client.socModule.SendString("<FAILURE>");
+                    return NasServiceResult.Failure;
+                }
             }
             catch (Exception)
             {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace NAS
@@ -22,7 +23,8 @@ namespace NAS
 
         private void btOk_Click(object sender, EventArgs e)
         {
-            CSvFileAdd service = new CSvFileAdd(NasClientProgram.GetClient(), m_absPath, txtFileName.Text);
+            string extension = Path.GetExtension(m_absPath);
+            CSvFileAdd service = new CSvFileAdd(NasClientProgram.GetClient(), m_absPath, txtFileName.Text, extension);
             service.onAddSuccess = onFileAddSuccess;
             service.onAddSuccess += m_OnAddSuccess;
             service.onAddFailure = onFileAddFailure;

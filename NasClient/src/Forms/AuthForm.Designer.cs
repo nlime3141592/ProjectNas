@@ -263,6 +263,7 @@
             this.Controls.Add(this.pnRegistration);
             this.Controls.Add(this.pnLogin);
             this.Controls.Add(this.lbTitle);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "AuthForm";
             this.Text = "NAS Authentication";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AuthForm_FormClosed);

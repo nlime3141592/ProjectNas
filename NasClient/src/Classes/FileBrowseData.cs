@@ -10,5 +10,6 @@ namespace NAS
 
         public ConcurrentDictionary<int, string> directories { get; private set; } = new ConcurrentDictionary<int, string>();
         public ConcurrentDictionary<int, string> files { get; private set; } = new ConcurrentDictionary<int, string>();
+        public ConcurrentDictionary<string, int> downloadingFiles { get; private set; } = new ConcurrentDictionary<string, int>();
     }
 }

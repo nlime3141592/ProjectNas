@@ -73,6 +73,8 @@ namespace NAS
             catch(Exception ex)
             {
                 NasClientProgram.instance.WriteLog("예외가 발생했담.... {0}", ex.Message);
+                NasClientProgram.instance.WriteLog("StackTrace : {0}", ex.StackTrace);
+                NasClientProgram.instance.WriteLog("Message : {0}", ex.Message);
             }
         }
 

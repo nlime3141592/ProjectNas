@@ -16,17 +16,19 @@ namespace NAS
         private NasClient m_client;
         private string m_fileAbsPath;
         private string m_fileName;
+        private string m_extension;
 
         private FileStream m_fileStream;
         private byte[] m_buffer;
         private int m_loopTimes = 0;
 
-        public CSvFileAdd(NasClient _client, string _fileAbsPath, string _fileName)
+        public CSvFileAdd(NasClient _client, string _fileAbsPath, string _fileName, string _extension)
         {
             m_client = _client;
             m_fileAbsPath = _fileAbsPath;
-            m_fileName = _fileName;
+            m_fileName = _fileName.Trim();
             m_buffer = new byte[c_BUFFER_SIZE];
+            m_extension = _extension;
         }
 
         public override NasServiceResult Execute()
@@ -36,6 +38,7 @@ namespace NAS
                 m_client.socModule.SendString("SV_FILE_ADD");
                 m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
                 m_client.socModule.SendString(m_fileName);
+                m_client.socModule.SendString(m_extension);
                 m_client.socModule.SendInt32(m_loopTimes);
                 string service_able = m_client.socModule.ReceiveString();
 
@@ -61,7 +64,7 @@ namespace NAS
                     m_fileStream.Close();
                     m_client.socModule.SendString("<EOF>");
                     int fidx = m_client.socModule.ReceiveInt32();
-                    onAddSuccess?.Invoke(fidx, m_fileName);
+                    onAddSuccess?.Invoke(fidx, m_fileName + m_extension);
                     return NasServiceResult.Success;
                 }
                 else
@@ -77,9 +80,6 @@ namespace NAS
             }
             catch(Exception ex)
             {
-                this.WriteLog("Message : {0}", ex.Message);
-                this.WriteLog("StackTrace : {0}", ex.StackTrace);
-
                 onError?.Invoke();
                 return NasServiceResult.NetworkError;
             }

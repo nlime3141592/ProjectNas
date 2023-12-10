@@ -21,6 +21,7 @@ namespace NAS
             {
                 string fakedir = m_client.socModule.ReceiveString();
                 string fileName = m_client.socModule.ReceiveString();
+                string fileExtension = m_client.socModule.ReceiveString();
                 int loopTimes = m_client.socModule.ReceiveInt32();
 
                 string absdir = m_client.fileSystem.FakeToPath(fakedir);
@@ -31,7 +32,7 @@ namespace NAS
                     m_client.socModule.SendString("<INVALID_NAME>");
                     return NasServiceResult.Failure;
                 }
-                else if (loopTimes == 0 && !manager.TryAddFile(fileName))
+                else if (loopTimes == 0 && !manager.TryAddFile(fileName + fileExtension))
                 {
                     m_client.socModule.SendString("<EXIST_FILE>");
                     return NasServiceResult.Failure;
@@ -44,12 +45,12 @@ namespace NAS
                 switch (serviceType)
                 {
                     case "<EOF>":
-                        m_client.socModule.SendInt32(manager.GetFileIndex(fileName));
+                        m_client.socModule.SendInt32(manager.GetFileIndex(fileName + fileExtension));
                         return NasServiceResult.Success;
                     case "<WRITE>":
                         byte[] buffer;
                         m_client.socModule.TryReceiveVariableData(out buffer, 1000);
-                        string path = absdir + fileName + '\\' + fileName + ".a";
+                        string path = absdir + fileName + fileExtension + '\\' + fileName + fileExtension + ".a";
                         FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
                         fileStream.Position = fileStream.Length;
                         fileStream.Write(buffer, 0, buffer.Length);

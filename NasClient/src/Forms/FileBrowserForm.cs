@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace NAS
@@ -7,11 +7,7 @@ namespace NAS
     public sealed partial class FileBrowserForm : Form
     {
         private static FileBrowserForm s_m_fileBrowserForm;
-
-        private int m_columnWidth0;
-        private int m_columnWidth1;
-        private int m_columnWidth2;
-        private List<int> m_selectedItemIndex;
+        private Stopwatch m_watch;
 
         public static FileBrowserForm GetForm()
         {
@@ -25,18 +21,19 @@ namespace NAS
         {
             InitializeComponent();
 
-            m_columnWidth0 = 660;
-            m_columnWidth1 = 120;
-            m_columnWidth2 = 120;
-            lvFileBrowser.Columns[0].Width = m_columnWidth0;
-            lvFileBrowser.Columns[1].Width = m_columnWidth1;
-            lvFileBrowser.Columns[2].Width = m_columnWidth2;
+            m_watch = new Stopwatch();
 
-            m_selectedItemIndex = new List<int>();
+            lvFileBrowser.Columns[0].Width = 660;
+            lvFileBrowser.Columns[1].Width = 120;
+            lvFileBrowser.Columns[2].Width = 120;
+
+            lvFileDownloadingBrowser.Columns[0].Width = 780;
+            lvFileDownloadingBrowser.Columns[1].Width = 120;
 
             lvFileBrowser.Items.Clear();
 
             m_ReloadDir();
+            ctUpdateFileDownloadingMonitor();
         }
 
         public void ctShow()
@@ -80,17 +77,48 @@ namespace NAS
 
         private void lvFileBrowser_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            if (e.IsSelected)
-                m_selectedItemIndex.Add(e.ItemIndex);
-            else
-                m_selectedItemIndex.Remove(e.ItemIndex);
-
-            if (m_selectedItemIndex.Count == 0)
+            if (lvFileBrowser.SelectedIndices.Count == 0)
+            {
                 lvFileBrowser.ContextMenuStrip = ctxMenuNoSelected;
-            else if (m_selectedItemIndex[0] > NasClientProgram.GetClient().datFileBrowse.directories.Count) // TODO: 폴더를 우선 보여주므로, 폴더 개수 정보가 조건문으로 들어와야 한다.
-                lvFileBrowser.ContextMenuStrip = ctxMenuFileSelected;
-            else
-                lvFileBrowser.ContextMenuStrip = ctxMenuFolderSelected;
+                return;
+            }
+
+            string fileType = lvFileBrowser.SelectedItems[0].SubItems[1].Text;
+
+            switch (fileType)
+            {
+                case "Folder":
+                    lvFileBrowser.ContextMenuStrip = ctxMenuFolderSelected;
+                    break;
+                case "File":
+                    lvFileBrowser.ContextMenuStrip = ctxMenuFileSelected;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void lvFileBrowser_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvFileBrowser.SelectedIndices.Count == 0)
+            {
+                lvFileBrowser.ContextMenuStrip = ctxMenuNoSelected;
+                return;
+            }
+
+            string fileType = lvFileBrowser.SelectedItems[0].SubItems[1].Text;
+
+            switch(fileType)
+            {
+                case "Folder":
+                    lvFileBrowser.ContextMenuStrip = ctxMenuFolderSelected;
+                    break;
+                case "File":
+                    lvFileBrowser.ContextMenuStrip = ctxMenuFileSelected;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void FileBrowserForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -115,6 +143,18 @@ namespace NAS
                     m_ToNextDir(dirnext);
                     break;
                 case "File":
+                    string absSaveDirectory;
+
+                    if (!m_TrySelectDirectory(out absSaveDirectory))
+                        return;
+
+                    NasClient client = NasClientProgram.GetClient();
+                    string fileName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
+                    CSvFileDownload service = new CSvFileDownload(client, absSaveDirectory, fileName);
+                    service.onDownloadSuccess = m_OnFileDownloadSuccess;
+                    service.onDownloadLoopback = m_OnFileDownloadLoopback;
+                    service.onError = m_OnNetworkError;
+                    client.Request(service);
                     break;
                 default:
                     break;
@@ -137,6 +177,12 @@ namespace NAS
             void _Add()
             {
                 lvFileBrowser.Items.Add(new ListViewItem(new string[] { name, type, size }));
+            }
+
+            void _Show()
+            {
+                lbFileCounter.Text = string.Format("폴더: {0}개, 파일: {1}개", client.datFileBrowse.directories.Count, client.datFileBrowse.files.Count);
+                lvFileBrowser.ContextMenuStrip = ctxMenuNoSelected;
             }
 
             if (this.InvokeRequired)
@@ -167,6 +213,67 @@ namespace NAS
                 else
                     _Add();
             }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        public void ctUpdateFileDownloadingMonitor()
+        {
+            void _Show()
+            {
+                NasClient client = NasClientProgram.GetClient();
+                int count = client.datFileBrowse.downloadingFiles.Count;
+
+                if (!m_watch.IsRunning)
+                    m_watch.Start();
+
+                if (count <= 0)
+                {
+                    lbDownloadingCounter.Text = string.Format("다운로드 없음");
+                    lvFileDownloadingBrowser.Items.Clear();
+                }
+                else if (m_watch.ElapsedMilliseconds < 100)
+                    return;
+                else
+                {
+                    m_watch.Restart();
+
+                    lbDownloadingCounter.Text = string.Format("다운로드 진행 중 ... ({0}개)", count);
+
+                    for(int i = lvFileDownloadingBrowser.Items.Count - 1; i >= 0 ; --i)
+                    {
+                        string path = lvFileDownloadingBrowser.Items[i].SubItems[0].Text;
+
+                        if (client.datFileBrowse.downloadingFiles.ContainsKey(path))
+                        {
+                            lvFileDownloadingBrowser.Items[i].SubItems[1].Text = client.datFileBrowse.downloadingFiles[path].ToString();
+                        }
+                        else
+                        {
+                            lvFileDownloadingBrowser.Items.RemoveAt(i);
+                        }
+                    }
+
+                    foreach (string key in client.datFileBrowse.downloadingFiles.Keys)
+                    {
+                        bool isContainInListView = false;
+
+                        for (int i = lvFileDownloadingBrowser.Items.Count - 1; i >= 0 && !isContainInListView; --i)
+                            isContainInListView = lvFileDownloadingBrowser.Items[i].SubItems[0].Text.Equals(key);
+
+                        if(!isContainInListView)
+                            lvFileDownloadingBrowser.Items.Add(new ListViewItem(new string[] { key, client.datFileBrowse.downloadingFiles[key].ToString() }));
+                    }
+                }
+            }
+
+            if(this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
         }
 
         private void m_OnDirectoryMoveSuccess()
@@ -207,7 +314,7 @@ namespace NAS
         {
             void _Show()
             {
-                MessageBox.Show(this, "파일 이름이 잘못되었습니다..", "파일 업로드 실패");
+                MessageBox.Show(this, "파일 이름이 잘못되었습니다.", "파일 업로드 실패");
             }
 
             if (this.InvokeRequired)
@@ -353,6 +460,27 @@ namespace NAS
             }
         }
 
+        private bool m_TrySelectDirectory(out string _absSaveDirectory)
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+
+            DialogResult result = dialog.ShowDialog(this);
+
+            switch (result)
+            {
+                case DialogResult.Cancel:
+                    _absSaveDirectory = null;
+                    return false;
+                case DialogResult.OK:
+                    _absSaveDirectory = dialog.SelectedPath + '\\'; // NOTE: 디렉토리
+                    this.WriteLog("디렉토리 : {0}", _absSaveDirectory);
+                    return true;
+                default:
+                    _absSaveDirectory = null;
+                    return false;
+            }
+        }
+
         private void 이동ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string dirnext = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
@@ -413,6 +541,23 @@ namespace NAS
             form.ShowDialog(this);
         }
 
+        // NOTE: 파일 다운로드 이벤트
+        private void 다운로드ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string absSaveDirectory;
+
+            if (!m_TrySelectDirectory(out absSaveDirectory))
+                return;
+
+            NasClient client = NasClientProgram.GetClient();
+            string fileName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
+            CSvFileDownload service = new CSvFileDownload(client, absSaveDirectory, fileName);
+            service.onDownloadSuccess = m_OnFileDownloadSuccess;
+            service.onDownloadLoopback = m_OnFileDownloadLoopback;
+            service.onError = m_OnNetworkError;
+            client.Request(service);
+        }
+
         // NOTE: 폴더 삭제 이벤트
         private void 삭제ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -425,6 +570,26 @@ namespace NAS
                     CSvDirectoryDelete service = new CSvDirectoryDelete(NasClientProgram.GetClient(), folderName);
                     service.onDeleteSuccess = m_OnDirectoryDeleteSuccess;
                     service.onDeleteFailure = m_OnDirectoryDeleteFailure;
+                    NasClientProgram.GetClient().Request(service);
+                    break;
+                case DialogResult.Cancel:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void 삭제ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(this, "파일을 삭제하시겠습니까?", "파일 삭제", MessageBoxButtons.OKCancel);
+
+            switch (result)
+            {
+                case DialogResult.OK:
+                    string fileName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
+                    CSvFileDelete service = new CSvFileDelete(NasClientProgram.GetClient(), fileName);
+                    service.onDeleteSuccess = m_OnFileDeleteSuccess;
+                    service.onDeleteFailure = m_OnFileDeleteFailure;
                     NasClientProgram.GetClient().Request(service);
                     break;
                 case DialogResult.Cancel:
@@ -449,6 +614,71 @@ namespace NAS
             void _Show()
             {
                 MessageBox.Show(this, "폴더를 삭제할 수 없습니다.", "폴더 삭제 실패");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnFileDeleteSuccess(int _fidx, string _folderName)
+        {
+            string fileName;
+
+            NasClient client = NasClientProgram.GetClient();
+            client.datFileBrowse.files.TryRemove(_fidx, out fileName);
+
+            ctUpdateFileBrowser();
+        }
+
+        private void m_OnFileDeleteFailure()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "파일을 삭제할 수 없습니다.", "파일 삭제 실패");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnFileDownloadLoopback(string _absDownloadingPath, int _loopTimes)
+        {
+            NasClient client = NasClientProgram.GetClient();
+
+            if (client.datFileBrowse.downloadingFiles.ContainsKey(_absDownloadingPath))
+                client.datFileBrowse.downloadingFiles[_absDownloadingPath] = _loopTimes;
+            else
+                client.datFileBrowse.downloadingFiles.TryAdd(_absDownloadingPath, _loopTimes);
+
+            ctUpdateFileDownloadingMonitor();
+        }
+
+        private void m_OnFileDownloadSuccess(string _absDownloadedPath)
+        {
+            void _Show()
+            {
+                int loopTimes;
+                NasClientProgram.GetClient().datFileBrowse.downloadingFiles.TryRemove(_absDownloadedPath, out loopTimes);
+                ctUpdateFileDownloadingMonitor();
+                string message = string.Format("파일을 다운로드 했습니다.\n({0})", _absDownloadedPath);
+                MessageBox.Show(this, message, "파일 다운로드 성공");
+            }
+
+            if(this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnFileDownloadFailure()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "파일을 다운로드 하지 못했습니다.", "파일 다운로드 실패");
             }
 
             if (this.InvokeRequired)
