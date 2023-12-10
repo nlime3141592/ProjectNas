@@ -22,6 +22,8 @@ namespace NAS
                 string fakedir = m_client.socModule.ReceiveString();
                 string fileName = m_client.socModule.ReceiveString();
                 string fileExtension = m_client.socModule.ReceiveString();
+                int department = m_client.socModule.ReceiveInt32();
+                int level = m_client.socModule.ReceiveInt32();
                 int loopTimes = m_client.socModule.ReceiveInt32();
 
                 string absdir = m_client.fileSystem.FakeToPath(fakedir);
@@ -32,7 +34,7 @@ namespace NAS
                     m_client.socModule.SendString("<INVALID_NAME>");
                     return NasServiceResult.Failure;
                 }
-                else if (loopTimes == 0 && !manager.TryAddFile(fileName + fileExtension))
+                else if (loopTimes == 0 && !manager.TryAddFile(fileName + fileExtension, department, level))
                 {
                     m_client.socModule.SendString("<EXIST_FILE>");
                     return NasServiceResult.Failure;

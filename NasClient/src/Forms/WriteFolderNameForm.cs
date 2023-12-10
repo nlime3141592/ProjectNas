@@ -8,11 +8,19 @@ namespace NAS
         public WriteFolderNameForm()
         {
             InitializeComponent();
+
+            int level = NasClientProgram.GetClient().datLogin.level;
+            for (int i = 0; i < level; ++i)
+                cbxPermissionLevel.Items.Add(level - i);
+            cbxPermissionLevel.SelectedIndex = 0;
         }
 
         private void btOk_Click(object sender, EventArgs e)
         {
-            CSvDirectoryAdd service = new CSvDirectoryAdd(NasClientProgram.GetClient(), txtFolderName.Text);
+            int department = rbtAll.Checked ? 0 : NasClientProgram.GetClient().datLogin.department;
+            int level = department == 0 ? 0 : int.Parse(cbxPermissionLevel.Text);
+
+            CSvDirectoryAdd service = new CSvDirectoryAdd(NasClientProgram.GetClient(), txtFolderName.Text, department, level);
             service.onAddSuccess = m_OnSuccess;
             service.onAddFailure = m_OnFailure;
             service.onInvalidName = m_OnInvalidName;

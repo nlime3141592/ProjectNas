@@ -17,18 +17,22 @@ namespace NAS
         private string m_fileAbsPath;
         private string m_fileName;
         private string m_extension;
+        private int m_department;
+        private int m_level;
 
         private FileStream m_fileStream;
         private byte[] m_buffer;
         private int m_loopTimes = 0;
 
-        public CSvFileAdd(NasClient _client, string _fileAbsPath, string _fileName, string _extension)
+        public CSvFileAdd(NasClient _client, string _fileAbsPath, string _fileName, string _extension, int _department, int _level)
         {
             m_client = _client;
             m_fileAbsPath = _fileAbsPath;
             m_fileName = _fileName.Trim();
             m_buffer = new byte[c_BUFFER_SIZE];
             m_extension = _extension;
+            m_department = _department;
+            m_level = _level;
         }
 
         public override NasServiceResult Execute()
@@ -39,6 +43,8 @@ namespace NAS
                 m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
                 m_client.socModule.SendString(m_fileName);
                 m_client.socModule.SendString(m_extension);
+                m_client.socModule.SendInt32(m_department);
+                m_client.socModule.SendInt32(m_level);
                 m_client.socModule.SendInt32(m_loopTimes);
                 string service_able = m_client.socModule.ReceiveString();
 

@@ -19,12 +19,20 @@ namespace NAS
             InitializeComponent();
 
             m_absPath = _absPath;
+
+            int level = NasClientProgram.GetClient().datLogin.level;
+            for (int i = 0; i < level; ++i)
+                cbxPermissionLevel.Items.Add(level - i);
+            cbxPermissionLevel.SelectedIndex = 0;
         }
 
         private void btOk_Click(object sender, EventArgs e)
         {
             string extension = Path.GetExtension(m_absPath);
-            CSvFileAdd service = new CSvFileAdd(NasClientProgram.GetClient(), m_absPath, txtFileName.Text, extension);
+            int department = rbtAll.Checked ? 0 : NasClientProgram.GetClient().datLogin.department;
+            int level = department == 0 ? 0 : int.Parse(cbxPermissionLevel.Text);
+
+            CSvFileAdd service = new CSvFileAdd(NasClientProgram.GetClient(), m_absPath, txtFileName.Text, extension, department, level);
             service.onAddSuccess = onFileAddSuccess;
             service.onAddSuccess += m_OnAddSuccess;
             service.onAddFailure = onFileAddFailure;

@@ -175,7 +175,7 @@
       <Name>NasDB</Name>
     </ProjectReference>
     <ProjectReference Include="..\NasFileSystem\NasFileSystem.csproj">
-      <Project>{42004fb3-299d-4d8c-88f5-b0ad55aeae9d}</Project>
+      <Project>{b9af9d81-91e5-4ac4-8b2f-2f802ae7e634}</Project>
       <Name>NasFileSystem</Name>
     </ProjectReference>
     <ProjectReference Include="..\NasLib\NasLib.csproj">

@@ -1,5 +1,4 @@
-﻿using NAS.FileSystem;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +20,8 @@ namespace NAS
             {
                 string fakedir = m_client.socModule.ReceiveString();
                 string dirnext = m_client.socModule.ReceiveString();
+                int department = m_client.socModule.ReceiveInt32();
+                int level = m_client.socModule.ReceiveInt32();
                 string absdir = m_client.fileSystem.FakeToPath(fakedir);
 
                 switch(dirnext)
@@ -48,22 +49,45 @@ namespace NAS
                 IEnumerator<KeyValuePair<int, string>> directories = manager.GetDirectories();
                 while(directories.MoveNext())
                 {
-                    m_client.socModule.SendInt32(directories.Current.Key);
-                    m_client.socModule.SendString(directories.Current.Value);
+                    int didx = directories.Current.Key;
+                    string folderName = directories.Current.Value;
+
+                    if (!manager.IsPermittedUserForFolder(folderName, department, level))
+                    {
+                        m_client.socModule.SendInt32(-1);
+                        m_client.socModule.SendString("");
+                    }
+                    else
+                    {
+                        m_client.socModule.SendInt32(didx);
+                        m_client.socModule.SendString(folderName);
+                    }
                 }
 
                 m_client.socModule.SendInt32(manager.fileCount);
                 IEnumerator<KeyValuePair<int, string>> files = manager.GetFiles();
                 while(files.MoveNext())
                 {
-                    m_client.socModule.SendInt32(files.Current.Key);
-                    m_client.socModule.SendString(files.Current.Value);
+                    int fidx = files.Current.Key;
+                    string fileName = files.Current.Value;
+
+                    if (!manager.IsPermittedUserForFile(fileName, department, level))
+                    {
+                        m_client.socModule.SendInt32(-1);
+                        m_client.socModule.SendString("");
+                    }
+                    else
+                    {
+                        m_client.socModule.SendInt32(fidx);
+                        m_client.socModule.SendString(fileName);
+                    }
                 }
 
                 return NasServiceResult.Success;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                this.WriteLog(ex.StackTrace);
                 return NasServiceResult.NetworkError;
             }
         }

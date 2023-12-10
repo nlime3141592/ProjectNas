@@ -31,6 +31,11 @@ namespace NAS
         private SortedList<int, string> files;
         #endregion
 
+        #region .fmeta file datas
+        private SortedList<int, int> departments;
+        private SortedList<int, int> levels;
+        #endregion
+
         private string m_dirRoot;
         private Encoding m_encoding;
         private Stopwatch m_watch;
@@ -45,13 +50,19 @@ namespace NAS
             directories = new SortedList<int, string>();
             files = new SortedList<int, string>();
 
+            departments = new SortedList<int, int>();
+            levels = new SortedList<int, int>();
+
             m_dirRoot = _dirRoot;
             m_encoding = _encoding;
             m_watch = new Stopwatch();
             m_watch.Start();
 
-            if (!m_TryInitialize())
-                m_LoadMetaFile();
+            if (!m_TryInitializeD())
+                m_LoadMetaFileD();
+
+            if (!m_TryInitializeP())
+                m_LoadMetaFileP();
         }
 
         public static bool IsValidName(string _fileOrFolderName)
@@ -93,6 +104,30 @@ namespace NAS
             return files.GetEnumerator();
         }
 
+        public bool IsPermittedUserForFolder(string _folderName, int _department, int _level)
+        {
+            int didx = GetFolderIndex(_folderName);
+
+            if (departments[didx] == 0)
+                return true;
+            else if (departments[didx] == _department && levels[didx] <= _level)
+                return true;
+            else
+                return false;
+        }
+
+        public bool IsPermittedUserForFile(string _fileName, int _department, int _level)
+        {
+            int fidx = GetFileIndex(_fileName);
+
+            if (departments[fidx] == 0)
+                return true;
+            else if (departments[fidx] == _department && levels[fidx] <= _level)
+                return true;
+            else
+                return false;
+        }
+
         public int GetFolderIndex(string _folderName)
         {
             return directories.FirstOrDefault((_kvPair) => _kvPair.Value == _folderName).Key;
@@ -103,7 +138,7 @@ namespace NAS
             return files.FirstOrDefault((_kvPair) => _kvPair.Value == _fileName).Key;
         }
 
-        public bool TryAddFolder(string _folderName)
+        public bool TryAddFolder(string _folderName, int _department, int _level)
         {
             m_watch.Restart();
 
@@ -118,7 +153,11 @@ namespace NAS
                 int idxKey = ++idxInc;
                 directories.Add(idxKey, _folderName);
                 ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                this.m_SaveMetaFile();
+                departments.Add(idxKey, _department);
+                levels.Add(idxKey, _level);
+
+                this.m_SaveMetaFileD();
+                this.m_SaveMetaFileP();
                 return true;
             }
             else
@@ -127,12 +166,16 @@ namespace NAS
                 int idxKey = ++idxInc;
                 directories.Add(idxKey, _folderName);
                 ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                this.m_SaveMetaFile();
+                departments.Add(idxKey, _department);
+                levels.Add(idxKey, _level);
+
+                this.m_SaveMetaFileD();
+                this.m_SaveMetaFileP();
                 return true;
             }
         }
 
-        public bool TryAddFile(string _fileName)
+        public bool TryAddFile(string _fileName, int _department, int _level)
         {
             m_watch.Restart();
 
@@ -147,7 +190,11 @@ namespace NAS
                 int idxKey = ++idxInc;
                 files.Add(idxKey, _fileName);
                 ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                this.m_SaveMetaFile();
+                departments.Add(idxKey, _department);
+                levels.Add(idxKey, _level);
+
+                this.m_SaveMetaFileD();
+                this.m_SaveMetaFileP();
                 return true;
             }
             else
@@ -156,7 +203,11 @@ namespace NAS
                 int idxKey = ++idxInc;
                 files.Add(idxKey, _fileName);
                 ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                this.m_SaveMetaFile();
+                departments.Add(idxKey, _department);
+                levels.Add(idxKey, _level);
+
+                this.m_SaveMetaFileD();
+                this.m_SaveMetaFileP();
                 return true;
             }
         }
@@ -180,8 +231,11 @@ namespace NAS
 
                     directories.Remove(key);
                     ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
+                    departments.Remove(key);
+                    levels.Remove(key);
 
-                    this.m_SaveMetaFile();
+                    this.m_SaveMetaFileD();
+                    this.m_SaveMetaFileP();
                     return true;
                 }
             }
@@ -208,8 +262,11 @@ namespace NAS
 
                     files.Remove(key);
                     ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
+                    departments.Remove(key);
+                    levels.Remove(key);
 
-                    this.m_SaveMetaFile();
+                    this.m_SaveMetaFileD();
+                    this.m_SaveMetaFileP();
                     return true;
                 }
             }
@@ -217,7 +274,7 @@ namespace NAS
             return false;
         }
 
-        private bool m_TryInitialize()
+        private bool m_TryInitializeD()
         {
             if (!Directory.Exists(m_dirRoot))
                 Directory.CreateDirectory(m_dirRoot);
@@ -234,11 +291,32 @@ namespace NAS
             reserve02 = 0;
             reserve03 = 0;
 
-            this.m_SaveMetaFile();
+            this.m_SaveMetaFileD();
             return true;
         }
 
-        private void m_LoadMetaFile()
+        private bool m_TryInitializeP()
+        {
+            if (File.Exists(string.Format("{0}.fmeta", m_dirRoot)))
+                return false;
+
+            foreach(int key in directories.Keys)
+            {
+                departments.Add(key, 0);
+                levels.Add(key, 0);
+            }
+
+            foreach(int key in files.Keys)
+            {
+                departments.Add(key, 0);
+                levels.Add(key, 0);
+            }
+
+            this.m_SaveMetaFileP();
+            return true;
+        }
+
+        private void m_LoadMetaFileD()
         {
             string path = string.Format("{0}.dmeta", m_dirRoot);
 
@@ -264,17 +342,17 @@ namespace NAS
 
             while (rd.BaseStream.Position < rd.BaseStream.Length)
             {
-                byte dcode = rd.ReadByte();
+                byte fcode = rd.ReadByte();
                 int idxKey = rd.ReadInt32();
-                int dirStringLength = rd.ReadInt32();
+                int fnlen = rd.ReadInt32();
 
-                switch (dcode)
+                switch (fcode)
                 {
                     case 0x0D: // directory
-                        directories[idxKey] = m_encoding.GetString(rd.ReadBytes(dirStringLength));
+                        directories[idxKey] = m_encoding.GetString(rd.ReadBytes(fnlen));
                         break;
                     case 0x0A: // file
-                        files[idxKey] = m_encoding.GetString(rd.ReadBytes(dirStringLength));
+                        files[idxKey] = m_encoding.GetString(rd.ReadBytes(fnlen));
                         break;
                 }
             }
@@ -283,7 +361,28 @@ namespace NAS
             stream.Close();
         }
 
-        private void m_SaveMetaFile()
+        private void m_LoadMetaFileP()
+        {
+            string path = string.Format("{0}.fmeta", m_dirRoot);
+
+            FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            BinaryReader rd = new BinaryReader(stream, m_encoding);
+
+            while(rd.BaseStream.Position < rd.BaseStream.Length)
+            {
+                int key = rd.ReadInt32();
+                int department = rd.ReadInt32();
+                int level = rd.ReadInt32();
+
+                departments.Add(key, department);
+                levels.Add(key, level);
+            }
+
+            rd.Close();
+            stream.Close();
+        }
+
+        private void m_SaveMetaFileD()
         {
             string path = string.Format("{0}.dmeta", m_dirRoot);
 
@@ -319,6 +418,24 @@ namespace NAS
                 byte[] bytes = m_encoding.GetBytes(files[key]);
                 wr.Write(bytes.Length);
                 wr.Write(bytes, 0, bytes.Length);
+            }
+
+            wr.Close();
+            stream.Close();
+        }
+
+        private void m_SaveMetaFileP()
+        {
+            string path = string.Format("{0}.fmeta", m_dirRoot);
+
+            FileStream stream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            BinaryWriter wr = new BinaryWriter(stream, m_encoding);
+
+            foreach(int key in departments.Keys)
+            {
+                wr.Write(key);
+                wr.Write(departments[key]);
+                wr.Write(levels[key]);
             }
 
             wr.Close();

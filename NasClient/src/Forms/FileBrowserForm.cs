@@ -346,27 +346,21 @@ namespace NAS
 
         private void btRoot_Click(object sender, EventArgs e)
         {
-            NasClient client = NasClientProgram.GetClient();
-
-            if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
-                return;
-
             m_ToRootDir();
         }
 
         private void btBack_Click(object sender, EventArgs e)
         {
-            NasClient client = NasClientProgram.GetClient();
-
-            if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
-                return;
-
             m_ToBackDir();
         }
 
         private void m_ToRootDir()
         {
             NasClient client = NasClientProgram.GetClient();
+
+            if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
+                return;
+
             client.datFileBrowse.fakedir = client.datFileBrowse.fakeroot;
             CSvDirectoryMove service = new CSvDirectoryMove(client, "");
             service.onMoveSuccess = m_OnDirectoryMoveSuccess;
@@ -422,7 +416,12 @@ namespace NAS
 
         private void m_ToBackDir()
         {
-            CSvDirectoryMove service = new CSvDirectoryMove(NasClientProgram.GetClient(), "..");
+            NasClient client = NasClientProgram.GetClient();
+
+            if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
+                return;
+
+            CSvDirectoryMove service = new CSvDirectoryMove(client, "..");
             service.onMoveSuccess = m_OnDirectoryMoveSuccess;
             service.onError = m_OnNetworkError;
             NasClientProgram.GetClient().Request(service);

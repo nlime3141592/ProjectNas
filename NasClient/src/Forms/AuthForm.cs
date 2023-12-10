@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -226,7 +225,8 @@ namespace NAS
 
                 CSvLogin service = new CSvLogin(NasClientProgram.GetClient(), id, pw); // TODO: 클라이언트를 집어넣어야 함.
                 service.onLoginSuccess = m_OnLoginSuccess;
-                service.onLoginFailure = m_OnLoginFailure;
+                service.onInvalidAccount = m_OnInvalidAccount;
+                service.onNotAcceptedAccount = m_OnNotAcceptedAccount;
                 service.onError = m_OnNetworkError;
                 NasClientProgram.GetClient().Request(service);
             }
@@ -268,18 +268,12 @@ namespace NAS
                 _Execute();
         }
 
-        private void m_OnLoginSuccess(int _uuid, string _fakedir)
+        private void m_OnLoginSuccess()
         {
             void _Show()
             {
                 FileBrowserForm.GetForm().ctShow();
             }
-
-            NasClient client = NasClientProgram.GetClient();
-
-            client.datLogin.uuid = _uuid;
-            client.datFileBrowse.fakeroot = _fakedir;
-            client.datFileBrowse.fakedir = _fakedir;
 
             this.ctHide();
 
@@ -289,11 +283,24 @@ namespace NAS
                 _Show();
         }
 
-        private void m_OnLoginFailure()
+        private void m_OnInvalidAccount()
         {
             void _Show()
             {
                 MessageBox.Show(this, "로그인에 실패했습니다. 정보를 확인하세요.", "AuthForm");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnNotAcceptedAccount()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "승인되지 않은 계정입니다. 관리자에게 문의하세요.", "AuthForm");
             }
 
             if (this.InvokeRequired)

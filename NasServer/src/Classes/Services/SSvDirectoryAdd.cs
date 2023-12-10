@@ -19,6 +19,8 @@ namespace NAS
             {
                 string fakedir = m_client.socModule.ReceiveString();
                 string dirnext = m_client.socModule.ReceiveString();
+                int department = m_client.socModule.ReceiveInt32();
+                int level = m_client.socModule.ReceiveInt32();
 
                 if(!DirectoryManager.IsValidName(dirnext))
                 {
@@ -29,7 +31,7 @@ namespace NAS
                 string absdir = m_client.fileSystem.FakeToPath(fakedir);
                 DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
 
-                if (manager.TryAddFolder(dirnext))
+                if (manager.TryAddFolder(dirnext, department, level))
                 {
                     m_client.socModule.SendString("<SUCCESS>");
                     m_client.socModule.SendInt32(manager.GetFolderIndex(dirnext));

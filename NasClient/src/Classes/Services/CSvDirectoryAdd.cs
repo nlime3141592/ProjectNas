@@ -11,11 +11,15 @@ namespace NAS
 
         private NasClient m_client;
         private string m_nextDir;
+        private int m_department;
+        private int m_level;
 
-        public CSvDirectoryAdd(NasClient _client, string _nextDir)
+        public CSvDirectoryAdd(NasClient _client, string _nextDir, int _department, int _level)
         {
             m_client = _client;
             m_nextDir = _nextDir.Trim();
+            m_department = _department;
+            m_level = _level;
         }
 
         public override NasServiceResult Execute()
@@ -25,6 +29,8 @@ namespace NAS
                 m_client.socModule.SendString("SV_DIRECTORY_ADD");
                 m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
                 m_client.socModule.SendString(m_nextDir);
+                m_client.socModule.SendInt32(m_department);
+                m_client.socModule.SendInt32(m_level);
                 string response = m_client.socModule.ReceiveString();
 
                 switch(response)

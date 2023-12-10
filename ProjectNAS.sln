@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasFileSystem", "NasFileSystem\NasFileSystem.csproj", "{42004FB3-299D-4D8C-88F5-B0AD55AEAE9D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasServer", "NasServer\NasServer.csproj", "{D87A3448-34B8-4D9C-84F8-B6C94BDF3DE8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasClient", "NasClient\NasClient.csproj", "{F6C5694F-12B5-4FFD-B239-C2F2DA63B393}"
@@ -13,16 +11,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasLib", "NasLib\NasLib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasDB", "NasDB\NasDB.csproj", "{2EB17581-BA3F-46DC-85A8-629E012E70DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NasFileSystem", "NasFileSystem\NasFileSystem.csproj", "{B9AF9D81-91E5-4AC4-8B2F-2F802AE7E634}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{42004FB3-299D-4D8C-88F5-B0AD55AEAE9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42004FB3-299D-4D8C-88F5-B0AD55AEAE9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42004FB3-299D-4D8C-88F5-B0AD55AEAE9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42004FB3-299D-4D8C-88F5-B0AD55AEAE9D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D87A3448-34B8-4D9C-84F8-B6C94BDF3DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D87A3448-34B8-4D9C-84F8-B6C94BDF3DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D87A3448-34B8-4D9C-84F8-B6C94BDF3DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,6 +35,10 @@ Global
 		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EB17581-BA3F-46DC-85A8-629E012E70DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9AF9D81-91E5-4AC4-8B2F-2F802AE7E634}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9AF9D81-91E5-4AC4-8B2F-2F802AE7E634}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9AF9D81-91E5-4AC4-8B2F-2F802AE7E634}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9AF9D81-91E5-4AC4-8B2F-2F802AE7E634}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

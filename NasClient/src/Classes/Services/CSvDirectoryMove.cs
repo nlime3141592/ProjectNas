@@ -27,6 +27,8 @@ namespace NAS
                 m_client.socModule.SendString("SV_DIRECTORY_MOVE");
                 m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
                 m_client.socModule.SendString(m_dirNext);
+                m_client.socModule.SendInt32(m_client.datLogin.department);
+                m_client.socModule.SendInt32(m_client.datLogin.level);
                 m_client.datFileBrowse.fakedir = m_client.socModule.ReceiveString();
 
                 int dcnt = m_client.socModule.ReceiveInt32();
@@ -35,7 +37,9 @@ namespace NAS
                 {
                     int didx = m_client.socModule.ReceiveInt32();
                     string dname = m_client.socModule.ReceiveString();
-                    m_client.datFileBrowse.directories.TryAdd(didx, dname);
+
+                    if(didx != -1)
+                        m_client.datFileBrowse.directories.TryAdd(didx, dname);
                 }
 
                 int fcnt = m_client.socModule.ReceiveInt32();
@@ -44,14 +48,17 @@ namespace NAS
                 {
                     int fidx = m_client.socModule.ReceiveInt32();
                     string fname = m_client.socModule.ReceiveString();
-                    m_client.datFileBrowse.files.TryAdd(fidx, fname);
+
+                    if(fidx != -1)
+                        m_client.datFileBrowse.files.TryAdd(fidx, fname);
                 }
 
                 onMoveSuccess?.Invoke();
                 return NasServiceResult.Success;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                this.WriteLog(ex.StackTrace);
                 onError?.Invoke();
                 return NasServiceResult.NetworkError;
             }

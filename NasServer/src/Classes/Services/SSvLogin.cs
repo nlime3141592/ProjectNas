@@ -21,36 +21,44 @@ namespace NAS
                 string pw = m_client.socModule.ReceiveString();
 
                 MySqlCommand sqlcmd;
-                NasServerProgram.GetDB().TryGetSqlCommand(out sqlcmd, "SELECT uuid FROM account WHERE id = @id AND pw = @pw");
+                NasServerProgram.GetDB().TryGetSqlCommand(out sqlcmd, "SELECT uuid, department, level FROM account WHERE id = @id AND pw = @pw");
                 sqlcmd.Parameters.AddWithValue("@id", id);
                 sqlcmd.Parameters.AddWithValue("@pw", pw);
                 MySqlDataReader reader = sqlcmd.ExecuteReader();
 
                 if(!reader.Read())
                 {
-                    // NOTE: 존재하지 않는 계정입니다.
-                    m_client.socModule.SendInt32(-1);
-                    m_client.socModule.SendString("");
-                    m_client.socModule.SendString("<LOGIN_FAILURE>");
+                    m_client.socModule.SendString("<INVALID_ACCOUNT>");
                     reader.Close();
                     return new NasServiceResult(20001, "INVALID_ACCOUNT");
                 }
                 else
                 {
-                    m_client.socModule.SendInt32(reader.GetInt32(0));
-                    m_client.socModule.SendString(m_client.fileSystem.rootFakeDirectory);
-                    m_client.socModule.SendString("<LOGIN_SUCCESS>");
-                    reader.Close();
-                    return NasServiceResult.Success;
+                    int uuid = reader.GetInt32(0);
+                    int department = reader.GetInt32(1);
+                    int level = reader.GetInt32(2);
+
+                    if(department == 0)
+                    {
+                        m_client.socModule.SendString("<NOT_ACCEPTED_ACCOUNT>");
+                        reader.Close();
+                        return new NasServiceResult(20002, "NOT_ACCEPTED_ACCOUNT");
+                    }
+                    else
+                    {
+                        m_client.socModule.SendString("<LOGIN_SUCCESS>");
+                        m_client.socModule.SendInt32(uuid);
+                        m_client.socModule.SendInt32(department);
+                        m_client.socModule.SendInt32(level);
+                        m_client.socModule.SendString(m_client.fileSystem.rootFakeDirectory);
+                        reader.Close();
+                        return NasServiceResult.Success;
+                    }
                 }
             }
-            catch(SocketException)
+            catch(Exception ex)
             {
                 return NasServiceResult.NetworkError;
-            }
-            catch(Exception)
-            {
-                return NasServiceResult.Error;
             }
         }
     }

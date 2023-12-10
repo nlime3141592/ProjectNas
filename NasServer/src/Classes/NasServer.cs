@@ -51,8 +51,10 @@ namespace NAS
                 m_acThread.Start();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // this.WriteLog(ex.Message);
+                // this.WriteLog(ex.StackTrace);
                 // NOTE: 예외 발생으로 서버를 열 수 없습니다.
                 m_isClosed = true;
                 return false;
