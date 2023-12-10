@@ -174,6 +174,61 @@ namespace NAS
             ctUpdateFileBrowser();
         }
 
+        private void m_OnFileAddSuccess(int _fidx, string _fileName)
+        {
+            void _Show()
+            {
+                NasClient client = NasClientProgram.GetClient();
+                client.datFileBrowse.files.TryAdd(_fidx, _fileName);
+                ctUpdateFileBrowser();
+                MessageBox.Show(this, "새로운 파일을 업로드 했습니다.", "파일 업로드");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnFileAddFailure()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "파일을 추가할 수 없습니다.", "파일 업로드 실패");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnInvalidFileName()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "파일 이름이 잘못되었습니다..", "파일 업로드 실패");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
+        private void m_OnExistFile()
+        {
+            void _Show()
+            {
+                MessageBox.Show(this, "이미 존재하는 파일 이름입니다.", "파일 업로드 실패");
+            }
+
+            if (this.InvokeRequired)
+                this.Invoke(new Action(_Show));
+            else
+                _Show();
+        }
+
         private void m_OnNetworkError()
         {
             NasClientProgram.GetClient().TryHalt();
@@ -276,7 +331,7 @@ namespace NAS
                 _Set();
         }
 
-        private void m_ShowFileDialog()
+        private bool m_TrySelectFile(out string _absPath)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Title = "폴더 추가";
@@ -287,11 +342,14 @@ namespace NAS
             switch(result)
             {
                 case DialogResult.Cancel:
-                    break;
+                    _absPath = null;
+                    return false;
                 case DialogResult.OK:
-                    this.WriteLog(dialog.SafeFileName); // 파일의 이름
-                    this.WriteLog(dialog.FileName); // 절대경로
-                    break;
+                    _absPath = dialog.FileName; // NOTE: 절대경로
+                    return true;
+                default:
+                    _absPath = null;
+                    return false;
             }
         }
 
@@ -325,12 +383,34 @@ namespace NAS
 
         private void 파일업로드ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            m_ShowFileDialog();
+            string absPath;
+
+            if (!m_TrySelectFile(out absPath))
+                return;
+
+            WriteFileNameForm form = new WriteFileNameForm(absPath);
+            form.onFileAddSuccess = m_OnFileAddSuccess;
+            form.onFileAddFailure = m_OnFileAddFailure;
+            form.onInvalidName = m_OnInvalidFileName;
+            form.onExistFile = m_OnExistFile;
+            form.onError = m_OnNetworkError;
+            form.ShowDialog(this);
         }
 
         private void 파일업로드ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m_ShowFileDialog();
+            string absPath;
+
+            if (!m_TrySelectFile(out absPath))
+                return;
+
+            WriteFileNameForm form = new WriteFileNameForm(absPath);
+            form.onFileAddSuccess = m_OnFileAddSuccess;
+            form.onFileAddFailure = m_OnFileAddFailure;
+            form.onInvalidName = m_OnInvalidFileName;
+            form.onExistFile = m_OnExistFile;
+            form.onError = m_OnNetworkError;
+            form.ShowDialog(this);
         }
 
         // NOTE: 폴더 삭제 이벤트

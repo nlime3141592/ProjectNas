@@ -21,8 +21,9 @@ namespace NAS
                 case "SV_DIRECTORY_DELETE":
                     return new SSvDirectoryDelete(this);
                 case "SV_FILE_ADD":
+                    return new SSvFileAdd(this);
                 case "SV_FILE_DELETE":
-                    return null;
+                    return new SSvFileDelete(this);
                 default:
                     return null;
             }

@@ -31,7 +31,7 @@
             this.btCancel = new System.Windows.Forms.Button();
             this.btOk = new System.Windows.Forms.Button();
             this.lbInfo = new System.Windows.Forms.Label();
-            this.txtFolderName = new System.Windows.Forms.TextBox();
+            this.txtFileName = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btCancel
@@ -42,6 +42,7 @@
             this.btCancel.TabIndex = 0;
             this.btCancel.Text = "취소";
             this.btCancel.UseVisualStyleBackColor = true;
+            this.btCancel.Click += new System.EventHandler(this.btCancel_Click);
             // 
             // btOk
             // 
@@ -51,6 +52,7 @@
             this.btOk.TabIndex = 1;
             this.btOk.Text = "확인";
             this.btOk.UseVisualStyleBackColor = true;
+            this.btOk.Click += new System.EventHandler(this.btOk_Click);
             // 
             // lbInfo
             // 
@@ -61,19 +63,19 @@
             this.lbInfo.TabIndex = 2;
             this.lbInfo.Text = "새로운 파일 이름을 입력하세요. (1~128자 이내)";
             // 
-            // txtFolderName
+            // txtFileName
             // 
-            this.txtFolderName.Location = new System.Drawing.Point(12, 43);
-            this.txtFolderName.Name = "txtFolderName";
-            this.txtFolderName.Size = new System.Drawing.Size(410, 21);
-            this.txtFolderName.TabIndex = 3;
+            this.txtFileName.Location = new System.Drawing.Point(12, 43);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(410, 21);
+            this.txtFileName.TabIndex = 3;
             // 
             // WriteFileNameForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(434, 110);
-            this.Controls.Add(this.txtFolderName);
+            this.Controls.Add(this.txtFileName);
             this.Controls.Add(this.lbInfo);
             this.Controls.Add(this.btOk);
             this.Controls.Add(this.btCancel);
@@ -89,6 +91,6 @@
         private System.Windows.Forms.Button btCancel;
         private System.Windows.Forms.Button btOk;
         private System.Windows.Forms.Label lbInfo;
-        private System.Windows.Forms.TextBox txtFolderName;
+        private System.Windows.Forms.TextBox txtFileName;
     }
 }

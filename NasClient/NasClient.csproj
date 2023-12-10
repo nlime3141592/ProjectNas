@@ -54,6 +54,8 @@
     <Compile Include="src\Classes\Services\CSvDirectoryAdd.cs" />
     <Compile Include="src\Classes\Services\CSvDirectoryDelete.cs" />
     <Compile Include="src\Classes\Services\CSvDirectoryMove.cs" />
+    <Compile Include="src\Classes\Services\CSvFileAdd.cs" />
+    <Compile Include="src\Classes\Services\CSvFileDelete.cs" />
     <Compile Include="src\Classes\Services\CSvInitialize.cs" />
     <Compile Include="src\Classes\Services\CSvLogin.cs" />
     <Compile Include="src\Classes\Services\CSvJoin.cs" />
