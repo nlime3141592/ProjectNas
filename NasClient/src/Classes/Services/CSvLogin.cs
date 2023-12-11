@@ -33,10 +33,12 @@ namespace NAS
                 {
                     case "<LOGIN_SUCCESS>":
                         int uuid = m_client.socModule.ReceiveInt32();
+                        string name = m_client.socModule.ReceiveString();
                         int department = m_client.socModule.ReceiveInt32();
                         int level = m_client.socModule.ReceiveInt32();
                         string fakedir = m_client.socModule.ReceiveString();
                         m_client.datLogin.uuid = uuid;
+                        m_client.datLogin.name = name;
                         m_client.datLogin.department = department;
                         m_client.datLogin.level = level;
                         m_client.datFileBrowse.fakedir = fakedir;
@@ -56,6 +58,7 @@ namespace NAS
             catch(Exception ex)
             {
                 onError?.Invoke();
+                this.WriteLog(ex.StackTrace);
                 return NasServiceResult.NetworkError;
             }
         }

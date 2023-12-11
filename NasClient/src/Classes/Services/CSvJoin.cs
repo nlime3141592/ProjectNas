@@ -15,12 +15,14 @@ namespace NAS
         private NasClient m_client;
         private string m_id;
         private string m_pw;
+        private string m_name;
 
-        public CSvJoin(NasClient _client, string _id, string _pw)
+        public CSvJoin(NasClient _client, string _id, string _pw, string _name)
         {
             m_client = _client;
             m_id = _id;
             m_pw = _pw;
+            m_name = _name;
         }
 
         public override NasServiceResult Execute()
@@ -30,6 +32,7 @@ namespace NAS
                 m_client.socModule.SendString("SV_JOIN");
                 m_client.socModule.SendString(m_id);
                 m_client.socModule.SendString(m_pw);
+                m_client.socModule.SendString(m_name);
                 string response = m_client.socModule.ReceiveString();
 
                 switch (response)

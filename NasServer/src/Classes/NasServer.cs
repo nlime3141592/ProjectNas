@@ -165,7 +165,11 @@ namespace NAS
             {
                 case "stdCLNT":
                     _acceptedClient = new StandardClient();
-                    this.WriteLog("Accepted standard client.");
+                    this.WriteLog("Accepted StandardClient.");
+                    return true;
+                case "acptCLNT":
+                    _acceptedClient = new AcceptorClient();
+                    this.WriteLog("Accepted AcceptorClient.");
                     return true;
                 default:
                     _acceptedClient = null;

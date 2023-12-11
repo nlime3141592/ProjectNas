@@ -1,0 +1,26 @@
+CREATE TABLE `department`(
+	`depid` INT(11) NOT NULL COMMENT '부서 번호',
+	`depname` NVARCHAR(64) NOT NULL COMMENT '부서 이름',
+	PRIMARY KEY (`depid`),
+	UNIQUE KEY (`depname`)
+);
+
+CREATE TABLE `account`(
+	`uuid` INT(11) NOT NULL AUTO_INCREMENT COMMENT '사용자 고유 번호',
+	`id` VARCHAR(32) NOT NULL COMMENT '계정',
+	`pw` VARCHAR(32) NOT NULL COMMENT '비밀번호',
+	`regdate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() COMMENT '가입 날짜',
+	PRIMARY KEY (`uuid`),
+	UNIQUE KEY (`id`)
+);
+
+CREATE TABLE `userinfo`(
+	`uuid` INT(11) NOT NULL AUTO_INCREMENT COMMENT '사용자 고유 번호',
+	`name` VARCHAR(32) NOT NULL COMMENT '사용자 이름',
+	`depid` INT(11) NOT NULL DEFAULT 0 COMMENT '부서',
+	`permission_level` INT(11) NOT NULL DEFAULT 0 COMMENT '권한 레벨',
+	FOREIGN KEY (`uuid`) REFERENCES `account` (`uuid`),
+	FOREIGN KEY (`depid`) REFERENCES `department` (`depid`),
+	PRIMARY KEY (`uuid`)
+);
+

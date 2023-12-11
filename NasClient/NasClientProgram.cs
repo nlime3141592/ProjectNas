@@ -35,11 +35,6 @@ namespace NAS
             return s_m_client;
         }
 
-        public static void ClearClient()
-        {
-            s_m_client = null;
-        }
-
         public static bool TryConnectToServer()
         {
             s_m_client?.socModule?.Close();
@@ -72,17 +67,17 @@ namespace NAS
             }
             catch(Exception ex)
             {
-                NasClientProgram.instance.WriteLog("예외가 발생했담.... {0}", ex.Message);
-                NasClientProgram.instance.WriteLog("StackTrace : {0}", ex.StackTrace);
+                s_m_client?.TryHalt();
                 NasClientProgram.instance.WriteLog("Message : {0}", ex.Message);
+                NasClientProgram.instance.WriteLog("StackTrace : {0}", ex.StackTrace);
             }
         }
 
         private static void s_m_OnHaltedByException()
         {
-            NasClientProgram.ClearClient();
-            AuthForm authForm = AuthForm.GetForm();
+            s_m_client?.TryHalt();
             NasClientProgram.instance.WriteLog("오 여기에 들어왔네?");
+            AuthForm authForm = AuthForm.GetForm();
             authForm.Invoke(new Action(() =>
             {
                 authForm.Show();

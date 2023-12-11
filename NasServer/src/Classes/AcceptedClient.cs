@@ -27,17 +27,6 @@ namespace NAS
                         base.TryHalt();
                         break;
                     }
-
-                    /*
-                    if (TryHandleServiceResult(service, result))
-                        socModule.SendString(result.name); // NOTE: 최종 서비스 결과를 클라이언트에 response 해줌.
-                    else
-                    {
-                        socModule.Close();
-                        base.TryHalt();
-                        break;
-                    }
-                    */
                 }
             }
             catch (Exception)

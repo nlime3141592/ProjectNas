@@ -18,11 +18,13 @@ namespace NAS
             {
                 string id = m_client.socModule.ReceiveString();
                 string pw = m_client.socModule.ReceiveString();
+                string name = m_client.socModule.ReceiveString();
 
                 MySqlCommand sqlcmd;
+                MySqlDataReader reader = null;
                 NasServerProgram.GetDB().TryGetSqlCommand(out sqlcmd, "SELECT COUNT(*) FROM account WHERE id = @id");
                 sqlcmd.Parameters.AddWithValue("@id", id);
-                MySqlDataReader reader = sqlcmd.ExecuteReader();
+                reader = sqlcmd.ExecuteReader();
 
                 if (!reader.Read() || reader.GetInt32(0) != 0)
                 {
@@ -35,6 +37,16 @@ namespace NAS
                 NasServerProgram.GetDB().TryGetSqlCommand(out sqlcmd, "INSERT INTO account (id, pw) values (@id, @pw)");
                 sqlcmd.Parameters.AddWithValue("@id", id);
                 sqlcmd.Parameters.AddWithValue("@pw", pw);
+                sqlcmd.ExecuteNonQuery();
+                NasServerProgram.GetDB().TryGetSqlCommand(out sqlcmd, "SELECT uuid FROM account WHERE id = @id");
+                sqlcmd.Parameters.AddWithValue("@id", id);
+                reader = sqlcmd.ExecuteReader();
+                reader.Read();
+                int uuid = reader.GetInt32(0);
+                reader.Close();
+                NasServerProgram.GetDB().TryGetSqlCommand(out sqlcmd, "INSERT INTO userinfo (uuid, name) VALUES (@uuid, @name)");
+                sqlcmd.Parameters.AddWithValue("@uuid", uuid);
+                sqlcmd.Parameters.AddWithValue("@name", name);
                 sqlcmd.ExecuteNonQuery();
                 m_client.socModule.SendString("<JOIN_SUCCESS>");
                 return NasServiceResult.Success;

@@ -8,7 +8,7 @@ namespace NAS
         private const string c_DB_IP = "localhost";
         private const string c_DB_ID = "root";
         private const string c_DB_PW = "1234";
-        private const string c_DB_NAME = "testbase";
+        private const string c_DB_NAME = "projnas";
 
         private MySqlConnection m_connection;
 

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Net;
 using System.Net.Sockets;
+using System.Net;
 using System.Text;
 
 namespace NAS
 {
-    public class NasClient : NasThread
+    public class NasAcceptor : NasThread
     {
         public const int c_CONNECTION_CHECK_INTERVAL = 8;
 
-        public LoginData datLogin { get; private set; }
-        public FileBrowseData datFileBrowse { get; private set; }
         public SocketModule socModule { get; private set; }
 
         public Action onHaltedByException;
@@ -20,11 +18,8 @@ namespace NAS
         private Stopwatch m_watch;
         private ConcurrentQueue<NasService> m_services;
 
-        public NasClient()
+        public NasAcceptor()
         {
-            datLogin = new LoginData();
-            datFileBrowse = new FileBrowseData();
-
             m_watch = new Stopwatch();
             m_services = new ConcurrentQueue<NasService>();
         }
@@ -41,7 +36,7 @@ namespace NAS
                     // NOTE: 10초마다 서버와의 연결 체크를 위한 서비스를 전송한다.
                     if (m_watch.ElapsedMilliseconds > 1000 * c_CONNECTION_CHECK_INTERVAL)
                     {
-                        this.Request(new CSvConnectionCheck(this));
+                        this.Request(new ASvConnectionCheck(this));
                         m_watch.Restart();
                     }
 
@@ -65,12 +60,11 @@ namespace NAS
                 base.TryStop();
                 m_watch.Stop();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 base.TryStop();
                 m_watch.Stop();
                 this.WriteLog("서비스 실행 오류 발생, {0}", ex.Message);
-                onHaltedByException();
             }
         }
 
@@ -85,7 +79,7 @@ namespace NAS
 
                 SocketModule module = new SocketModule(tcpclnt, Encoding.UTF8);
 
-                module.SendString("stdCLNT");
+                module.SendString("acptCLNT");
                 string response = module.ReceiveString();
 
                 if (!response.Equals("<ACCEPTED>"))
@@ -107,7 +101,7 @@ namespace NAS
 
         public void Request(NasService _service)
         {
-            if(isStarted && !isStopped)
+            if (isStarted && !isStopped)
                 m_services.Enqueue(_service);
             else
             {
@@ -115,9 +109,9 @@ namespace NAS
                 {
                     _service.Execute();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
-                    
+
                 }
             }
         }

@@ -241,21 +241,22 @@ namespace NAS
         {
             void _ShowError()
             {
-                MessageBox.Show(this, "id, pw를 확인하세요.", "AuthForm");
+                MessageBox.Show(this, "아이디, 패스워드, 이름은 필수 입력입니다.", "AuthForm");
             }
 
             void _Execute()
             {
                 string id = txtRegistrationId.Text;
                 string pw = txtRegistrationPw.Text;
+                string name = txtRegistrationName.Text;
 
-                if(id.Length == 0 || pw.Length == 0)
+                if(id.Length == 0 || pw.Length == 0 || name.Length == 0)
                 {
                     _ShowError();
                     return;
                 }
 
-                CSvJoin service = new CSvJoin(NasClientProgram.GetClient(), id, pw); // TODO: 클라이언트를 집어넣어야 함.
+                CSvJoin service = new CSvJoin(NasClientProgram.GetClient(), id, pw, name);
                 service.onJoinSuccess = m_OnJoinSuccess;
                 service.onJoinFailure = m_OnJoinFailure;
                 service.onError = m_OnNetworkError;

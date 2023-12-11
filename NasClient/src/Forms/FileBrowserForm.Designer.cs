@@ -352,6 +352,7 @@
             this.Controls.Add(this.menuBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuBar;
+            this.MaximizeBox = false;
             this.Name = "FileBrowserForm";
             this.Text = "NAS File Browser";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FileBrowserForm_FormClosed);
