@@ -182,7 +182,6 @@ namespace NAS
             if (_client == null)
                 return;
 
-            _client.socModule.Close();
             _client.TryHalt();
         }
     }

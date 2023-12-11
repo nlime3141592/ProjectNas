@@ -32,7 +32,7 @@ namespace NAS
                 this.WriteLog(_exception.Message);
                 this.WriteLog(_exception.StackTrace);
                 base.TryStop();
-                this.socModule.Close();
+                // this.socModule.Close();
             }
 
             Console.WriteLine("[{0}] Disconnect a {0} client.", this.GetType().Name);

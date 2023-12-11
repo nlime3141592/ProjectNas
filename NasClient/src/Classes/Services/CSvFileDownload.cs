@@ -13,6 +13,7 @@ namespace NAS
 
         private NasClient m_client;
         private string m_absDownloadDirectory;
+        private string m_storageDirectory;
         private string m_storageFileName;
         private string m_saveFileName;
 
@@ -23,6 +24,7 @@ namespace NAS
         {
             m_client = _client;
             m_absDownloadDirectory = _absDownloadDirectory;
+            m_storageDirectory = m_client.datFileBrowse.fakedir;
             m_storageFileName = _storageFileName.Trim();
             m_saveFileName = m_GetAvailableFileName(_absDownloadDirectory, m_storageFileName);
 
@@ -33,7 +35,7 @@ namespace NAS
         public override NasServiceResult Execute()
         {
             m_client.socModule.SendString("SV_FILE_DOWNLOAD");
-            m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
+            m_client.socModule.SendString(m_storageDirectory);
             m_client.socModule.SendString(m_storageFileName);
             m_client.socModule.SendInt32(m_loopTimes);
 

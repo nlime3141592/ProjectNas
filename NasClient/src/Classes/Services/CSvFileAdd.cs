@@ -15,6 +15,7 @@ namespace NAS
 
         private NasClient m_client;
         private string m_fileAbsPath;
+        private string m_fileFakeDir;
         private string m_fileName;
         private string m_extension;
         private int m_department;
@@ -28,6 +29,7 @@ namespace NAS
         {
             m_client = _client;
             m_fileAbsPath = _fileAbsPath;
+            m_fileFakeDir = m_client.datFileBrowse.fakedir;
             m_fileName = _fileName.Trim();
             m_buffer = new byte[c_BUFFER_SIZE];
             m_extension = _extension;
@@ -38,7 +40,7 @@ namespace NAS
         public override NasServiceResult Execute()
         {
             m_client.socModule.SendString("SV_FILE_ADD");
-            m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
+            m_client.socModule.SendString(m_fileFakeDir);
             m_client.socModule.SendString(m_fileName);
             m_client.socModule.SendString(m_extension);
             m_client.socModule.SendInt32(m_department);
