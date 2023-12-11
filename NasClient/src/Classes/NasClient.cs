@@ -9,9 +9,9 @@ namespace NAS
 {
     public class NasClient : NasThread
     {
-        public const string c_HOST = "127.0.0.1";
+        public const string c_HOST = "192.168.35.31";
         public const int c_PORT = 25565;
-        public const int c_CONNECTION_CHECK_INTERVAL = 8;
+        public const int c_CONNECTION_CHECK_INTERVAL = 10;
 
         public static NasClient instance => s_m_client;
 

@@ -8,7 +8,7 @@ namespace NAS
 {
     internal class NasAcceptorProgram
     {
-        public const string c_HOST = "127.0.0.1";
+        public const string c_HOST = "192.168.35.31";
         public const int c_PORT = 25565;
 
         private static NasAcceptorProgram instance

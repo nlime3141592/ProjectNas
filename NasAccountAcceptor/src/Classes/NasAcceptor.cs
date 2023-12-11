@@ -10,7 +10,7 @@ namespace NAS
 {
     public class NasAcceptor : NasThread
     {
-        public const int c_CONNECTION_CHECK_INTERVAL = 8;
+        public const int c_CONNECTION_CHECK_INTERVAL = 10;
 
         public List<WaitingAccountData> wAccounts { get; private set; }
         public List<DepartmentData> departments { get; private set; }
