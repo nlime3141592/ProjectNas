@@ -2,6 +2,7 @@
 
 namespace NAS
 {
+    // NOTE: 로그인을 수행하는 서비스 객체입니다.
     public class CSvLogin : NasService
     {
         public Action onLoginSuccess;
@@ -29,6 +30,9 @@ namespace NAS
 
             switch(response)
             {
+                // NOTE:
+                // 로그인에 성공하면 서버로부터 계정에 대한 각종 정보를 수신합니다.
+                // 자세한 사항은 NasClient 프로젝트의 LoginData.cs 및 FileBrowseData.cs 파일을 참조하세요.
                 case "<LOGIN_SUCCESS>":
                     int uuid = m_client.socModule.ReceiveInt32();
                     string name = m_client.socModule.ReceiveString();

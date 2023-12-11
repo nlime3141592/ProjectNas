@@ -8,18 +8,19 @@ using System.Collections.Generic;
 
 namespace NAS
 {
+    // NOTE: Account Acceptor의 구현 클래스입니다.
     public class NasAcceptor : NasThread
     {
         public const int c_CONNECTION_CHECK_INTERVAL = 10;
 
-        public List<WaitingAccountData> wAccounts { get; private set; }
-        public List<DepartmentData> departments { get; private set; }
+        public List<WaitingAccountData> wAccounts { get; private set; } // NOTE: 가입 승인 대기 계정 정보
+        public List<DepartmentData> departments { get; private set; } // NOTE: 부서 리스트
         public SocketModule socModule { get; private set; }
 
         public Action onHaltedByException;
 
-        private Stopwatch m_watch;
-        private ConcurrentQueue<NasService> m_services;
+        private Stopwatch m_watch; // NOTE: 서버와의 연결 상태를 주기적으로 체크하기 위한 스탑워치 클래스
+        private ConcurrentQueue<NasService> m_services; // NOTE: 서비스 객체를 순차적으로 처리하기 위한 서비스 큐
 
         public NasAcceptor()
         {
@@ -74,6 +75,7 @@ namespace NAS
             }
         }
 
+        // NOTE: 서버와 연결을 시도합니다.
         public bool TryConnect(string _host, int _port)
         {
             Socket socket = null;
@@ -85,7 +87,7 @@ namespace NAS
 
                 SocketModule module = new SocketModule(tcpclnt, Encoding.UTF8);
 
-                module.SendString("acptCLNT");
+                module.SendString("acptCLNT"); // NOTE: 클라이언트 유형을 전송합니다. 자세한 내용은 NasServer 프로젝트의 NasServer.cs 파일을 참조하세요.
                 string response = module.ReceiveString();
 
                 if (!response.Equals("<ACCEPTED>"))
@@ -105,6 +107,7 @@ namespace NAS
             }
         }
 
+        // NOTE: 서비스 객체를 등록합니다.
         public void Request(NasService _service)
         {
             if (isStarted && !isStopped)
@@ -113,6 +116,7 @@ namespace NAS
             {
                 try
                 {
+                    // NOTE: 만약 ThreadMain이 종료되었다면 독자적으로 수행합니다.
                     _service.Execute();
                 }
                 catch (Exception)

@@ -1,7 +1,5 @@
-﻿using MySqlConnector;
-using System;
+﻿using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 
 namespace NAS
 {
@@ -30,6 +28,8 @@ namespace NAS
         /// <summary>
         /// 해당 애플리케이션의 주 진입점입니다.
         /// </summary>
+        // args[0] : Storage의 Root 폴더
+        // args[1] : Server 포트 번호
         private static void Main(string[] args)
         {
             try
@@ -60,6 +60,7 @@ namespace NAS
                     return;
                 }
 
+                // NOTE: DB와 Server 모두 열려야만 최종적으로 서버가 열린 것입니다.
                 s_m_server = server;
                 NasServerProgram.instance.WriteLog("Opened server.");
                 s_m_ExecuteServerCommand(s_m_server);
@@ -70,6 +71,8 @@ namespace NAS
             }
         }
 
+        // NOTE: 서버 프로그램은 콘솔 애플리케이션이므로, Argument 처리를 수행해야 할 필요가 있습니다.
+        #region Command Line Argument Utilities
         private static string s_m_GetAbsoluteDirectory(string _directory)
         {
             string directory = _directory;
@@ -116,5 +119,6 @@ namespace NAS
             }
             while (!isStopped);
         }
+        #endregion
     }
 }

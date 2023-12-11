@@ -2,6 +2,7 @@
 
 namespace NAS
 {
+    // NOTE: 파일을 탐색하기 위해 경로를 이동하는 서비스 객체입니다.
     public class CSvDirectoryMove : NasService
     {
         public Action onMoveSuccess;
@@ -18,6 +19,9 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
+            // NOTE:
+            // 전송되는 m_dirNext 값에 따라 서버측에서 탐색하는 디렉토리가 달라집니다.
+            // 자세한 사항은 NasServer 프로젝트의 SSvDirectoryMove.cs 파일을 참조하세요.
             m_client.socModule.SendString("SV_DIRECTORY_MOVE");
             m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
             m_client.socModule.SendString(m_dirNext);

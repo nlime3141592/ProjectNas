@@ -1,8 +1,8 @@
 ﻿using MySqlConnector;
-using System;
 
 namespace NAS
 {
+    // NOTE: 회원가입 정보를 DB에 저장하는 서버 측 서비스입니다.
     public class SSvJoin : NasService
     {
         private AcceptedClient m_client;

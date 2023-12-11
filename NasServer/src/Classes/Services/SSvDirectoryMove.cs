@@ -21,19 +21,21 @@ namespace NAS
             int level = m_client.socModule.ReceiveInt32();
             string absdir = m_client.fileSystem.FakeToPath(fakedir);
 
+            // NOTE:
+            // 수신한 다음 파일 경로에 따라 다른 폴더로 이동합니다.
             switch(dirnext)
             {
-                case "":
+                case "": // NOTE: 현재 폴더의 정보를 갱신합니다.
                 case ".":
                     break;
-                case "..":
+                case "..": // NOTE: 상위 폴더로 이동합니다.
                     absdir = absdir.Substring(0, absdir.Length - 1);
                     int idxbackslach = absdir.LastIndexOf('\\');
                     if (idxbackslach > 0)
                         absdir = absdir.Substring(0, idxbackslach);
                     absdir += '\\';
                     break;
-                default:
+                default: // NOTE: 하위 폴더로 이동합니다.
                     absdir += (dirnext + '\\');
                     break;
             }

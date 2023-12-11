@@ -9,6 +9,8 @@ using System.Text.RegularExpressions;
 
 namespace NAS
 {
+    // NOTE:
+    // NAS Storage에 존재하는 폴더를 관리합니다.
     public class DirectoryManager
     {
         private const int c_DIRECTORY_MANAGER_TIMEOUT = 5;
@@ -19,6 +21,7 @@ namespace NAS
         public int directoryCount => directories.Count;
         public int fileCount => files.Count;
 
+        // NOTE: .dmeta 파일 정보입니다.
         #region .dmeta file datas
         private int headerSize = 24;
         private int idxInc = 0;
@@ -31,6 +34,7 @@ namespace NAS
         private SortedList<int, string> files;
         #endregion
 
+        // NOTE: .fmeta 파일 정보입니다.
         #region .fmeta file datas
         private SortedList<int, int> departments;
         private SortedList<int, int> levels;
@@ -45,6 +49,9 @@ namespace NAS
             s_m_managers = new ConcurrentDictionary<string, DirectoryManager>();
         }
 
+        // NOTE:
+        // _dirRoot 폴더를 관리하는 객체를 생성합니다.
+        // _dirRoot의 접근 권한 등 각종 기능을 사용할 수 있습니다.
         private DirectoryManager(string _dirRoot, Encoding _encoding)
         {
             directories = new SortedList<int, string>();
@@ -58,9 +65,11 @@ namespace NAS
             m_watch = new Stopwatch();
             m_watch.Start();
 
+            // 만약, .dmeta 파일이 없다면 새로 생성합니다.
             if (!m_TryInitializeD())
                 m_LoadMetaFileD();
 
+            // 만약, .fmeta 파일이 없다면 새로 생성합니다.
             if (!m_TryInitializeP())
                 m_LoadMetaFileP();
         }
@@ -104,6 +113,7 @@ namespace NAS
             return files.GetEnumerator();
         }
 
+        // NOTE: 현재 폴더가 포함하고 있는 폴더가 접근 가능한 폴더인지 점검합니다.
         public bool IsPermittedUserForFolder(string _folderName, int _department, int _level)
         {
             int didx = GetFolderIndex(_folderName);
@@ -116,6 +126,7 @@ namespace NAS
                 return false;
         }
 
+        // NOTE: 현재 폴더가 포함하고 있는 파일이 접근 가능한 파일인지 점검합니다.
         public bool IsPermittedUserForFile(string _fileName, int _department, int _level)
         {
             int fidx = GetFileIndex(_fileName);
@@ -138,6 +149,7 @@ namespace NAS
             return files.FirstOrDefault((_kvPair) => _kvPair.Value == _fileName).Key;
         }
 
+        // NOTE: 새로운 폴더를 추가합니다.
         public bool TryAddFolder(string _folderName, int _department, int _level)
         {
             m_watch.Restart();
@@ -155,11 +167,13 @@ namespace NAS
             departments.Add(idxKey, _department);
             levels.Add(idxKey, _level);
 
+            // NOTE: 파일 시스템 작업 후 즉시 meta파일을 갱신합니다.
             this.m_SaveMetaFileD();
             this.m_SaveMetaFileP();
             return true;
         }
 
+        // NOTE: 새로운 파일을 추가합니다.
         public bool TryAddFile(string _fileName, int _department, int _level)
         {
             m_watch.Restart();
@@ -182,6 +196,7 @@ namespace NAS
             return true;
         }
 
+        // NOTE: 기존 폴더를 삭제합니다.
         public bool TryDeleteFolder(string _folderName)
         {
             m_watch.Restart();
@@ -209,6 +224,7 @@ namespace NAS
             return false;
         }
 
+        // NOTE: 기존 파일을 삭제합니다.
         public bool TryDeleteFile(string _fileName)
         {
             m_watch.Restart();
@@ -236,6 +252,8 @@ namespace NAS
             return false;
         }
 
+        // NOTE: meta파일의 생성/로드/저장을 관리하는 함수 영역입니다.
+        #region Meta File Processing
         private bool m_TryInitializeD()
         {
             if (!Directory.Exists(m_dirRoot))
@@ -402,7 +420,9 @@ namespace NAS
             wr.Close();
             stream.Close();
         }
+        #endregion
 
+        // NOTE: 현재 디렉토리로부터 하위의 모든 파일과 폴더를 지우기 위한 재귀 함수입니다.
         private void m_rec_Delete(string _directory)
         {
             foreach(string file in Directory.GetFiles(_directory))

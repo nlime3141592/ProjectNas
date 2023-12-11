@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace NAS
 {
+    // NOTE: 독자 Thread 클래스를 구성하여 생명주기를 제어합니다.
     public abstract class NasThread
     {
         public bool isStarted => m_isStarted;

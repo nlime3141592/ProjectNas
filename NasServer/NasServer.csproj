@@ -138,7 +138,6 @@
     <Compile Include="src\Classes\Services\SSvDirectoryAdd.cs" />
     <Compile Include="src\Classes\Services\SSvDirectoryDelete.cs" />
     <Compile Include="src\Classes\Services\SSvDirectoryMove.cs" />
-    <Compile Include="src\Classes\Services\SSvDisconnect.cs" />
     <Compile Include="src\Classes\Services\SSvFileAdd.cs" />
     <Compile Include="src\Classes\Services\SSvFileDelete.cs" />
     <Compile Include="src\Classes\Services\SSvFileDownload.cs" />

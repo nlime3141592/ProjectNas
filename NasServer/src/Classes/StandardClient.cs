@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace NAS
+﻿namespace NAS
 {
+    // NOTE: 파일 시스템 사용자 프로그램에 대한 서비스 스레드입니다.
     public sealed class StandardClient : AcceptedClient
     {
         protected override NasService HandleServiceHeader(string _serviceHeader)

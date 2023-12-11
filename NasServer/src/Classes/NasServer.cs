@@ -132,9 +132,11 @@ namespace NAS
             {
                 while (m_isOpened && !m_isClosed)
                 {
+                    // NOTE: Socket 기반 TCP 클라이언트 객체를 수신합니다.
                     TcpClient tcpclnt = m_server.AcceptTcpClient();
                     SocketModule socModule = new SocketModule(tcpclnt, Encoding.UTF8);
 
+                    // NOTE: 클라이언트 유형 정보를 수신해 유형에 따라 다른 서비스 Thread를 수행할 수 있도록 합니다.
                     string clientType = socModule.ReceiveString();
                     AcceptedClient client;
 
@@ -145,10 +147,11 @@ namespace NAS
                         continue;
                     }
 
+                    // NOTE: 서버의 파일 시스템(NAS Storage)을 사용할 수 있도록 클라이언트에 참조를 전달합니다.
                     client.fileSystem = m_fileSystem;
                     client.socModule = socModule;
                     client.socModule.SendString("<ACCEPTED>");
-                    client.TryStart(); // TODO: 호출 순서가 중요한가? 맨 위에 있긴 했는데 점검해 볼 필요 있음.
+                    client.TryStart();
                     m_clients.Enqueue(client);
                 }
             }
@@ -160,6 +163,7 @@ namespace NAS
             this.WriteLog("Deny client.");
         }
 
+        // NOTE: 클라이언트 유형에 따라 다른 서비스 Thread를 실행합니다.
         private bool m_TrySwitchClient(out AcceptedClient _acceptedClient, string _clientType)
         {
             switch (_clientType)

@@ -45,6 +45,7 @@ namespace NAS
                 }
                 else
                 {
+                    // NOTE: 로그인 성공하여 사용자 정보를 클라이언트에 전송합니다.
                     m_client.socModule.SendString("<LOGIN_SUCCESS>");
                     m_client.socModule.SendInt32(uuid);
                     m_client.socModule.SendString(name);

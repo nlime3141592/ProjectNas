@@ -17,6 +17,7 @@ namespace NAS
             {
                 while (base.isStarted && !base.isStopped)
                 {
+                    // NOTE: 먼저, 서비스 헤더를 수신하고, 그에 맞는 서비스 로직을 수행합니다.
                     string serviceHeader = socModule.ReceiveString(1000 * c_CLIENT_TIMEOUT);
                     NasService service = HandleServiceHeader(serviceHeader);
                     service.Execute();
@@ -38,6 +39,9 @@ namespace NAS
             Console.WriteLine("[{0}] Disconnect a {0} client.", this.GetType().Name);
         }
 
+        // NOTE:
+        // 서비스 헤더를 수신하고, 헤더에 맞는 서비스 객체를 반환해야 합니다.
+        // 서비스 Thread를 자식 클래스에서 다르게 구현하면, 다른 서비스를 제공할 수 있습니다.
         protected abstract NasService HandleServiceHeader(string _serviceHeader);
     }
 }

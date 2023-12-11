@@ -5,10 +5,17 @@ using System.Windows.Forms;
 
 namespace NAS
 {
+    // NOTE: 회원가입/로그인을 구현한 WinForm 클래스입니다.
     public sealed partial class AuthForm : Form
     {
         private static AuthForm s_m_authForm;
 
+        // NOTE:
+        // AuthForm은 4가지 모드가 있습니다.
+        // 1. Login : 로그인 GUI를 제공합니다.
+        // 2. Registration : 회원가입 GUI를 제공합니다.
+        // 3. Start : 서버와 연결 실패 시 재접속 시도할 수 있는 버튼을 제공합니다.
+        // 4. Waiting : 서버와 연결 중일 때 보여줄 GUI를 제공합니다.
         public enum FormMode
         {
             Login,
@@ -50,6 +57,7 @@ namespace NAS
                 _Show();
         }
 
+        // NOTE: Form의 모드를 전환합니다.
         #region Change Form Mode
         public void ctChangeFormMode(AuthForm.FormMode _formMode)
         {
@@ -170,7 +178,8 @@ namespace NAS
         }
         #endregion
 
-        #region Button Events
+        // NOTE: 각종 컨트롤과 상호작용으로 인해 발생하는 이벤트 핸들링 함수 영역입니다.
+        #region WinForm Control Events
         private void btBackToLogin_Click(object sender, EventArgs e)
         {
             m_ctShowLoginMode();
@@ -229,11 +238,12 @@ namespace NAS
             NasClient.instance?.TryHalt();
         }
 
+        // NOTE: 로그인/회원가입 등의 작업을 수행한 후 처리되는 이벤트 핸들러 함수 영역입니다.
+        #region Login/Registration Service Operation Events
         private void m_OnLoginSuccess()
         {
             void _Show()
             {
-                // TODO: 예외 발생하는지 점검해보기
                 new FileBrowserForm().Show();
                 this.Hide();
             }
@@ -297,5 +307,6 @@ namespace NAS
             else
                 _Show();
         }
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ namespace NAS
 {
     public class DBConnection
     {
+        // NOTE: 데이터베이스의 기본 정보를 나타냅니다.
         private const string c_DB_IP = "localhost";
         private const string c_DB_ID = "root";
         private const string c_DB_PW = "1234";
@@ -47,6 +48,7 @@ namespace NAS
             }
         }
 
+        // NOTE: 데이터베이스에 질의를 시도합니다.
         public bool TryGetSqlCommand(out MySqlCommand _command, string _sql)
         {
             try
@@ -60,23 +62,5 @@ namespace NAS
                 return false;
             }
         }
-
-        /*
-        // NOTE: 예제 코드
-        public void Test()
-        {
-            
-            MySqlCommand command = new MySqlCommand("SELECT * FROM account", m_connection);
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                Console.WriteLine(reader.GetInt32(0));
-                Console.WriteLine(reader.GetString(1));
-                Console.WriteLine(reader.GetString(2));
-                Console.WriteLine(reader.GetDateTime(3));
-            }
-        }
-        */
     }
 }

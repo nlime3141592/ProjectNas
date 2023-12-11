@@ -2,6 +2,7 @@
 
 namespace NAS
 {
+    // NOTE: 서버와의 연결 상태를 주기적으로 체크하는 서비스 클래스입니다.
     public class ASvConnectionCheck : NasService
     {
         private NasAcceptor m_acceptor;

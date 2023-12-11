@@ -2,6 +2,7 @@
 
 namespace NAS
 {
+    // NOTE: 가입 승인 관리 페이지의 각종 UI를 갱신합니다.
     public class ASvAcceptorViewUpdate : NasService
     {
         public Action onSuccess;
@@ -21,6 +22,7 @@ namespace NAS
                 m_acceptor.socModule.SendString("SV_ACCEPTOR_VIEW_UPDATE");
                 int count = 0;
                 
+                // NOTE: 계정 목록 갱신
                 count = m_acceptor.socModule.ReceiveInt32();
                 m_acceptor.wAccounts.Clear();
                 for(int i = 0; i < count; ++i)
@@ -38,6 +40,7 @@ namespace NAS
                     m_acceptor.wAccounts.Add(data);
                 }
 
+                // NOTE: 부서 목록 콤보 박스 갱신
                 count = m_acceptor.socModule.ReceiveInt32();
                 m_acceptor.departments.Clear();
                 for (int i = 0; i < count; ++i)

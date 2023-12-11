@@ -45,7 +45,7 @@
             this.btCancel.Location = new System.Drawing.Point(347, 138);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(75, 23);
-            this.btCancel.TabIndex = 0;
+            this.btCancel.TabIndex = 7;
             this.btCancel.Text = "취소";
             this.btCancel.UseVisualStyleBackColor = true;
             this.btCancel.Click += new System.EventHandler(this.btCancel_Click);
@@ -55,7 +55,7 @@
             this.btOk.Location = new System.Drawing.Point(347, 109);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(75, 23);
-            this.btOk.TabIndex = 1;
+            this.btOk.TabIndex = 6;
             this.btOk.Text = "확인";
             this.btOk.UseVisualStyleBackColor = true;
             this.btOk.Click += new System.EventHandler(this.btOk_Click);
@@ -74,7 +74,7 @@
             this.txtFileName.Location = new System.Drawing.Point(12, 34);
             this.txtFileName.Name = "txtFileName";
             this.txtFileName.Size = new System.Drawing.Size(410, 21);
-            this.txtFileName.TabIndex = 3;
+            this.txtFileName.TabIndex = 0;
             // 
             // rbtDepartment
             // 
@@ -83,7 +83,7 @@
             this.rbtDepartment.Location = new System.Drawing.Point(6, 20);
             this.rbtDepartment.Name = "rbtDepartment";
             this.rbtDepartment.Size = new System.Drawing.Size(167, 16);
-            this.rbtDepartment.TabIndex = 4;
+            this.rbtDepartment.TabIndex = 2;
             this.rbtDepartment.TabStop = true;
             this.rbtDepartment.Text = "같은 부서의 직원에게 공유";
             this.rbtDepartment.UseVisualStyleBackColor = true;
@@ -94,7 +94,8 @@
             this.rbtAll.Location = new System.Drawing.Point(6, 62);
             this.rbtAll.Name = "rbtAll";
             this.rbtAll.Size = new System.Drawing.Size(127, 16);
-            this.rbtAll.TabIndex = 5;
+            this.rbtAll.TabIndex = 4;
+            this.rbtAll.TabStop = true;
             this.rbtAll.Text = "모든 직원에게 공유";
             this.rbtAll.UseVisualStyleBackColor = true;
             // 
@@ -105,7 +106,7 @@
             this.cbxPermissionLevel.Location = new System.Drawing.Point(92, 37);
             this.cbxPermissionLevel.Name = "cbxPermissionLevel";
             this.cbxPermissionLevel.Size = new System.Drawing.Size(76, 20);
-            this.cbxPermissionLevel.TabIndex = 7;
+            this.cbxPermissionLevel.TabIndex = 3;
             // 
             // lvPermissionLevel
             // 
@@ -125,7 +126,7 @@
             this.gbPermission.Location = new System.Drawing.Point(14, 70);
             this.gbPermission.Name = "gbPermission";
             this.gbPermission.Size = new System.Drawing.Size(200, 91);
-            this.gbPermission.TabIndex = 9;
+            this.gbPermission.TabIndex = 1;
             this.gbPermission.TabStop = false;
             this.gbPermission.Text = "권한 설정";
             // 

@@ -23,6 +23,7 @@ namespace NAS
             Monitor.Exit(tcpClient);
         }
 
+        // NOTE: 32비트 부호 있는 정수를 전송합니다.
         public void SendInt32(int _value, int _msTimeout = 1000)
         {
             byte[] bytes = BitConverter.GetBytes(_value);
@@ -59,6 +60,7 @@ namespace NAS
             return m_encoding.GetString(buffer);
         }
 
+        // NOTE: 고정 길이 자료형을 byte로 변형하여 전송하기 위한 유틸리티 함수입니다.
         public bool TrySendFixedDate(byte[] _buffer, int _offset, int _length, int _msTimeout)
         {
             try
@@ -66,6 +68,7 @@ namespace NAS
                 if (_buffer == null || _buffer.Length <= 0)
                     return false;
 
+                // NOTE: 네트워크 스트림 동시 점유 방지를 위한 모니터 클래스 사용입니다.
                 Monitor.Enter(tcpClient);
                 tcpClient.SendTimeout = _msTimeout;
                 tcpClient.GetStream().Write(_buffer, _offset, _length);
@@ -77,6 +80,7 @@ namespace NAS
             }
             finally
             {
+                // NOTE: 모니터에 진입하면 반드시 풀어줘야 하므로 finally 영역에 작성합니다.
                 Monitor.Exit(tcpClient);
             }
         }

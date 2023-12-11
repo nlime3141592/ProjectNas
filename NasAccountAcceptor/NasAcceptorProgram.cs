@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NAS
@@ -23,10 +20,11 @@ namespace NAS
         }
 
         private static NasAcceptor s_m_acceptor;
-        private static NasAcceptorProgram s_m_program;
+        private static NasAcceptorProgram s_m_program; // TEST: Log & Debug을 위한 객체
 
         private NasAcceptorProgram() { }
 
+        // NOTE: NasAccountAcceptor의 기본 클래스를 Singleton으로 관리합니다.
         public static NasAcceptor GetAcceptor()
         {
             if(s_m_acceptor == null)
@@ -38,6 +36,7 @@ namespace NAS
             return s_m_acceptor;
         }
 
+        // NOTE: 서버와 연결을 시도합니다.
         public static bool TryConnectToServer()
         {
             s_m_acceptor?.socModule?.Close();
@@ -73,9 +72,6 @@ namespace NAS
         private static void s_m_OnHaltedByException()
         {
             s_m_acceptor?.TryHalt();
-            NasAcceptorProgram.instance.WriteLog("오 여기에 들어왔네?");
-            // AuthForm authForm = AuthForm.GetForm();
-            // authForm.Invoke(new Action(() => { authForm.Show(); }));
         }
     }
 }

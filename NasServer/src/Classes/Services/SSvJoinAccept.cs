@@ -36,6 +36,7 @@ namespace NAS
             int depid = reader.GetInt32(0);
             reader.Close();
 
+            // NOTE: 회원 가입을 승인하고 권한 정보를 DB에 저장합니다.
             db.TryGetSqlCommand(out sqlcmd, "UPDATE userinfo SET depid = @depid, permission_level = @level WHERE uuid = @uuid");
             sqlcmd.Parameters.AddWithValue("@depid", depid);
             sqlcmd.Parameters.AddWithValue("@level", level);

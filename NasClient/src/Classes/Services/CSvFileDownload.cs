@@ -41,8 +41,13 @@ namespace NAS
 
             while(true)
             {
+                // NOTE:
+                // 서버로부터 파일을 다운로드 합니다.
+                // 파일의 모든 내용을 수신하면 serviceType == "<EOF>"로, 파일 수신을 종료합니다.
+                // 파일을 계속 수신해야 한다면 NasServiceResult.Loopback을 반환하여
+                // NasClient 클래스의 서비스 큐에 서비스를 다시 등록합니다.
+
                 string serviceType = m_client.socModule.ReceiveString();
-                // this.WriteLog("Service Type: {0}, lp = {1}", serviceType, m_loopTimes);
 
                 switch(serviceType)
                 {
@@ -63,6 +68,9 @@ namespace NAS
             }
         }
 
+        // NOTE:
+        // 파일을 다운로드하고자 하는 경로에 이미 같은 이름의 파일이 존재한다면
+        // 파일 이름에 (1), (2), .. 등과 같이 인덱스 번호를 매깁니다.
         private string m_GetAvailableFileName(string _absDownloadDirectory, string _fileName)
         {
             string path = _absDownloadDirectory + _fileName;

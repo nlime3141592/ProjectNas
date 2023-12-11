@@ -1,5 +1,6 @@
 ﻿namespace NAS
 {
+    // NOTE: 회원가입 승인 프로그램용 서비스 스레드입니다.
     public class AcceptorClient : AcceptedClient
     {
         protected override NasService HandleServiceHeader(string _serviceHeader)

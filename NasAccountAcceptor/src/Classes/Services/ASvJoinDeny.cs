@@ -2,6 +2,7 @@
 
 namespace NAS
 {
+    // NOTE: 사용자의 회원 가입을 거절합니다.
     public class ASvJoinDeny : NasService
     {
         public Action onDenySuccess;

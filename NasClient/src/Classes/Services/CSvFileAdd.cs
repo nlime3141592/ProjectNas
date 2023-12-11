@@ -75,6 +75,11 @@ namespace NAS
             }
             else
             {
+                // NOTE:
+                // 서버에 파일을 전송합니다.
+                // 서버에 전송할 파일이 남아있다면
+                // NasServiceResult.Loopback을 반환하여
+                // NasClient 클래스의 서비스 큐에 서비스를 다시 등록합니다.
                 m_fileStream.Position = m_loopTimes * c_BUFFER_SIZE;
                 m_client.socModule.SendString("<WRITE>");
 

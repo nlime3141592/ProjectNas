@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace NAS
 {
+    // NOTE: 회원가입 서비스 객체입니다.
     public class CSvJoin : NasService
     {
         public Action onJoinSuccess;
@@ -35,7 +36,7 @@ namespace NAS
 
             switch (response)
             {
-                case "<JOIN_SUCCESS>":
+                case "<JOIN_SUCCESS>": // NOTE: 회원가입 성공시 수신하는 문자열
                     onJoinSuccess?.Invoke();
                     return NasServiceResult.Success;
                 case "<JOIN_FAILURE>":

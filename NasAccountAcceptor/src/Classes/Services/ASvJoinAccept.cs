@@ -2,6 +2,7 @@
 
 namespace NAS
 {
+    // NOTE: 사용자의 회원 가입을 승인합니다.
     public class ASvJoinAccept : NasService
     {
         public Action onAcceptSuccess;
@@ -41,6 +42,7 @@ namespace NAS
                     return NasServiceResult.Failure;
                 }
 
+                // NOTE: 회원 가입을 승인하면 부서와 권한 레벨을 저장해 클라이언트로 접속할 수 있는 계정으로 설정합니다.
                 m_acceptor.socModule.SendString("SV_JOIN_ACCEPT");
                 m_acceptor.socModule.SendInt32(uuid);
                 m_acceptor.socModule.SendString(m_departmentName);

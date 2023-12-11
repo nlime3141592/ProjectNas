@@ -4,6 +4,7 @@ using System.Windows.Forms;
 
 namespace NAS
 {
+    // NOTE: 파일 이름을 작성할 수 있는 WinForm 클래스.
     public partial class WriteFileNameForm : Form
     {
         private string m_absPath;
@@ -26,6 +27,7 @@ namespace NAS
             cbxPermissionLevel.SelectedIndex = 0;
         }
 
+        // NOTE: 확인 버튼 클릭 시.
         private void btOk_Click(object sender, EventArgs e)
         {
             string extension = Path.GetExtension(m_absPath);
@@ -41,6 +43,7 @@ namespace NAS
             NasClient.instance.Request(service);
         }
 
+        // NOTE: 취소 버튼 클릭 시.
         private void btCancel_Click(object sender, EventArgs e)
         {
             this.Close();
