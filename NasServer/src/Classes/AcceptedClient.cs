@@ -4,7 +4,7 @@ namespace NAS
 {
     public abstract class AcceptedClient : NasThread
     {
-        public const int c_CLIENT_TIMEOUT = 60;
+        public const int c_CLIENT_TIMEOUT = 20;
 
         public SocketModule socModule { get; internal set; }
         public NasFileSystem fileSystem { get; internal set; }

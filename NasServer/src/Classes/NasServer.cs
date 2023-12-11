@@ -100,14 +100,15 @@ namespace NAS
                         if (!m_clients.TryDequeue(out client))
                             m_KillClient(client);
                         else if (client.isStopped)
-                            client.socModule.Close();
+                            try { client.socModule.Close(); } catch (Exception) { } // NOTE: 소켓을 닫았습니다.
                         else
                             m_clients.Enqueue(client);
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // this.WriteLog(ex.StackTrace);
                 // NOTE: 강제로 서버 Thread가 종료되었습니다.
             }
 
