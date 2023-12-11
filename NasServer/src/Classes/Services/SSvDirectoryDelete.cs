@@ -14,36 +14,29 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
+            string fakedir = m_client.socModule.ReceiveString();
+            string folderName = m_client.socModule.ReceiveString();
+
+            if(!DirectoryManager.IsValidName(folderName))
             {
-                string fakedir = m_client.socModule.ReceiveString();
-                string folderName = m_client.socModule.ReceiveString();
-
-                if(!DirectoryManager.IsValidName(folderName))
-                {
-                    m_client.socModule.SendString("<FAILURE>");
-                    return NasServiceResult.Failure;
-                }
-
-                string absdir = m_client.fileSystem.FakeToPath(fakedir);
-                DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
-                int didx = manager.GetFolderIndex(folderName);
-
-                if(manager.TryDeleteFolder(folderName))
-                {
-                    m_client.socModule.SendString("<SUCCESS>");
-                    m_client.socModule.SendInt32(didx);
-                    return NasServiceResult.Success;
-                }
-                else
-                {
-                    m_client.socModule.SendString("<FAILURE>");
-                    return NasServiceResult.Failure;
-                }
+                m_client.socModule.SendString("<FAILURE>");
+                return NasServiceResult.Failure;
             }
-            catch(Exception ex)
+
+            string absdir = m_client.fileSystem.FakeToPath(fakedir);
+            DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
+            int didx = manager.GetFolderIndex(folderName);
+
+            if(manager.TryDeleteFolder(folderName))
             {
-                return NasServiceResult.NetworkError;
+                m_client.socModule.SendString("<SUCCESS>");
+                m_client.socModule.SendInt32(didx);
+                return NasServiceResult.Success;
+            }
+            else
+            {
+                m_client.socModule.SendString("<FAILURE>");
+                return NasServiceResult.Failure;
             }
         }
     }

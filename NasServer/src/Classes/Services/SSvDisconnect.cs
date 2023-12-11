@@ -13,15 +13,8 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_thread.TryHalt();
-                return NasServiceResult.Success;
-            }
-            catch(Exception ex)
-            {
-                return NasServiceResult.NetworkError;
-            }
+            m_thread.TryHalt();
+            return NasServiceResult.Success;
         }
     }
 }

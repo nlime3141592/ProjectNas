@@ -1,3 +1,6 @@
+CREATE DATABASE projnas;
+USE projnas;
+
 CREATE TABLE `department`(
 	`depid` INT(11) NOT NULL COMMENT '부서 번호',
 	`depname` NVARCHAR(64) NOT NULL COMMENT '부서 이름',
@@ -23,3 +26,10 @@ CREATE TABLE `userinfo`(
 	FOREIGN KEY (`depid`) REFERENCES `department` (`depid`),
 	PRIMARY KEY (`uuid`)
 );
+
+INSERT INTO department (depid, depname) VALUES (0, 'WAITING_ACCOUNT');
+INSERT INTO department (depid, depname) VALUES (101, 'PM/사업팀');
+INSERT INTO department (depid, depname) VALUES (102, '행정팀');
+INSERT INTO department (depid, depname) VALUES (103, '프로그래밍팀');
+INSERT INTO department (depid, depname) VALUES (104, '일러스트/애니메이션팀');
+INSERT INTO department (depid, depname) VALUES (105, '사운드팀');

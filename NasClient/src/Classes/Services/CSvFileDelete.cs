@@ -24,31 +24,24 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_client.socModule.SendString("SV_FILE_DELETE");
-                m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
-                m_client.socModule.SendString(m_fileNameWithoutExt);
-                m_client.socModule.SendString(m_fileExt);
-                string response = m_client.socModule.ReceiveString();
+            m_client.socModule.SendString("SV_FILE_DELETE");
+            m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
+            m_client.socModule.SendString(m_fileNameWithoutExt);
+            m_client.socModule.SendString(m_fileExt);
+            string response = m_client.socModule.ReceiveString();
 
-                switch (response)
-                {
-                    case "<SUCCESS>":
-                        int didx = m_client.socModule.ReceiveInt32();
-                        onDeleteSuccess?.Invoke(didx, m_fileNameWithoutExt + m_fileExt);
-                        return NasServiceResult.Success;
-                    case "<FAILURE>":
-                        onDeleteFailure?.Invoke();
-                        return NasServiceResult.Failure;
-                    default:
-                        onError?.Invoke();
-                        return NasServiceResult.Error;
-                }
-            }
-            catch (Exception)
+            switch (response)
             {
-                return NasServiceResult.NetworkError;
+                case "<SUCCESS>":
+                    int didx = m_client.socModule.ReceiveInt32();
+                    onDeleteSuccess?.Invoke(didx, m_fileNameWithoutExt + m_fileExt);
+                    return NasServiceResult.Success;
+                case "<FAILURE>":
+                    onDeleteFailure?.Invoke();
+                    return NasServiceResult.Failure;
+                default:
+                    onError?.Invoke();
+                    return NasServiceResult.Error;
             }
         }
     }

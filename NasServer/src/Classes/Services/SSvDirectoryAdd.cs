@@ -15,41 +15,30 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
+            string fakedir = m_client.socModule.ReceiveString();
+            string dirnext = m_client.socModule.ReceiveString();
+            int department = m_client.socModule.ReceiveInt32();
+            int level = m_client.socModule.ReceiveInt32();
+
+            if(!DirectoryManager.IsValidName(dirnext))
             {
-                string fakedir = m_client.socModule.ReceiveString();
-                string dirnext = m_client.socModule.ReceiveString();
-                int department = m_client.socModule.ReceiveInt32();
-                int level = m_client.socModule.ReceiveInt32();
-
-                if(!DirectoryManager.IsValidName(dirnext))
-                {
-                    m_client.socModule.SendString("<INVALID_NAME>");
-                    return NasServiceResult.Failure;
-                }
-
-                string absdir = m_client.fileSystem.FakeToPath(fakedir);
-                DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
-
-                if (manager.TryAddFolder(dirnext, department, level))
-                {
-                    m_client.socModule.SendString("<SUCCESS>");
-                    m_client.socModule.SendInt32(manager.GetFolderIndex(dirnext));
-                    return NasServiceResult.Success;
-                }
-                else
-                {
-                    m_client.socModule.SendString("<FAILURE>");
-                    return NasServiceResult.Failure;
-                }
+                m_client.socModule.SendString("<INVALID_NAME>");
+                return NasServiceResult.Failure;
             }
-            catch (SocketException)
+
+            string absdir = m_client.fileSystem.FakeToPath(fakedir);
+            DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
+
+            if (manager.TryAddFolder(dirnext, department, level))
             {
-                return NasServiceResult.NetworkError;
+                m_client.socModule.SendString("<SUCCESS>");
+                m_client.socModule.SendInt32(manager.GetFolderIndex(dirnext));
+                return NasServiceResult.Success;
             }
-            catch (Exception)
+            else
             {
-                return NasServiceResult.NetworkError;
+                m_client.socModule.SendString("<FAILURE>");
+                return NasServiceResult.Failure;
             }
         }
     }

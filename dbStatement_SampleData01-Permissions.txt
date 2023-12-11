@@ -1,0 +1,23 @@
+INSERT INTO department (depid, depname) VALUES (0, 'WAITING_ACCOUNT');
+INSERT INTO department (depid, depname) VALUES (101, 'PM/사업팀');
+INSERT INTO department (depid, depname) VALUES (102, '행정팀');
+INSERT INTO department (depid, depname) VALUES (103, '프로그래밍팀');
+INSERT INTO department (depid, depname) VALUES (104, '일러스트/애니메이션팀');
+INSERT INTO department (depid, depname) VALUES (105, '사운드팀');
+
+INSERT INTO account (id, pw) VALUES ('id001', 'pw001');
+INSERT INTO userinfo (name) VALUES ('name001');
+INSERT INTO account (id, pw) VALUES ('id002', 'pw002');
+INSERT INTO userinfo (name) VALUES ('name002');
+INSERT INTO account (id, pw) VALUES ('id003', 'pw003');
+INSERT INTO userinfo (name) VALUES ('name003');
+INSERT INTO account (id, pw) VALUES ('id004', 'pw004');
+INSERT INTO userinfo (name) VALUES ('name004');
+INSERT INTO account (id, pw) VALUES ('id005', 'pw005');
+INSERT INTO userinfo (name) VALUES ('name005');
+INSERT INTO account (id, pw) VALUES ('id006', 'pw006');
+INSERT INTO userinfo (name) VALUES ('name006');
+INSERT INTO account (id, pw) VALUES ('id007', 'pw007');
+INSERT INTO userinfo (name) VALUES ('name007');
+INSERT INTO account (id, pw) VALUES ('id008', 'pw008');
+INSERT INTO userinfo (name) VALUES ('name008');

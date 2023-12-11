@@ -27,30 +27,22 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_client.socModule.SendString("SV_JOIN");
-                m_client.socModule.SendString(m_id);
-                m_client.socModule.SendString(m_pw);
-                m_client.socModule.SendString(m_name);
-                string response = m_client.socModule.ReceiveString();
+            m_client.socModule.SendString("SV_JOIN");
+            m_client.socModule.SendString(m_id);
+            m_client.socModule.SendString(m_pw);
+            m_client.socModule.SendString(m_name);
+            string response = m_client.socModule.ReceiveString();
 
-                switch (response)
-                {
-                    case "<JOIN_SUCCESS>":
-                        onJoinSuccess?.Invoke();
-                        return NasServiceResult.Success;
-                    case "<JOIN_FAILURE>":
-                        onJoinFailure?.Invoke();
-                        return NasServiceResult.Success;
-                    default:
-                        return NasServiceResult.Failure;
-                }
-            }
-            catch (Exception)
+            switch (response)
             {
-                onError?.Invoke();
-                return NasServiceResult.NetworkError;
+                case "<JOIN_SUCCESS>":
+                    onJoinSuccess?.Invoke();
+                    return NasServiceResult.Success;
+                case "<JOIN_FAILURE>":
+                    onJoinFailure?.Invoke();
+                    return NasServiceResult.Success;
+                default:
+                    return NasServiceResult.Failure;
             }
         }
     }

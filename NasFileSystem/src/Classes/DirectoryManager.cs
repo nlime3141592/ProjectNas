@@ -22,7 +22,7 @@ namespace NAS
         #region .dmeta file datas
         private int headerSize = 24;
         private int idxInc = 0;
-        private int ptrData = 0;
+        private int ptrData => headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
         private int reserve01 = 0;
         private int reserve02 = 0;
         private int reserve03 = 0;
@@ -144,35 +144,20 @@ namespace NAS
 
             string directory = string.Format(@"{0}{1}\", m_dirRoot, _folderName);
 
-            if (Directory.Exists(directory)) // NOTE: 디렉토리가 이미 존재하는데 .dmeta에 추가되지 않은 경우에 대한 로직 처리
-            {
-                foreach (int key in directories.Keys)
-                    if (directories[key].Equals(_folderName))
-                        return false;
-
-                int idxKey = ++idxInc;
-                directories.Add(idxKey, _folderName);
-                ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                departments.Add(idxKey, _department);
-                levels.Add(idxKey, _level);
-
-                this.m_SaveMetaFileD();
-                this.m_SaveMetaFileP();
-                return true;
-            }
-            else
-            {
+            if(!Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
-                int idxKey = ++idxInc;
-                directories.Add(idxKey, _folderName);
-                ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                departments.Add(idxKey, _department);
-                levels.Add(idxKey, _level);
 
-                this.m_SaveMetaFileD();
-                this.m_SaveMetaFileP();
-                return true;
-            }
+            if (directories.Values.IndexOf(_folderName) >= 0)
+                return false;
+
+            int idxKey = ++idxInc;
+            directories.Add(idxKey, _folderName);
+            departments.Add(idxKey, _department);
+            levels.Add(idxKey, _level);
+
+            this.m_SaveMetaFileD();
+            this.m_SaveMetaFileP();
+            return true;
         }
 
         public bool TryAddFile(string _fileName, int _department, int _level)
@@ -181,42 +166,27 @@ namespace NAS
 
             string file = string.Format(@"{0}{1}\", m_dirRoot, _fileName);
 
-            if (Directory.Exists(file)) // NOTE: 디렉토리가 이미 존재하는데 .dmeta에 추가되지 않은 경우에 대한 로직 처리
-            {
-                foreach (int key in files.Keys)
-                    if (files[key].Equals(_fileName))
-                        return false;
-
-                int idxKey = ++idxInc;
-                files.Add(idxKey, _fileName);
-                ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                departments.Add(idxKey, _department);
-                levels.Add(idxKey, _level);
-
-                this.m_SaveMetaFileD();
-                this.m_SaveMetaFileP();
-                return true;
-            }
-            else
-            {
+            if(!Directory.Exists(file))
                 Directory.CreateDirectory(file);
-                int idxKey = ++idxInc;
-                files.Add(idxKey, _fileName);
-                ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
-                departments.Add(idxKey, _department);
-                levels.Add(idxKey, _level);
 
-                this.m_SaveMetaFileD();
-                this.m_SaveMetaFileP();
-                return true;
-            }
+            if (files.Values.IndexOf(_fileName) >= 0)
+                return false;
+
+            int idxKey = ++idxInc;
+            files.Add(idxKey, _fileName);
+            departments.Add(idxKey, _department);
+            levels.Add(idxKey, _level);
+
+            this.m_SaveMetaFileD();
+            this.m_SaveMetaFileP();
+            return true;
         }
 
         public bool TryDeleteFolder(string _folderName)
         {
             m_watch.Restart();
 
-            string directory = string.Format(@"{0}{1}\", m_dirRoot, _folderName);
+            string directory = m_dirRoot + _folderName + '\\';
 
             foreach (int key in directories.Keys)
             {
@@ -224,13 +194,9 @@ namespace NAS
                 {
                     // NOTE: 디렉토리가 존재하지 않는데 Directory.Delete()를 호출하는 문제를 회피
                     if (Directory.Exists(directory))
-                    {
                         m_rec_Delete(directory);
-                        Directory.Delete(directory);
-                    }
 
                     directories.Remove(key);
-                    ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
                     departments.Remove(key);
                     levels.Remove(key);
 
@@ -247,7 +213,7 @@ namespace NAS
         {
             m_watch.Restart();
 
-            string file = string.Format(@"{0}{1}\", m_dirRoot, _fileName);
+            string file = m_dirRoot + _fileName + '\\';
 
             foreach (int key in files.Keys)
             {
@@ -255,13 +221,9 @@ namespace NAS
                 {
                     // NOTE: 디렉토리가 존재하지 않는데 Directory.Delete()를 호출하는 문제를 회피
                     if (Directory.Exists(file))
-                    {
                         m_rec_Delete(file);
-                        Directory.Delete(file);
-                    }
 
                     files.Remove(key);
-                    ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
                     departments.Remove(key);
                     levels.Remove(key);
 
@@ -286,7 +248,6 @@ namespace NAS
 
             headerSize = 24;
             idxInc = 0;
-            ptrData = headerSize + (sizeof(int) + directories.Count) + (sizeof(int) + files.Count);
             reserve01 = 0;
             reserve02 = 0;
             reserve03 = 0;
@@ -325,7 +286,7 @@ namespace NAS
 
             headerSize = rd.ReadInt32();
             idxInc = rd.ReadInt32();
-            ptrData = rd.ReadInt32();
+            int ptrData = rd.ReadInt32();
             reserve01 = rd.ReadInt32();
             reserve02 = rd.ReadInt32();
             reserve03 = rd.ReadInt32();
@@ -448,10 +409,9 @@ namespace NAS
                 File.Delete(file);
 
             foreach (string directory in Directory.GetDirectories(_directory))
-            {
                 m_rec_Delete(directory);
-                Directory.Delete(directory);
-            }
+
+            Directory.Delete(_directory);
         }
     }
 }

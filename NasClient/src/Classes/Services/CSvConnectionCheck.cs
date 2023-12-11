@@ -13,15 +13,8 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_client.socModule.SendString("CONNECTION_CHECK");
-                return NasServiceResult.Success;
-            }
-            catch (Exception)
-            {
-                return NasServiceResult.NetworkError;
-            }
+            m_client.socModule.SendString("SV_CONNECTION_CHECK");
+            return NasServiceResult.Success;
         }
     }
 }

@@ -17,6 +17,8 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
+            FileStream fileStream = null;
+
             try
             {
                 string fakedir = m_client.socModule.ReceiveString();
@@ -53,7 +55,7 @@ namespace NAS
                         byte[] buffer;
                         m_client.socModule.TryReceiveVariableData(out buffer, 1000);
                         string path = absdir + fileName + fileExtension + '\\' + fileName + fileExtension + ".a";
-                        FileStream fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+                        fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write);
                         fileStream.Position = fileStream.Length;
                         fileStream.Write(buffer, 0, buffer.Length);
                         fileStream.Close();
@@ -62,11 +64,10 @@ namespace NAS
                         return NasServiceResult.Failure;
                 }
             }
-            catch (Exception ex)
+            catch(Exception _exception)
             {
-                this.WriteLog("Message : {0}", ex.Message);
-                this.WriteLog("StackTrace : {0}", ex.StackTrace);
-                return NasServiceResult.NetworkError;
+                fileStream?.Close();
+                throw _exception;
             }
         }
     }

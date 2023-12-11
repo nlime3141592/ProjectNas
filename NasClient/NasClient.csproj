@@ -57,7 +57,6 @@
     <Compile Include="src\Classes\Services\CSvFileAdd.cs" />
     <Compile Include="src\Classes\Services\CSvFileDelete.cs" />
     <Compile Include="src\Classes\Services\CSvFileDownload.cs" />
-    <Compile Include="src\Classes\Services\CSvInitialize.cs" />
     <Compile Include="src\Classes\Services\CSvLogin.cs" />
     <Compile Include="src\Classes\Services\CSvJoin.cs" />
     <Compile Include="src\Forms\AuthForm.cs">

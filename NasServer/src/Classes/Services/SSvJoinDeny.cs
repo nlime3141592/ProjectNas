@@ -14,35 +14,28 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
+            int uuid = m_client.socModule.ReceiveInt32();
+
+            DBConnection db = NasServerProgram.GetDB();
+            MySqlCommand sqlcmd;
+
+            db.TryGetSqlCommand(out sqlcmd, "DELETE FROM userinfo where uuid = @uuid");
+            sqlcmd.Parameters.AddWithValue("@uuid", uuid);
+            int affected0 = sqlcmd.ExecuteNonQuery();
+
+            db.TryGetSqlCommand(out sqlcmd, "DELETE FROM account where uuid = @uuid");
+            sqlcmd.Parameters.AddWithValue("@uuid", uuid);
+            int affected1 = sqlcmd.ExecuteNonQuery();
+
+            if (affected0 > 0 && affected1 > 0)
             {
-                int uuid = m_client.socModule.ReceiveInt32();
-
-                DBConnection db = NasServerProgram.GetDB();
-                MySqlCommand sqlcmd;
-
-                db.TryGetSqlCommand(out sqlcmd, "DELETE FROM userinfo where uuid = @uuid");
-                sqlcmd.Parameters.AddWithValue("@uuid", uuid);
-                int affected0 = sqlcmd.ExecuteNonQuery();
-
-                db.TryGetSqlCommand(out sqlcmd, "DELETE FROM account where uuid = @uuid");
-                sqlcmd.Parameters.AddWithValue("@uuid", uuid);
-                int affected1 = sqlcmd.ExecuteNonQuery();
-
-                if (affected0 > 0 && affected1 > 0)
-                {
-                    m_client.socModule.SendString("<DENY_SUCCESS>");
-                    return NasServiceResult.Success;
-                }
-                else
-                {
-                    m_client.socModule.SendString("<DENY_FAILURE>");
-                    return NasServiceResult.Failure;
-                }
+                m_client.socModule.SendString("<DENY_SUCCESS>");
+                return NasServiceResult.Success;
             }
-            catch(Exception)
+            else
             {
-                return NasServiceResult.NetworkError;
+                m_client.socModule.SendString("<DENY_FAILURE>");
+                return NasServiceResult.Failure;
             }
         }
     }

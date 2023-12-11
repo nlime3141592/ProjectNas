@@ -113,6 +113,7 @@
             // 
             // cbxPermissionLevel
             // 
+            this.cbxPermissionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxPermissionLevel.FormattingEnabled = true;
             this.cbxPermissionLevel.Items.AddRange(new object[] {
             "1",
@@ -123,7 +124,6 @@
             this.cbxPermissionLevel.Name = "cbxPermissionLevel";
             this.cbxPermissionLevel.Size = new System.Drawing.Size(76, 20);
             this.cbxPermissionLevel.TabIndex = 7;
-            this.cbxPermissionLevel.Text = "1";
             // 
             // lvPermissionLevel
             // 

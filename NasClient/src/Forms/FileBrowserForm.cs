@@ -6,18 +6,9 @@ namespace NAS
 {
     public sealed partial class FileBrowserForm : Form
     {
-        private static FileBrowserForm s_m_fileBrowserForm;
         private Stopwatch m_watch;
 
-        public static FileBrowserForm GetForm()
-        {
-            if(s_m_fileBrowserForm == null)
-                s_m_fileBrowserForm = new FileBrowserForm();
-
-            return s_m_fileBrowserForm;
-        }
-
-        private FileBrowserForm()
+        public FileBrowserForm()
         {
             InitializeComponent();
 
@@ -34,45 +25,6 @@ namespace NAS
 
             m_ReloadDir();
             ctUpdateFileDownloadingMonitor();
-        }
-
-        public void ctShow()
-        {
-            void _Show()
-            {
-                this.Show();
-            }
-
-            if (this.InvokeRequired)
-                this.Invoke(new Action(_Show));
-            else
-                _Show();
-        }
-
-        public void ctHide()
-        {
-            void _Hide()
-            {
-                this.Hide();
-            }
-
-            if (this.InvokeRequired)
-                this.Invoke(new Action(_Hide));
-            else
-                _Hide();
-        }
-
-        public void ctClose()
-        {
-            void _Close()
-            {
-                this.Close();
-            }
-
-            if(this.InvokeRequired)
-                this.Invoke(new Action(_Close));
-            else
-                _Close();
         }
 
         private void lvFileBrowser_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -123,16 +75,18 @@ namespace NAS
 
         private void FileBrowserForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (s_m_fileBrowserForm == this)
-                s_m_fileBrowserForm = null;
-
-            AuthForm.GetForm().ctChangeFormMode(AuthForm.FormMode.Login);
+            NasClient.instance.Close();
+            AuthForm.GetForm().ctChangeFormMode(AuthForm.FormMode.Start);
             AuthForm.GetForm().ctShow();
         }
 
+        // NOTE: 폴더나 파일을 더블클릭 할 때 발생하는 이벤트
         private void lvFileBrowser_DoubleClick(object sender, EventArgs e)
         {
             ListView view = (ListView)sender;
+
+            if (view.SelectedItems.Count == 0)
+                return;
 
             string filetype = view.SelectedItems[0].SubItems[1].Text;
 
@@ -148,12 +102,11 @@ namespace NAS
                     if (!m_TrySelectDirectory(out absSaveDirectory))
                         return;
 
-                    NasClient client = NasClientProgram.GetClient();
+                    NasClient client = NasClient.instance;
                     string fileName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
                     CSvFileDownload service = new CSvFileDownload(client, absSaveDirectory, fileName);
                     service.onDownloadSuccess = m_OnFileDownloadSuccess;
                     service.onDownloadLoopback = m_OnFileDownloadLoopback;
-                    service.onError = m_OnNetworkError;
                     client.Request(service);
                     break;
                 default:
@@ -166,7 +119,7 @@ namespace NAS
             string name = "";
             string type = "";
             string size = "";
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
 
             void _Init()
             {
@@ -224,7 +177,7 @@ namespace NAS
         {
             void _Show()
             {
-                NasClient client = NasClientProgram.GetClient();
+                NasClient client = NasClient.instance;
                 int count = client.datFileBrowse.downloadingFiles.Count;
 
                 if (!m_watch.IsRunning)
@@ -285,7 +238,7 @@ namespace NAS
         {
             void _Show()
             {
-                NasClient client = NasClientProgram.GetClient();
+                NasClient client = NasClient.instance;
                 client.datFileBrowse.files.TryAdd(_fidx, _fileName);
                 ctUpdateFileBrowser();
                 MessageBox.Show(this, "새로운 파일을 업로드 했습니다.", "파일 업로드");
@@ -336,14 +289,6 @@ namespace NAS
                 _Show();
         }
 
-        private void m_OnNetworkError()
-        {
-            NasClientProgram.GetClient().TryHalt();
-            this.ctClose();
-            AuthForm.GetForm().ctChangeFormMode(AuthForm.FormMode.Start);
-            AuthForm.GetForm().ctShow();
-        }
-
         private void btRoot_Click(object sender, EventArgs e)
         {
             m_ToRootDir();
@@ -356,7 +301,7 @@ namespace NAS
 
         private void m_ToRootDir()
         {
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
 
             if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
                 return;
@@ -364,8 +309,7 @@ namespace NAS
             client.datFileBrowse.fakedir = client.datFileBrowse.fakeroot;
             CSvDirectoryMove service = new CSvDirectoryMove(client, "");
             service.onMoveSuccess = m_OnDirectoryMoveSuccess;
-            service.onError = m_OnNetworkError;
-            NasClientProgram.GetClient().Request(service);
+            NasClient.instance.Request(service);
 
             void _Set()
             {
@@ -380,10 +324,9 @@ namespace NAS
 
         private void m_ReloadDir()
         {
-            CSvDirectoryMove service = new CSvDirectoryMove(NasClientProgram.GetClient(), ".");
+            CSvDirectoryMove service = new CSvDirectoryMove(NasClient.instance, ".");
             service.onMoveSuccess = m_OnDirectoryMoveSuccess;
-            service.onError = m_OnNetworkError;
-            NasClientProgram.GetClient().Request(service);
+            NasClient.instance.Request(service);
 
             void _Set()
             {
@@ -398,10 +341,9 @@ namespace NAS
 
         private void m_ToNextDir(string _nextdir)
         {
-            CSvDirectoryMove service = new CSvDirectoryMove(NasClientProgram.GetClient(), _nextdir);
+            CSvDirectoryMove service = new CSvDirectoryMove(NasClient.instance, _nextdir);
             service.onMoveSuccess = m_OnDirectoryMoveSuccess;
-            service.onError = m_OnNetworkError;
-            NasClientProgram.GetClient().Request(service);
+            NasClient.instance.Request(service);
 
             void _Set()
             {
@@ -416,15 +358,14 @@ namespace NAS
 
         private void m_ToBackDir()
         {
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
 
             if (client.datFileBrowse.fakeroot.Equals(client.datFileBrowse.fakedir))
                 return;
 
             CSvDirectoryMove service = new CSvDirectoryMove(client, "..");
             service.onMoveSuccess = m_OnDirectoryMoveSuccess;
-            service.onError = m_OnNetworkError;
-            NasClientProgram.GetClient().Request(service);
+            NasClient.instance.Request(service);
 
             void _Set()
             {
@@ -520,7 +461,6 @@ namespace NAS
             form.onFileAddFailure = m_OnFileAddFailure;
             form.onInvalidName = m_OnInvalidFileName;
             form.onExistFile = m_OnExistFile;
-            form.onError = m_OnNetworkError;
             form.ShowDialog(this);
         }
 
@@ -536,7 +476,6 @@ namespace NAS
             form.onFileAddFailure = m_OnFileAddFailure;
             form.onInvalidName = m_OnInvalidFileName;
             form.onExistFile = m_OnExistFile;
-            form.onError = m_OnNetworkError;
             form.ShowDialog(this);
         }
 
@@ -548,12 +487,11 @@ namespace NAS
             if (!m_TrySelectDirectory(out absSaveDirectory))
                 return;
 
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
             string fileName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
             CSvFileDownload service = new CSvFileDownload(client, absSaveDirectory, fileName);
             service.onDownloadSuccess = m_OnFileDownloadSuccess;
             service.onDownloadLoopback = m_OnFileDownloadLoopback;
-            service.onError = m_OnNetworkError;
             client.Request(service);
         }
 
@@ -566,10 +504,10 @@ namespace NAS
             {
                 case DialogResult.OK:
                     string folderName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
-                    CSvDirectoryDelete service = new CSvDirectoryDelete(NasClientProgram.GetClient(), folderName);
+                    CSvDirectoryDelete service = new CSvDirectoryDelete(NasClient.instance, folderName);
                     service.onDeleteSuccess = m_OnDirectoryDeleteSuccess;
                     service.onDeleteFailure = m_OnDirectoryDeleteFailure;
-                    NasClientProgram.GetClient().Request(service);
+                    NasClient.instance.Request(service);
                     break;
                 case DialogResult.Cancel:
                     break;
@@ -586,10 +524,10 @@ namespace NAS
             {
                 case DialogResult.OK:
                     string fileName = lvFileBrowser.SelectedItems[0].SubItems[0].Text;
-                    CSvFileDelete service = new CSvFileDelete(NasClientProgram.GetClient(), fileName);
+                    CSvFileDelete service = new CSvFileDelete(NasClient.instance, fileName);
                     service.onDeleteSuccess = m_OnFileDeleteSuccess;
                     service.onDeleteFailure = m_OnFileDeleteFailure;
-                    NasClientProgram.GetClient().Request(service);
+                    NasClient.instance.Request(service);
                     break;
                 case DialogResult.Cancel:
                     break;
@@ -602,7 +540,7 @@ namespace NAS
         {
             string folderName;
 
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
             client.datFileBrowse.directories.TryRemove(_didx, out folderName);
 
             ctUpdateFileBrowser();
@@ -625,7 +563,7 @@ namespace NAS
         {
             string fileName;
 
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
             client.datFileBrowse.files.TryRemove(_fidx, out fileName);
 
             ctUpdateFileBrowser();
@@ -646,7 +584,7 @@ namespace NAS
 
         private void m_OnFileDownloadLoopback(string _absDownloadingPath, int _loopTimes)
         {
-            NasClient client = NasClientProgram.GetClient();
+            NasClient client = NasClient.instance;
 
             if (client.datFileBrowse.downloadingFiles.ContainsKey(_absDownloadingPath))
                 client.datFileBrowse.downloadingFiles[_absDownloadingPath] = _loopTimes;
@@ -661,7 +599,7 @@ namespace NAS
             void _Show()
             {
                 int loopTimes;
-                NasClientProgram.GetClient().datFileBrowse.downloadingFiles.TryRemove(_absDownloadedPath, out loopTimes);
+                NasClient.instance.datFileBrowse.downloadingFiles.TryRemove(_absDownloadedPath, out loopTimes);
                 ctUpdateFileDownloadingMonitor();
                 string message = string.Format("파일을 다운로드 했습니다.\n({0})", _absDownloadedPath);
                 MessageBox.Show(this, message, "파일 다운로드 성공");

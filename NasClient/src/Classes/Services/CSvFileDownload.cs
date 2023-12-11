@@ -32,39 +32,32 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_client.socModule.SendString("SV_FILE_DOWNLOAD");
-                m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
-                m_client.socModule.SendString(m_storageFileName);
-                m_client.socModule.SendInt32(m_loopTimes);
+            m_client.socModule.SendString("SV_FILE_DOWNLOAD");
+            m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
+            m_client.socModule.SendString(m_storageFileName);
+            m_client.socModule.SendInt32(m_loopTimes);
 
-                while(true)
+            while(true)
+            {
+                string serviceType = m_client.socModule.ReceiveString();
+                // this.WriteLog("Service Type: {0}, lp = {1}", serviceType, m_loopTimes);
+
+                switch(serviceType)
                 {
-                    string serviceType = m_client.socModule.ReceiveString();
-                    // this.WriteLog("Service Type: {0}, lp = {1}", serviceType, m_loopTimes);
-
-                    switch(serviceType)
-                    {
-                        case "<READ>":
-                            byte[] buffer;
-                            m_client.socModule.TryReceiveVariableData(out buffer, 1000);
-                            m_fileStream.Position = m_loopTimes * c_BUFFER_SIZE;
-                            m_fileStream.Write(buffer, 0, buffer.Length);
-                            onDownloadLoopback?.Invoke(m_absDownloadDirectory + m_saveFileName, ++m_loopTimes);
-                            return NasServiceResult.Loopback;
-                        case "<EOF>":
-                            m_fileStream.Close();
-                            onDownloadSuccess?.Invoke(m_absDownloadDirectory + m_saveFileName);
-                            return NasServiceResult.Success;
-                        default:
-                            return NasServiceResult.Error;
-                    }
+                    case "<READ>":
+                        byte[] buffer;
+                        m_client.socModule.TryReceiveVariableData(out buffer, 1000);
+                        m_fileStream.Position = m_loopTimes * c_BUFFER_SIZE;
+                        m_fileStream.Write(buffer, 0, buffer.Length);
+                        onDownloadLoopback?.Invoke(m_absDownloadDirectory + m_saveFileName, ++m_loopTimes);
+                        return NasServiceResult.Loopback;
+                    case "<EOF>":
+                        m_fileStream.Close();
+                        onDownloadSuccess?.Invoke(m_absDownloadDirectory + m_saveFileName);
+                        return NasServiceResult.Success;
+                    default:
+                        return NasServiceResult.Error;
                 }
-            }
-            catch(Exception)
-            {
-                return NasServiceResult.NetworkError;
             }
         }
 
@@ -77,10 +70,10 @@ namespace NAS
 
             string nameOnly = Path.GetFileNameWithoutExtension(path);
             string ext = Path.GetExtension(path);
+            int counter = 0;
 
             while (true)
             {
-                int counter = 0;
                 string newName = string.Format("{0} ({1}){2}", nameOnly, ++counter, ext);
                 path = _absDownloadDirectory + newName;
 

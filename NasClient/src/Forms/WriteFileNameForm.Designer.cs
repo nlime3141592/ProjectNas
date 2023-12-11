@@ -100,6 +100,7 @@
             // 
             // cbxPermissionLevel
             // 
+            this.cbxPermissionLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxPermissionLevel.FormattingEnabled = true;
             this.cbxPermissionLevel.Location = new System.Drawing.Point(92, 37);
             this.cbxPermissionLevel.Name = "cbxPermissionLevel";

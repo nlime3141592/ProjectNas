@@ -146,7 +146,6 @@
     <Compile Include="src\Classes\Services\SSvJoinAccept.cs" />
     <Compile Include="src\Classes\Services\SSvJoinDeny.cs" />
     <Compile Include="src\Classes\Services\SSvLogin.cs" />
-    <Compile Include="src\Classes\Services\SSvTest.cs" />
     <Compile Include="src\Classes\Services\SSvAcceptorViewUpdate.cs" />
     <Compile Include="src\Classes\StandardClient.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -19,21 +19,18 @@ namespace NAS
                 {
                     string serviceHeader = socModule.ReceiveString(1000 * c_CLIENT_TIMEOUT);
                     NasService service = HandleServiceHeader(serviceHeader);
-                    NasServiceResult result = service.Execute();
-
-                    if (!TryHandleServiceResult(service, result))
-                    {
-                        socModule.Close();
-                        base.TryHalt();
-                        break;
-                    }
+                    service.Execute();
                 }
+
+                // NOTE: 정상 종료
+                base.TryStop();
+                this.socModule.Close();
             }
-            catch (Exception)
+            catch (Exception _exception)
             {
                 // NOTE: Thread가 강제 종료되었음.
-
-                // NOTE: Kill self.
+                this.WriteLog(_exception.Message);
+                this.WriteLog(_exception.StackTrace);
                 base.TryStop();
                 this.socModule.Close();
             }
@@ -42,13 +39,5 @@ namespace NAS
         }
 
         protected abstract NasService HandleServiceHeader(string _serviceHeader);
-
-        private bool TryHandleServiceResult(NasService _service, NasServiceResult _result)
-        {
-            if (_result == NasServiceResult.NetworkError)
-                return false;
-
-            return true;
-        }
     }
 }

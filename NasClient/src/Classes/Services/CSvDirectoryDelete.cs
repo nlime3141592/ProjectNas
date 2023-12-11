@@ -23,31 +23,23 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_client.socModule.SendString("SV_DIRECTORY_DELETE");
-                m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
-                m_client.socModule.SendString(m_folderName);
-                string response = m_client.socModule.ReceiveString();
+            m_client.socModule.SendString("SV_DIRECTORY_DELETE");
+            m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
+            m_client.socModule.SendString(m_folderName);
+            string response = m_client.socModule.ReceiveString();
 
-                switch(response)
-                {
-                    case "<SUCCESS>":
-                        int didx = m_client.socModule.ReceiveInt32();
-                        onDeleteSuccess?.Invoke(didx, m_folderName);
-                        return NasServiceResult.Success;
-                    case "<FAILURE>":
-                        onDeleteFailure?.Invoke();
-                        return NasServiceResult.Failure;
-                    default:
-                        onError?.Invoke();
-                        return NasServiceResult.Error;
-                }
-            }
-            catch(Exception)
+            switch(response)
             {
-                onError?.Invoke();
-                return NasServiceResult.NetworkError;
+                case "<SUCCESS>":
+                    int didx = m_client.socModule.ReceiveInt32();
+                    onDeleteSuccess?.Invoke(didx, m_folderName);
+                    return NasServiceResult.Success;
+                case "<FAILURE>":
+                    onDeleteFailure?.Invoke();
+                    return NasServiceResult.Failure;
+                default:
+                    onError?.Invoke();
+                    return NasServiceResult.Error;
             }
         }
     }

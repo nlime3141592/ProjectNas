@@ -5,27 +5,32 @@ namespace NAS
 {
     public partial class WriteFolderNameForm : Form
     {
+        public Action<int, string> onFileAddSuccess;
+        public Action onFileAddFailure;
+        public Action onInvalidName;
+        public Action onExistFolder;
+
         public WriteFolderNameForm()
         {
             InitializeComponent();
 
-            int level = NasClientProgram.GetClient().datLogin.level;
-            for (int i = 0; i < level; ++i)
-                cbxPermissionLevel.Items.Add(level - i);
+            int level = NasClient.instance.datLogin.level;
+            cbxPermissionLevel.Items.Clear();
+            for (int i = 1; i <= level; ++i)
+                cbxPermissionLevel.Items.Add(i);
             cbxPermissionLevel.SelectedIndex = 0;
         }
 
         private void btOk_Click(object sender, EventArgs e)
         {
-            int department = rbtAll.Checked ? 0 : NasClientProgram.GetClient().datLogin.department;
+            int department = rbtAll.Checked ? 0 : NasClient.instance.datLogin.department;
             int level = department == 0 ? 0 : int.Parse(cbxPermissionLevel.Text);
 
-            CSvDirectoryAdd service = new CSvDirectoryAdd(NasClientProgram.GetClient(), txtFolderName.Text, department, level);
-            service.onAddSuccess = m_OnSuccess;
-            service.onAddFailure = m_OnFailure;
-            service.onInvalidName = m_OnInvalidName;
-            service.onError = m_OnNetworkError;
-            NasClientProgram.GetClient().Request(service);
+            CSvDirectoryAdd service = new CSvDirectoryAdd(NasClient.instance, txtFolderName.Text, department, level);
+            service.onAddSuccess += onFileAddSuccess;
+            service.onAddFailure = onFileAddFailure;
+            service.onInvalidName = onInvalidName;
+            NasClient.instance.Request(service);
         }
 
         private void btCancel_Click(object sender, EventArgs e)
@@ -37,8 +42,8 @@ namespace NAS
         {
             void _Show()
             {
-                NasClientProgram.GetClient().datFileBrowse.directories.TryAdd(_uuid, _folderName);
-                FileBrowserForm.GetForm().ctUpdateFileBrowser();
+                NasClient.instance.datFileBrowse.directories.TryAdd(_uuid, _folderName);
+                // FileBrowserForm.GetForm().ctUpdateFileBrowser();
                 MessageBox.Show(this, "폴더를 추가했습니다.", "폴더 추가 완료");
                 this.Close();
             }
@@ -67,23 +72,6 @@ namespace NAS
             void _Show()
             {
                 MessageBox.Show(this, "잘못된 폴더 이름 형식입니다.", "폴더 이름 입력");
-            }
-
-            if (this.InvokeRequired)
-                this.Invoke(new Action(_Show));
-            else
-                _Show();
-        }
-
-        private void m_OnNetworkError()
-        {
-            void _Show()
-            {
-                NasClientProgram.GetClient().TryHalt();
-                this.Close();
-                FileBrowserForm.GetForm().ctClose();
-                AuthForm.GetForm().ctChangeFormMode(AuthForm.FormMode.Start);
-                AuthForm.GetForm().ctShow();
             }
 
             if (this.InvokeRequired)

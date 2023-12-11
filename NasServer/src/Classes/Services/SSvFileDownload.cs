@@ -19,6 +19,8 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
+            FileStream fileStream = null;
+
             try
             {
                 string fakedir = m_client.socModule.ReceiveString();
@@ -29,9 +31,9 @@ namespace NAS
                 DirectoryManager manager = DirectoryManager.Get(absdir, Encoding.UTF8);
 
                 string path = absdir + fileName + '\\' + fileName + ".a";
-                FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-                if(fileStream.Length < loopTimes * c_BUFFER_SIZE)
+                if (fileStream.Length < loopTimes * c_BUFFER_SIZE)
                 {
                     fileStream.Close();
                     m_client.socModule.SendString("<EOF>");
@@ -48,9 +50,10 @@ namespace NAS
                     return NasServiceResult.Success;
                 }
             }
-            catch (Exception)
+            catch(Exception _exception)
             {
-                return NasServiceResult.NetworkError;
+                fileStream?.Close();
+                throw _exception;
             }
         }
     }

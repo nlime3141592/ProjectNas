@@ -24,36 +24,28 @@ namespace NAS
 
         public override NasServiceResult Execute()
         {
-            try
-            {
-                m_client.socModule.SendString("SV_DIRECTORY_ADD");
-                m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
-                m_client.socModule.SendString(m_nextDir);
-                m_client.socModule.SendInt32(m_department);
-                m_client.socModule.SendInt32(m_level);
-                string response = m_client.socModule.ReceiveString();
+            m_client.socModule.SendString("SV_DIRECTORY_ADD");
+            m_client.socModule.SendString(m_client.datFileBrowse.fakedir);
+            m_client.socModule.SendString(m_nextDir);
+            m_client.socModule.SendInt32(m_department);
+            m_client.socModule.SendInt32(m_level);
+            string response = m_client.socModule.ReceiveString();
 
-                switch(response)
-                {
-                    case "<SUCCESS>":
-                        int didx = m_client.socModule.ReceiveInt32();
-                        onAddSuccess?.Invoke(didx, m_nextDir);
-                        return NasServiceResult.Success;
-                    case "<INVALID_NAME>":
-                        onInvalidName?.Invoke();
-                        return NasServiceResult.Failure;
-                    case "<FAILURE>":
-                        onAddFailure?.Invoke();
-                        return NasServiceResult.Failure;
-                    default:
-                        onError?.Invoke();
-                        return NasServiceResult.Error;
-                }
-            }
-            catch(Exception)
+            switch(response)
             {
-                onError?.Invoke();
-                return NasServiceResult.NetworkError;
+                case "<SUCCESS>":
+                    int didx = m_client.socModule.ReceiveInt32();
+                    onAddSuccess?.Invoke(didx, m_nextDir);
+                    return NasServiceResult.Success;
+                case "<INVALID_NAME>":
+                    onInvalidName?.Invoke();
+                    return NasServiceResult.Failure;
+                case "<FAILURE>":
+                    onAddFailure?.Invoke();
+                    return NasServiceResult.Failure;
+                default:
+                    onError?.Invoke();
+                    return NasServiceResult.Error;
             }
         }
     }

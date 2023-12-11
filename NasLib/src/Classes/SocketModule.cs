@@ -19,7 +19,7 @@ namespace NAS
         public void Close()
         {
             Monitor.Enter(tcpClient);
-            tcpClient.Close();
+            tcpClient.GetStream().Close();
             Monitor.Exit(tcpClient);
         }
 
@@ -77,7 +77,6 @@ namespace NAS
             }
             finally
             {
-                tcpClient.SendTimeout = -1;
                 Monitor.Exit(tcpClient);
             }
         }
@@ -93,7 +92,9 @@ namespace NAS
                 tcpClient.ReceiveTimeout = _msTimeout;
 
                 while (ptrFront < buffer.Length)
+                {
                     ptrFront += tcpClient.GetStream().Read(buffer, ptrFront, buffer.Length - ptrFront);
+                }
 
                 _newByteArray = buffer;
                 return true;
@@ -105,7 +106,6 @@ namespace NAS
             }
             finally
             {
-                tcpClient.ReceiveTimeout = -1;
                 Monitor.Exit(tcpClient);
             }
         }
@@ -130,7 +130,6 @@ namespace NAS
             }
             finally
             {
-                tcpClient.SendTimeout = -1;
                 Monitor.Exit(tcpClient);
             }
         }
@@ -165,7 +164,6 @@ namespace NAS
             }
             finally
             {
-                tcpClient.ReceiveTimeout = -1;
                 Monitor.Exit(tcpClient);
             }
         }

@@ -38,6 +38,8 @@
             this.txtLoginPw = new System.Windows.Forms.TextBox();
             this.txtLoginId = new System.Windows.Forms.TextBox();
             this.pnRegistration = new System.Windows.Forms.Panel();
+            this.lbRegistrationName = new System.Windows.Forms.Label();
+            this.txtRegistrationName = new System.Windows.Forms.TextBox();
             this.btBackToLogin = new System.Windows.Forms.Button();
             this.btRegistration = new System.Windows.Forms.Button();
             this.lbRegistrationPw = new System.Windows.Forms.Label();
@@ -46,8 +48,6 @@
             this.txtRegistrationId = new System.Windows.Forms.TextBox();
             this.btStart = new System.Windows.Forms.Button();
             this.lbWaiting = new System.Windows.Forms.Label();
-            this.txtRegistrationName = new System.Windows.Forms.TextBox();
-            this.lbRegistrationName = new System.Windows.Forms.Label();
             this.pnLogin.SuspendLayout();
             this.pnRegistration.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +82,7 @@
             this.btLogin.Location = new System.Drawing.Point(389, 85);
             this.btLogin.Name = "btLogin";
             this.btLogin.Size = new System.Drawing.Size(75, 23);
-            this.btLogin.TabIndex = 6;
+            this.btLogin.TabIndex = 4;
             this.btLogin.Text = "로그인";
             this.btLogin.UseVisualStyleBackColor = true;
             this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
@@ -94,7 +94,7 @@
             this.lklbFoundPw.Location = new System.Drawing.Point(182, 91);
             this.lklbFoundPw.Name = "lklbFoundPw";
             this.lklbFoundPw.Size = new System.Drawing.Size(147, 12);
-            this.lklbFoundPw.TabIndex = 5;
+            this.lklbFoundPw.TabIndex = 3;
             this.lklbFoundPw.TabStop = true;
             this.lklbFoundPw.Text = "비밀번호를 잊어버렸나요?";
             this.lklbFoundPw.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lklbFoundPw_LinkClicked);
@@ -106,7 +106,7 @@
             this.lklbNewAccount.Location = new System.Drawing.Point(91, 91);
             this.lklbNewAccount.Name = "lklbNewAccount";
             this.lklbNewAccount.Size = new System.Drawing.Size(85, 12);
-            this.lklbNewAccount.TabIndex = 4;
+            this.lklbNewAccount.TabIndex = 2;
             this.lklbNewAccount.TabStop = true;
             this.lklbNewAccount.Text = "새 계정 만들기";
             this.lklbNewAccount.Click += new System.EventHandler(this.lklbNewAccount_Click);
@@ -165,13 +165,32 @@
             this.pnRegistration.Size = new System.Drawing.Size(520, 140);
             this.pnRegistration.TabIndex = 7;
             // 
+            // lbRegistrationName
+            // 
+            this.lbRegistrationName.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbRegistrationName.AutoSize = true;
+            this.lbRegistrationName.Location = new System.Drawing.Point(50, 90);
+            this.lbRegistrationName.Name = "lbRegistrationName";
+            this.lbRegistrationName.Size = new System.Drawing.Size(37, 12);
+            this.lbRegistrationName.TabIndex = 9;
+            this.lbRegistrationName.Text = "이름 :";
+            this.lbRegistrationName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtRegistrationName
+            // 
+            this.txtRegistrationName.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.txtRegistrationName.Location = new System.Drawing.Point(93, 85);
+            this.txtRegistrationName.Name = "txtRegistrationName";
+            this.txtRegistrationName.Size = new System.Drawing.Size(202, 21);
+            this.txtRegistrationName.TabIndex = 2;
+            // 
             // btBackToLogin
             // 
             this.btBackToLogin.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btBackToLogin.Location = new System.Drawing.Point(308, 84);
             this.btBackToLogin.Name = "btBackToLogin";
             this.btBackToLogin.Size = new System.Drawing.Size(75, 23);
-            this.btBackToLogin.TabIndex = 7;
+            this.btBackToLogin.TabIndex = 3;
             this.btBackToLogin.Text = "뒤로";
             this.btBackToLogin.UseVisualStyleBackColor = true;
             this.btBackToLogin.Click += new System.EventHandler(this.btBackToLogin_Click);
@@ -182,7 +201,7 @@
             this.btRegistration.Location = new System.Drawing.Point(389, 84);
             this.btRegistration.Name = "btRegistration";
             this.btRegistration.Size = new System.Drawing.Size(75, 23);
-            this.btRegistration.TabIndex = 6;
+            this.btRegistration.TabIndex = 4;
             this.btRegistration.Text = "회원가입";
             this.btRegistration.UseVisualStyleBackColor = true;
             this.btRegistration.Click += new System.EventHandler(this.btRegistration_Click);
@@ -231,7 +250,7 @@
             this.btStart.Location = new System.Drawing.Point(764, 428);
             this.btStart.Name = "btStart";
             this.btStart.Size = new System.Drawing.Size(140, 40);
-            this.btStart.TabIndex = 8;
+            this.btStart.TabIndex = 0;
             this.btStart.Text = "시작하기";
             this.btStart.UseVisualStyleBackColor = true;
             this.btStart.Click += new System.EventHandler(this.btStart_Click);
@@ -245,26 +264,6 @@
             this.lbWaiting.TabIndex = 9;
             this.lbWaiting.Text = "서버에 연결 중...";
             this.lbWaiting.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtRegistrationName
-            // 
-            this.txtRegistrationName.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.txtRegistrationName.Location = new System.Drawing.Point(93, 85);
-            this.txtRegistrationName.Name = "txtRegistrationName";
-            this.txtRegistrationName.PasswordChar = '*';
-            this.txtRegistrationName.Size = new System.Drawing.Size(202, 21);
-            this.txtRegistrationName.TabIndex = 8;
-            // 
-            // lbRegistrationName
-            // 
-            this.lbRegistrationName.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lbRegistrationName.AutoSize = true;
-            this.lbRegistrationName.Location = new System.Drawing.Point(50, 90);
-            this.lbRegistrationName.Name = "lbRegistrationName";
-            this.lbRegistrationName.Size = new System.Drawing.Size(37, 12);
-            this.lbRegistrationName.TabIndex = 9;
-            this.lbRegistrationName.Text = "이름 :";
-            this.lbRegistrationName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // AuthForm
             // 
