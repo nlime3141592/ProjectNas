@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Collections.Generic;
 
 namespace NAS
 {
@@ -11,6 +12,8 @@ namespace NAS
     {
         public const int c_CONNECTION_CHECK_INTERVAL = 8;
 
+        public List<WaitingAccountData> wAccounts { get; private set; }
+        public List<DepartmentData> departments { get; private set; }
         public SocketModule socModule { get; private set; }
 
         public Action onHaltedByException;
@@ -20,6 +23,9 @@ namespace NAS
 
         public NasAcceptor()
         {
+            wAccounts = new List<WaitingAccountData>();
+            departments = new List<DepartmentData>();
+
             m_watch = new Stopwatch();
             m_services = new ConcurrentQueue<NasService>();
         }

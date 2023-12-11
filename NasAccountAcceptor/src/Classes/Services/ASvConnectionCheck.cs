@@ -2,7 +2,7 @@
 
 namespace NAS
 {
-    internal class ASvConnectionCheck : NasService
+    public class ASvConnectionCheck : NasService
     {
         private NasAcceptor m_acceptor;
 
@@ -15,7 +15,7 @@ namespace NAS
         {
             try
             {
-                m_acceptor.socModule.SendString("CONNECTION_CHECK");
+                m_acceptor.socModule.SendString("SV_CONNECTION_CHECK");
                 return NasServiceResult.Success;
             }
             catch (Exception)

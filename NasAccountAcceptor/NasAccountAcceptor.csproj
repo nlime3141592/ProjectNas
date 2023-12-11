@@ -48,8 +48,13 @@
   <ItemGroup>
     <Compile Include="NasAcceptorProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\Classes\DepartmentData.cs" />
     <Compile Include="src\Classes\NasAcceptor.cs" />
     <Compile Include="src\Classes\Services\ASvConnectionCheck.cs" />
+    <Compile Include="src\Classes\Services\ASvAcceptorViewUpdate.cs" />
+    <Compile Include="src\Classes\Services\ASvJoinAccept.cs" />
+    <Compile Include="src\Classes\Services\ASvJoinDeny.cs" />
+    <Compile Include="src\Classes\WaitingAccountData.cs" />
     <Compile Include="src\Forms\AcceptorForm.cs">
       <SubType>Form</SubType>
     </Compile>

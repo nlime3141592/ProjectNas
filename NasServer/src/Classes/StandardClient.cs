@@ -8,7 +8,7 @@ namespace NAS
         {
             switch (_serviceHeader)
             {
-                case "CONNECTION_CHECK":
+                case "SV_CONNECTION_CHECK":
                     return new SSvConnectionCheck(this);
                 case "SV_LOGIN":
                     return new SSvLogin(this);
